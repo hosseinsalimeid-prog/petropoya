@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پترو پویا | خدمات نفت و انرژی</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:Tahoma, sans-serif; }
+  body { background:#0b1f33; color:#fff; line-height:1.8; }
+  header { background:linear-gradient(135deg,#0b1f33,#123a5c); text-align:center; padding:60px 20px 80px; }
+  header h1 { font-size:2rem; color:#f5b301; margin-bottom:10px; }
+  header p { color:#cfd8e3; font-size:1.05rem; }
+  .btn { display:inline-block; background:#f5b301; color:#0b1f33; font-weight:bold; padding:12px 32px; border-radius:30px; text-decoration:none; margin-top:24px; border:none; font-size:1rem; }
+  section { max-width:800px; margin:auto; padding:50px 20px; }
+  h2 { color:#f5b301; text-align:center; margin-bottom:30px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+  .card { background:#12334f; border-radius:12px; padding:24px; text-align:center; }
+  .card h3 { margin-bottom:8px; font-size:1.1rem; }
+  .card p { color:#b9c6d2; font-size:.9rem; }
+  form { background:#12334f; border-radius:12px; padding:24px; max-width:480px; margin:auto; }
+  label { display:block; margin:12px 0 6px; font-size:.9rem; color:#cfd8e3; }
+  input, textarea { width:100%; padding:12px; border-radius:8px; border:none; background:#0b1f33; color:#fff; font-family:inherit; }
+  form .btn { width:100%; cursor:pointer; }
+  footer { text-align:center; padding:24px; color:#7d8ea0; font-size:.85rem; border-top:1px solid #1d3a55; }
+</style>
+</head>
+<body>
 
+<header>
+  <h1>پترو پویا</h1>
+  <p>تأمین و توزیع محصولات نفت، گاز و انرژی</p>
+  <a class="btn" href="#register">ثبت‌نام / درخواست همکاری</a>
+</header>
+
+<section>
+  <h2>خدمات ما</h2>
+  <div class="cards">
+    <div class="card"><h3>⛽ تأمین فرآورده‌های نفتی</h3><p>عرضه گازوئیل، بنزین و نفت کوره با کیفیت استاندارد</p></div>
+    <div class="card"><h3>🚚 حمل و نقل</h3><p>ارسال سریع و مطمئن بار به سراسر کشور</p></div>
+    <div class="card"><h3>🤝 همکاری تجاری</h3><p>همکاری با شرکت‌ها و پیمانکاران حوزه انرژی</p></div>
+  </div>
+</section>
+
+<section id="register">
+  <h2>فرم ثبت‌نام</h2>
+  <form onsubmit="send(event)">
+    <label>نام و نام خانوادگی</label>
+    <input required>
+    <label>شماره تماس</label>
+    <input required>
+    <label>شرکت / نوع همکاری</label>
+    <input>
+    <label>توضیحات</label>
+    <textarea rows="4"></textarea>
+    <button class="btn">ارسال</button>
+    <p id="ok" style="display:none;color:#7CFC00;text-align:center;margin-top:12px;">✅ با تشکر! اطلاعات شما ثبت شد.</p>
+  </form>
+</section>
+
+<footer>© ۲۰۲۶ پترو پویا</footer>
+
+<script>
+function send(e){e.preventDefault();document.getElementById('ok').style.display='block';e.target.reset();}
+</script>
+</body>
+</html>
