@@ -1,66 +1,73 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>خدمات | پترو پویا</title>
-<style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:Tahoma, sans-serif; }
-  body { background:#0b1f33; color:#fff; line-height:1.8; }
-  nav { display:flex; flex-wrap:wrap; justify-content:center; gap:6px; background:#0e2a44; padding:10px; position:sticky; top:0; z-index:9; }
-  nav a { color:#fff; text-decoration:none; font-size:.9rem; padding:8px 14px; border-radius:20px; }
-  nav a.on, nav a:hover { background:#f5b301; color:#0b1f33; font-weight:bold; }
-  header { background:linear-gradient(135deg,#0b1f33,#123a5c); text-align:center; padding:60px 20px; }
-  header h1 { font-size:2rem; color:#f5b301; margin-bottom:10px; }
-  header p { color:#cfd8e3; font-size:1.05rem; }
-  .btn { display:inline-block; background:#f5b301; color:#0b1f33; font-weight:bold; padding:12px 32px; border-radius:30px; text-decoration:none; margin-top:24px; border:none; font-size:1rem; }
-  section { max-width:800px; margin:auto; padding:50px 20px; }
-  h2 { color:#f5b301; text-align:center; margin-bottom:30px; }
-  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
-  .card { background:#12334f; border-radius:12px; padding:24px; text-align:center; }
-  .card h3 { margin-bottom:8px; font-size:1.05rem; }
-  .card p { color:#b9c6d2; font-size:.9rem; }
-  footer { text-align:center; padding:24px; color:#7d8ea0; font-size:.85rem; border-top:1px solid #1d3a55; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>خدمات و عملکرد | پترو پویا</title>
+  <meta name="description" content="خدمات سامانه هوشمند مدیریت پیرولیز پترو پویا: پایش آنلاین، OCR اسناد، داشبورد سهامداران و گزارش‌گیری." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛢</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f6f8fb; --card:#fff; --muted:#6b7280;
+      --accent:#2bd9a8; --accent-hover:#22c296; --text:#0f1724;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Vazirmatn',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    .container{max-width:1100px;margin:30px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+    h1{font-size:22px;margin:0}
+    h2{font-size:18px;margin:0 0 12px}
+    .muted{color:var(--muted);font-size:13px}
+    .btn{display:inline-block;padding:9px 14px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-family:inherit;font-weight:700;text-decoration:none;transition:background .2s}
+    .btn:hover{background:var(--accent-hover)}
+    .btn.secondary{background:#e6eef3;color:var(--text)}
+    .page-title{font-size:24px;text-align:center;margin:26px 0 6px}
+    .page-sub{text-align:center;color:var(--muted);margin-bottom:26px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:34px}
+    .card{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(15,23,45,.05)}
+    .card h3{margin:8px 0 6px;font-size:15px}
+    .card p{margin:0;font-size:13px;color:var(--muted)}
+    .ico{font-size:26px}
+    .step{display:flex;gap:12px;align-items:flex-start;background:var(--card);padding:16px;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,45,.04);margin-bottom:10px}
+    .num{flex:0 0 34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+    .cta{text-align:center;background:linear-gradient(180deg,#fff,#f3f6f9);border-radius:10px;padding:26px 16px;box-shadow:0 6px 18px rgba(15,23,45,.06)}
+    footer{margin-top:30px;text-align:center;color:var(--muted);font-size:13px}
+    @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+  </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <h1>پترو پویا</h1>
+      <a href="index.html" class="btn secondary">🏠 بازگشت به خانه</a>
+    </header>
 
-<nav>
-  <a href="index.html">🏠 خانه</a>
-  <a class="on" href="services.html">⚙️ خدمات</a>
-  <a href="index.html#register">📝 ثبت‌نام</a>
-</nav>
+    <h2 class="page-title">خدمات و عملکرد</h2>
+    <p class="page-sub">سامانه هوشمند مدیریت پیرولیز — از پایش تا تحویل گزارش</p>
 
-<header>
-  <h1>خدمات و عملکرد</h1>
-  <p>از سفارش تا تحویل، در کنار شما هستیم</p>
-</header>
+    <div class="grid">
+      <div class="card"><div class="ico">🌡</div><h3>پایش آنلاین خط تولید</h3><p>مشاهده لحظه‌ای دما، جریان و وضعیت راکتور از هر جا.</p></div>
+      <div class="card"><div class="ico">📸</div><h3>OCR اسناد</h3><p>عکس فیش باسکول یا فرم دست‌نویس ← ثبت خودکار در سامانه.</p></div>
+      <div class="card"><div class="ico">📊</div><h3>داشبورد سهامداران</h3><p>محاسبه خودکار سود، ROI و بازگشت سرمایه با شفافیت کامل.</p></div>
+      <div class="card"><div class="ico">🧾</div><h3>گزارش‌گیری خودکار</h3><p>گزارش روزانه، هفتگی و ماهانه بدون کار دستی.</p></div>
+      <div class="card"><div class="ico">🌐</div><h3>شبکه صنعت</h3><p>اتصال به تأمین‌کنندگان، تعمیرکاران و بازار پیرولیز.</p></div>
+      <div class="card"><div class="ico">🎓</div><h3>مرکز آموزش</h3><p>آموزش تخصصی راه‌اندازی و بهره‌برداری از خط پیرولیز.</p></div>
+    </div>
 
-<section>
-  <h2>خدمات ما</h2>
-  <div class="cards">
-    <div class="card"><h3>⛽ تأمین فرآورده‌های نفتی</h3><p>گازوئیل، بنزین، نفت کوره و روغن با کیفیت استاندارد</p></div>
-    <div class="card"><h3>🛢 فروش عمده</h3><p>عرضه حجم بالا برای شرکت‌ها و پیمانکاران با قرارداد</p></div>
-    <div class="card"><h3>🚚 حمل و نقل</h3><p>ناوگان تانکر و ارسال مطمئن به سراسر کشور</p></div>
-    <div class="card"><h3>📋 مشاوره و قیمت روز</h3><p>مشاوره خرید و اطلاع از شرایط بازار انرژی</p></div>
+    <h2>روند همکاری</h2>
+    <div class="step"><div class="num">۱</div><div><h3>ثبت درخواست</h3><p class="muted">فرم درخواست مشاوره را در صفحه اصلی پر می‌کنید.</p></div></div>
+    <div class="step"><div class="num">۲</div><div><h3>تماس کارشناس</h3><p class="muted">کارشناسان ما برای بررسی نیازتان تماس می‌گیرند.</p></div></div>
+    <div class="step"><div class="num">۳</div><div><h3>استقرار سامانه</h3><p class="muted">اتصال به خط تولید، تنظیم داشبورد و آموزش تیم.</p></div></div>
+    <div class="step"><div class="num">۴</div><div><h3>پشتیبانی مستمر</h3><p class="muted">به‌روزرسانی، پشتیبانی فنی و بهبود پیوسته.</p></div></div>
+
+    <div class="cta">
+      <h2>آماده شروع هستید؟</h2>
+      <p class="muted">فرم درخواست مشاوره را پر کنید تا کارشناسان ما با شما تماس بگیرند.</p>
+      <a class="btn" href="index.html#contactSection">درخواست مشاوره</a>
+    </div>
+
+    <footer>© ۲۰۲۶ پترو پویا — تمامی حقوق محفوظ است.</footer>
   </div>
-</section>
-
-<section>
-  <h2>روند همکاری</h2>
-  <div class="cards">
-    <div class="card"><h3>۱️⃣ ثبت درخواست</h3><p>فرم سایت را پر می‌کنید</p></div>
-    <div class="card"><h3>۲️⃣ تماس کارشناس</h3><p>تیم ما با شما تماس می‌گیرد</p></div>
-    <div class="card"><h3>۳️⃣ قیمت و شرایط</h3><p>پیش‌فاکتور و جزئیات مشخص می‌شود</p></div>
-    <div class="card"><h3>۴️⃣ تحویل بار</h3><p>ارسال، تحویل و پشتیبانی کامل</p></div>
-  </div>
-</section>
-
-<section style="text-align:center;">
-  <a class="btn" href="index.html#register">همین حالا درخواست بده 📝</a>
-</section>
-
-<footer>© ۲۰۲۶ پترو پویا</footer>
-
 </body>
 </html>
