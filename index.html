@@ -1,141 +1,338 @@
-<!doctype html>
-<html lang="fa" dir="rtl">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>پترو پارسیان اکسیر جوانی | PYROHUB</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
-<style>
-:root{--gold:#e8b64c;--pan:rgba(13,35,66,.85);--br:rgba(64,140,255,.22);--tx:#dcebf7;--mut:#7d9bbd;--grn:#10b981;--blu:#2196f3;--org:#ff9800;--red:#f44336}
-*{box-sizing:border-box}.hidden{display:none!important}
-html,body{margin:0;background:radial-gradient(1000px 500px at 50% -80px,#0e2c55,#040d1f 65%);color:var(--tx);font-family:Vazirmatn,system-ui,sans-serif}
-#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.gcard{width:min(94vw,420px);background:var(--pan);border:1px solid var(--br);border-radius:18px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center;animation:up .5s}
-@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1}}
-.gflame{font-size:50px}.gcard h1{color:var(--gold);margin:8px 0 2px;font-size:21px}.gcard p{color:var(--mut);margin:0 0 14px;font-size:12.5px}
-.tabs{display:flex;gap:8px;margin-bottom:12px}.tabs button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--br);background:transparent;color:var(--tx);font-family:inherit;cursor:pointer;font-size:14px}
-.tabs button.on{background:linear-gradient(135deg,#e8b64c,#c98a1e);color:#1a1206;font-weight:900;border-color:transparent}
-label.f{display:block;text-align:right;margin-top:10px;font-size:13px;color:var(--mut)}
-.inp{width:100%;padding:11px;margin-top:6px;border:1px solid #1d3a63;border-radius:10px;background:#081a36;color:var(--tx);font-family:inherit}
-.inp option{color:#0f1724}
-.err{color:#ff8a80;font-size:12px;min-height:16px;text-align:right;margin-top:4px}
-.gbtn{width:100%;margin-top:12px;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);color:#03291d;font-weight:900;font-size:15px;cursor:pointer;font-family:inherit}
-.wrap{max-width:1500px;margin:0 auto;padding:14px}
-.hdr{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(180deg,#0a1f3f,#071530);border:1px solid var(--br);border-radius:16px;padding:12px 16px}
-.brand{display:flex;align-items:center;gap:10px}
-.logo{width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffcc66,#e65100);display:flex;align-items:center;justify-content:center;font-size:25px;box-shadow:0 0 22px #ff980055}
-.bz{font-weight:900;color:var(--gold);font-size:12.5px}.bz small{display:block;color:var(--mut);font-weight:400;font-size:10.5px}
-.htitle{flex:1;text-align:center;min-width:200px}.htitle h1{margin:0;color:var(--gold);font-size:clamp(15px,2.4vw,24px)}
-.htitle p{margin:2px 0 0;color:var(--mut);font-size:11.5px}
-.ubox{display:flex;align-items:center;gap:10px;background:#0a2244;border:1px solid var(--br);border-radius:12px;padding:7px 12px;font-size:12px}
-.ubox b{color:var(--gold)}
-#outBtn{background:#3a1520;border:none;color:#ff8a80;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:11px;font-family:inherit}
-.layout{display:flex;gap:14px;margin-top:14px;align-items:flex-start}
-aside{width:230px;flex-shrink:0;background:var(--pan);border:1px solid var(--br);border-radius:14px;padding:12px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto}
-.grp h4{margin:10px 0 6px;font-size:11.5px;color:var(--gold);border-bottom:1px dashed #2a4a78;padding-bottom:4px}
-.sitem{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--tx);font-family:inherit;font-size:12.5px;padding:8px;border-radius:8px;cursor:pointer;transition:.15s}
-.sitem:hover{background:#123159}
-.sitem.on{background:linear-gradient(90deg,#e8b64c22,transparent);border-right:3px solid var(--gold);color:var(--gold);font-weight:700}
-main{flex:1;min-width:0}
-.view{animation:up .35s both}
-.vhead{background:var(--pan);border:1px solid var(--br);border-radius:14px;padding:16px 18px;margin-bottom:14px}
-.vhead h2{margin:0;color:var(--gold);font-size:19px}.vhead p{margin:4px 0 0;color:var(--mut);font-size:12.5px}
-.panel{background:var(--pan);border:1px solid var(--br);border-radius:14px;padding:16px;margin-bottom:14px}
-.panel h3{color:var(--gold);font-size:14.5px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
-.panel h3::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#e8b64c44,transparent)}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:14px}
-.kpi{border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;color:#fff;border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 22px rgba(0,0,0,.35)}
-.kpi i{font-style:normal;font-size:26px}.kpi h5{margin:0;font-size:11.5px;font-weight:400;opacity:.9}.kpi .v{font-size:18px;font-weight:900;direction:ltr;text-align:right}
-.k-green{background:linear-gradient(135deg,#0f9d58,#087f43)}.k-blue{background:linear-gradient(135deg,#1e88e5,#0d5bb5)}
-.k-pur{background:linear-gradient(135deg,#8e24aa,#ff9800)}.k-org{background:linear-gradient(135deg,#fb8c00,#ef6c00)}.k-red{background:linear-gradient(135deg,#d32f2f,#8e0000)}
-.tbw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
-th{color:var(--gold);font-weight:400;font-size:11.5px;padding:8px;border-bottom:1px solid #1d3a63;text-align:center}
-td{padding:8px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center}
-.okc{color:var(--grn)}.warnc{color:var(--org)}.badc{color:#ff6f60}
-.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;align-items:end}
-.fbtn{background:linear-gradient(135deg,#10b981,#059669);color:#03291d;border:none;border-radius:10px;padding:10px 18px;font-family:inherit;font-weight:900;cursor:pointer;font-size:13.5px}
-.fbtn.ghost{background:#123159;color:var(--tx);border:1px solid var(--br)}
-.fbtn.red{background:linear-gradient(135deg,#d32f2f,#8e0000);color:#fff;padding:4px 10px;font-size:11.5px}
-.fbtn.warn{background:linear-gradient(135deg,#fb8c00,#ef6c00);color:#fff}
-.muted2{font-size:11px;color:#7d8ea0;margin-top:8px;line-height:1.9}
-.seg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.seg button{padding:8px 14px;border-radius:10px;border:1px solid var(--br);background:#0a2244;color:var(--tx);font-family:inherit;font-size:12.5px;cursor:pointer}
-.seg button.on{background:linear-gradient(135deg,#e8b64c,#c98a1e);color:#1a1206;font-weight:900}
-.stbox{border-radius:12px;padding:13px;text-align:center;font-weight:900;font-size:15px;margin-top:12px}
-.st-lock{background:rgba(244,67,54,.15);border:1px solid #f44336;color:#ff8a80}
-.st-open{background:rgba(16,185,129,.16);border:1px solid #10b981;color:#34d399;animation:glow 1.6s infinite}
-@keyframes glow{50%{box-shadow:0 0 22px #10b98166}}
-.tick{width:18px;height:18px;accent-color:#10b981;cursor:pointer}
-.shake{animation:shk .4s}@keyframes shk{25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
-.bands{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
-.band{border-radius:10px;padding:10px 6px;text-align:center;font-size:11.5px;font-weight:700;border:1px solid rgba(255,255,255,.15)}
-.b1{background:linear-gradient(135deg,#1b5e20,#2e7d32)}.b2{background:linear-gradient(135deg,#e65100,#f57c00)}
-.b3{background:linear-gradient(135deg,#b71c1c,#d32f2f)}.b4{background:linear-gradient(135deg,#0d47a1,#1565c0)}
-.band small{display:block;font-weight:400;opacity:.85;direction:ltr}
-.flow{display:flex;align-items:center;gap:5px;overflow-x:auto;padding:8px 2px}
-.fs{flex-shrink:0;width:74px;text-align:center}
-.fs .fi{width:42px;height:42px;margin:0 auto 4px;border-radius:50%;background:#0c2951;border:2px solid var(--blu);display:flex;align-items:center;justify-content:center;font-size:18px;animation:pul 3s infinite}
-.fs span{font-size:10px;color:var(--mut);line-height:1.4;display:block}
-.far{color:var(--grn);font-size:15px;flex-shrink:0;animation:blk 1.2s infinite}
-@keyframes pul{0%,100%{box-shadow:0 0 0 0 #2196f344}50%{box-shadow:0 0 0 7px transparent}}
-@keyframes blk{50%{opacity:.25}}
-.ggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.gauge{background:#081a36;border:1px solid var(--br);border-radius:12px;padding:10px;text-align:center}
-.gauge .gv{font-size:22px;font-weight:900;color:var(--gold);direction:ltr}.gauge .gt{font-size:11px;color:var(--mut);margin-top:2px}
-.tl{position:relative;padding-right:16px}.tl::before{content:'';position:absolute;right:5px;top:6px;bottom:6px;width:2px;background:#1d3a63}
-.tli{position:relative;padding:5px 0;font-size:12.5px}.tli::before{content:'';position:absolute;right:-15.5px;top:11px;width:11px;height:11px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
-.tli b{direction:ltr;display:inline-block;margin-left:6px;color:var(--c)}
-.aii{display:flex;gap:9px;align-items:flex-start;background:#081a36;border:1px solid var(--br);border-right:3px solid var(--org);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;animation:up .5s both}
-.aii.b{border-right-color:var(--blu)}.aii i{font-style:normal;font-size:16px}
-.roleb{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;background:#123159;border:1px solid var(--br)}
-.r-admin{background:#3d2f10;border-color:var(--gold);color:var(--gold)}
-.rolesel{padding:6px;border-radius:8px;background:#081a36;color:var(--tx);border:1px solid #1d3a63;font-family:inherit;font-size:12px}
-.tw{position:fixed;bottom:16px;right:16px;z-index:300;display:flex;flex-direction:column;gap:8px}
-.toast{background:#0a2244;color:var(--tx);border:1px solid var(--br);border-right:4px solid var(--grn);padding:11px 15px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(12px);transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.toast.error{border-right-color:var(--red)}
-.toast.show{opacity:1;transform:none}
-@media(max-width:960px){
-.layout{flex-direction:column}
-aside{position:static;width:100%;max-height:none;display:flex;gap:8px;overflow-x:auto;align-items:center;padding:8px}
-.grp{display:flex;gap:4px;flex-shrink:0;align-items:center}.grp h4{display:none}
-.sitem{white-space:nowrap;padding:7px 10px}.g2{grid-template-columns:1fr}
-}
-</style>
-</head>
-<body>
+'use strict';
+/* ═══ PYROHUB — پترو پارسیان اکسیر جوانی · app.js ═══ */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const GL=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?(d==null?[]:d):v}catch(e){return d==null?[]:d}};
+const SL=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const fa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const fm=n=>fa(Number(n||0).toLocaleString('en-US'));
+const td=()=>new Date().toISOString().slice(0,10);
+const nt=()=>new Date().toTimeString().slice(0,5);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isEm=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+const hsh=t=>crypto.subtle?crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)).then(b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')):Promise.resolve('x'+t.length);
+function toast(m,t){const e=document.createElement('div');e.className='toast'+(t==='error'?' error':'');e.textContent=m;$('#tw').appendChild(e);requestAnimationFrame(()=>e.classList.add('show'));setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},3200)}
 
-<div id="gate">
- <div class="gcard">
-  <div class="gflame">🔥</div>
-  <h1>پترو پارسیان — اکسیر جوانی</h1>
-  <p>PYROHUB · سامانه جامع مدیریت کارخانه‌های پیرولیز</p>
-  <div class="tabs"><button id="tLogin" class="on">ورود</button><button id="tReg">ثبت‌نام</button></div>
-  <div id="gName" class="hidden"><label class="f">نام و نام خانوادگی<input id="qName" class="inp"></label></div>
-  <label class="f">ایمیل<input id="qEmail" class="inp" type="email" dir="ltr" autocomplete="email"></label><div class="err" id="eE"></div>
-  <label class="f">رمز عبور<input id="qPass" class="inp" type="password" dir="ltr" placeholder="حداقل ۶ کاراکتر"></label><div class="err" id="eP"></div>
-  <div id="gPass2" class="hidden"><label class="f">تکرار رمز<input id="qPass2" class="inp" type="password" dir="ltr"></label><div class="err" id="eP2"></div></div>
-  <div class="err" id="eTop"></div>
-  <button class="gbtn" id="goBtn">ورود به سامانه</button>
-  <p style="margin-top:10px;font-size:11px;line-height:1.9">اولین ثبت‌نام = <b style="color:var(--gold)">مدیر کل</b> 👑<br>ثبت‌نام‌های بعدی «ناظر» می‌شوند تا مدیر نقششان را تعیین کند.</p>
- </div>
-</div>
+/* ═══ نقش‌ها و دسترسی‌ها ═══ */
+const ROLES={admin:'مدیر کل',manager:'مدیر کارخانه',supervisor:'مسئول شیفت',operator:'اپراتور',warehouse:'انباردار',maintenance:'تعمیرکار',finance:'کاربر مالی',viewer:'ناظر'};
+const PERMS={admin:'*',manager:['dash','process','plan','inv','sales','fin','rep','net'],supervisor:['dash','process','plan'],operator:['dash','process'],warehouse:['dash','inv'],maintenance:['dash','maint','inv'],finance:['dash','fin','sales','rep'],viewer:['dash']};
+const can=(r,v)=>!!r&&(PERMS[r]==='*'||(PERMS[r]||[]).indexOf(v)>-1);
+const ROLESEE={admin:'دسترسی کامل + مدیریت کاربران و SOP',manager:'داشبورد، پخت، Batch، انبار، مالی، فروش، گزارش‌ها',supervisor:'داشبورد، فرآیند پخت، برنامه Batch، START راکتور',operator:'داشبورد + ثبت فرآیند پخت (چک‌لیست و ثبت ساعتی) — بدون START',warehouse:'داشبورد + انبار (مواد/محصول/قطعه)',maintenance:'داشبورد، تعمیرات، انبار قطعات',finance:'داشبورد، مالی، فروش، گزارش‌ها',viewer:'فقط داشبورد (مشاهده)'};
+const MENU=[['dash','📊','داشبورد','عمومی'],['process','🔥','فرآیند پخت','تولید'],['plan','📅','برنامه و Batch','تولید'],['inv','📦','انبار','انبار و فنی'],['maint','🔧','تعمیرات','انبار و فنی'],['fin','💰','مالی','مالی و مدیریت'],['sales','🧾','فروش و مطالبات','مالی و مدیریت'],['users','👥','کاربران و نقش‌ها','مدیریت'],['rep','📈','گزارش‌ها','مالی و مدیریت'],['settings','⚙️','تنظیمات SOP','مدیریت'],['net','🌐','شبکه پیرولیز','سرویس‌ها']];
+const MENU2={};MENU.forEach(m=>MENU2[m[0]]=m[2]);
+const SUB={dash:'نمای کلی عملیات کارخانه',process:'چک‌لیست استارت + ثبت ساعتی پخت + چرخه Batch (اپراتور: ثبت — مسئول شیفت: تأیید Start)',plan:'ایجاد و مدیریت Batchهای تولید',inv:'مواد اولیه، محصولات و قطعات — ویژه انباردار',maint:'ثبت تعمیرات، مصرف قطعه و هزینه (خودکار به مالی و انبار)',fin:'درآمد، هزینه و سود — ویژه مالی و مدیر',sales:'ثبت فروش، کسر از انبار، ثبت دریافت و مطالبات',users:'تعیین نقش هر کاربر — فقط مدیر کل',rep:'شاخص‌ها و خروجی CSV',settings:'SOP فرآیند و چک‌لیست — فقط مدیر کل',net:'PyroTrade · PyroJobs · PyroAcademy · شبکه کارخانه‌ها'};
 
-<div id="app" class="hidden">
-<div class="wrap">
- <header class="hdr">
-  <div class="brand"><div class="logo">🔥</div><div class="bz">PETRO PARSIAN<small>EXIR JAVANI · 09154040240</small></div></div>
-  <div class="htitle"><h1>پترو پارسیان اکسیر جوانی</h1><p>سامانه جامع مدیریت کارخانه‌های پیرولیز — PYROHUB</p></div>
-  <div class="ubox"><span id="uIcon">👤</span><div><b id="uName">—</b><div style="color:var(--mut);font-size:10px" id="uRole">—</div></div><button id="outBtn">خروج</button></div>
- </header>
- <div class="layout">
-  <aside id="aside"></aside>
-  <main><div id="main"></div></main>
- </div>
-</div>
-</div>
+/* ═══ داده اولیه ═══ */
+const DEF_CHK=[['انجام پروتکل‌های دستورالعمل عملیاتی',1],['نبش و آب‌بندی درب راکتور',1],['وضعیت شعله و مشعل‌ها',1],['سنجش کاتالیست و بررسی رطوبت',0],['سیستم برق و کنتاکتور',1],['مسیر خروجی مخزن ضدانفجار',1],['تجهیزات اطفاء و خاموش‌کننده‌ها',0],['صحت مسیرهای فرآیندی',1]];
+(function(){if(!GL('pp_sop',null))SL('pp_sop',{crit:220,crack:270,max:320});
+if(!GL('pp_checks',null).length)SL('pp_checks',DEF_CHK.map(c=>({t:c[0],c:!!c[1],ch:false})));
+if(!GL('pp_invProd',null).length)SL('pp_invProd',[{name:'روغن',qty:45600,unit:'لیتر'},{name:'کربن',qty:32400,unit:'کیلوگرم'},{name:'سیم',qty:1250,unit:'کیلوگرم'}]);
+if(!GL('pp_invRaw',null).length)SL('pp_invRaw',[{name:'لاستیک',qty:12000,unit:'کیلوگرم',min:2000},{name:'پلاستیک',qty:8000,unit:'کیلوگرم',min:1500}]);
+if(!GL('pp_invParts',null).length)SL('pp_invParts',[{name:'واشر نسوز',qty:10,unit:'عدد',min:3},{name:'پمپ',qty:2,unit:'عدد',min:1}]);
+if(!GL('pp_batches',null).length)SL('pp_batches',[{id:'B-'+Date.now().toString().slice(-6),reactor:'R-01',feed:'لاستیک',ton:10,op:'شیفت A',shift:'صبح',date:td(),status:'planned'}]);})();
+const ST={planned:['برنامه‌ریزی شده',''],running:['در حال پخت 🔥','okc'],cooling:['در حال Cooling ❄️','warnc'],done:['پایان یافته ✅','okc']};
+const FLOW=[['🛒','خرید'],['⚖️','توزین'],['🧰','آماده‌سازی'],['📋','چک‌لیست'],['▶️','استارت'],['📈','ثبت ساعتی'],['🔥','Cracking'],['❄️','Cooling'],['📤','تخلیه'],['🧾','خروجی'],['💰','فروش']];
 
-<div class="tw" id="tw"></div>
-<script src="app.js"></script>
-</body>
-</html>
+/* ═══ ورود / ثبت‌نام ═══ */
+let mode='login';
+function tabUI(m){mode=m;$('#tLogin').classList.toggle('on',m==='login');$('#tReg').classList.toggle('on',m==='register');$('#gName').classList.toggle('hidden',m!=='register');$('#gPass2').classList.toggle('hidden',m!=='register');$('#goBtn').textContent=m==='login'?'ورود به سامانه':'ایجاد حساب و ورود';['eE','eP','eP2','eTop'].forEach(i=>{const el=$('#'+i);if(el)el.textContent=''})}
+$('#tLogin').onclick=()=>tabUI('login');$('#tReg').onclick=()=>tabUI('register');
+$('#goBtn').onclick=async function(){
+const em=$('#qEmail').value.trim().toLowerCase(),p=$('#qPass').value;
+let ok=true;const E=(i,m2)=>{const el=$('#'+i);if(el)el.textContent=m2;if(m2)ok=false};
+E('eE',!isEm(em)?'ایمیل معتبر نیست.':'');E('eP',p.length<6?'رمز حداقل ۶ کاراکتر.':'');
+if(mode==='register'&&$('#qPass2').value!==p){E('eP2','تکرار رمز مطابقت ندارد.');ok=false}
+if(!ok)return;
+const users=GL('pp_users'),h=await hsh(p);
+if(mode==='register'){
+if(users.some(u=>u.email===em)){$('#eE').textContent='این ایمیل قبلاً ثبت شده است.';return}
+const role=users.length?'viewer':'admin';
+users.push({name:$('#qName').value.trim()||em.split('@')[0],email:em,hash:h,role:role});SL('pp_users',users);SL('pp_session',em);start(users[users.length-1]);
+toast(role==='admin'?'خوش آمدید — شما مدیر کل سیستم هستید 👑':'حساب ساخته شد — نقش شما «ناظر» است تا مدیر تعیین کند.');
+}else{
+const u=users.find(x=>x.email===em&&x.hash===h);
+if(!u){$('#eTop').textContent='ایمیل یا رمز اشتباه است یا حساب ندارید.';return}
+SL('pp_session',em);start(u);toast('خوش آمدید، '+u.name);}};
+$('#outBtn').onclick=()=>{localStorage.removeItem('pp_session');location.reload()};
+(function(){let em=null;try{em=JSON.parse(localStorage.getItem('pp_session'))}catch(e){}
+if(em){const u=GL('pp_users').find(x=>x.email===em);if(u)start(u)}})();
+
+/* ═══ شروع اپ ═══ */
+let U=null;
+function start(u){U=u;$('#gate').classList.add('hidden');$('#app').classList.remove('hidden');
+$('#uName').textContent=u.name;$('#uRole').textContent=ROLES[u.role]||'—';
+$('#uIcon').textContent=u.role==='admin'?'👑':u.role==='operator'?'👷':u.role==='warehouse'?'📦':u.role==='finance'?'💰':u.role==='maintenance'?'🔧':u.role==='supervisor'?'⏱':'👤';
+buildSide();go('dash');}
+function buildSide(){let h='',last='';
+MENU.forEach(function(m){const v=m[0];
+if((v==='users'||v==='settings')?U.role!=='admin':!can(U.role,v))return;
+if(m[3]!==last){if(last)h+='</div>';h+='<div class="grp"><h4>'+m[3]+'</h4>';last=m[3]}
+h+='<button class="sitem" data-v="'+v+'">'+m[1]+' '+m[2]+'</button>'});
+if(last)h+='</div>';$('#aside').innerHTML=h;
+$$('#aside .sitem').forEach(b=>b.onclick=function(){go(b.dataset.v)});}
+const VIEWS={},BIND={};
+function go(v){$$('#aside .sitem').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+$('#main').innerHTML='<div class="view"><div class="vhead"><h2>'+MENU2[v]+'</h2><p>'+ (SUB[v]||'') +'</p></div>'+VIEWS[v]()+'</div>';
+if(BIND[v])BIND[v]();window.scrollTo(0,0);}
+function bindDel(){$$('#main [data-del]').forEach(function(b){b.onclick=function(){if(!confirm('این رکورد حذف شود؟'))return;const k=b.dataset.del;const a=GL(k);a.splice(+b.dataset.i,1);SL(k,a);go(b.dataset.back||'dash');toast('حذف شد.')}})}
+function dlCSV(name,rows){const csv=rows.map(r=>r.join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download=name+'.csv';a.click();toast('فایل CSV دانلود شد ✅')}
+
+/* ═══ داشبورد ═══ */
+VIEWS.dash=function(){const bts=GL('pp_batches');
+const act=bts.filter(b=>b.status!=='done');
+const oilT=bts.filter(b=>b.outDate===td()&&b.out).reduce((s,b)=>s+ +b.out.oil,0);
+const sal=GL('pp_sales'),salT=sal.filter(s=>s.date===td()).reduce((s,x)=>s+x.qty*x.price,0);
+const rec=sal.reduce((s,x)=>s+(x.qty*x.price-x.paid),0);
+const fin=GL('pp_fin'),inc=fin.filter(f=>f.type==='in').reduce((s,f)=>s+ +f.amount,0),exp=fin.filter(f=>f.type==='out').reduce((s,f)=>s+ +f.amount,0);
+const low=[].concat(GL('pp_invParts'),GL('pp_invRaw')).filter(x=>x.min&&+x.qty<+x.min);
+let h='<div class="kpis">'+
+'<div class="kpi k-blue"><i>🔥</i><div><h5>Batch فعال</h5><div class="v">'+fa(act.length)+'</div></div></div>'+
+'<div class="kpi k-pur"><i>🛢</i><div><h5>روغن تولید امروز (لیتر)</h5><div class="v">'+fm(oilT)+'</div></div></div>'+
+'<div class="kpi k-org"><i>🧾</i><div><h5>فروش امروز (ریال)</h5><div class="v">'+fm(salT)+'</div></div></div>'+
+'<div class="kpi k-green"><i>📈</i><div><h5>سود انباشته (ریال)</h5><div class="v">'+fm(inc-exp)+'</div></div></div>'+
+'<div class="kpi k-red"><i>💳</i><div><h5>مانده مطالبات (ریال)</h5><div class="v">'+fm(rec)+'</div></div></div></div>';
+h+='<div class="panel"><h3>⚡ جریان کامل فرآیند</h3><div class="flow">'+FLOW.map((f,i)=>'<div class="fs" style="animation-delay:'+(i*.15)+'s"><div class="fi">'+f[0]+'</div><span>'+f[1]+'</span></div>'+(i<FLOW.length-1?'<div class="far">➜</div>':'')).join('')+'</div></div>';
+h+='<div class="panel"><h3>🔥 Batch‌های جاری</h3><div class="tbw"><table><tr><th>شناسه</th><th>راکتور</th><th>خوراک</th><th>تناژ</th><th>وضعیت</th></tr>';
+if(act.length)act.forEach(function(b){h+='<tr><td dir="ltr">'+esc(b.id)+'</td><td>'+esc(b.reactor)+'</td><td>'+esc(b.feed)+'</td><td>'+fa(b.ton)+' تن</td><td class="'+ST[b.status][1]+'">'+ST[b.status][0]+'</td></tr>'});
+else h+='<tr><td colspan="5">Batch فعالی وجود ندارد — از «برنامه و Batch» ایجاد کنید.</td></tr>';
+h+='</table></div></div>';
+h+='<div class="panel"><h3>🤖 تحلیل و هشدارها</h3>';
+low.forEach(function(x){h+='<div class="aii"><i>⚠️</i><span>موجودی «'+esc(x.name)+'» به حد هشدار رسید: '+fa(x.qty)+' '+esc(x.unit)+' (حداقل: '+fa(x.min)+') — سفارش خرید ثبت کنید.</span></div>'});
+if(!act.length)h+='<div class="aii b"><i>💡</i><span>هیچ پخت فعالی در جریان نیست — برنامه‌ریزی Batch جدید می‌تواند ظرفیت خط را فعال کند.</span></div>';
+h+='<div class="aii b"><i>💡</i><span>❌ AI فرمان عملیاتی صادر نمی‌کند — فقط تحلیل و پیشنهاد؛ تصمیم با فرد مجاز است.</span></div></div>';
+return h;};
+
+/* ═══ فرآیند پخت ═══ */
+VIEWS.process=function(){const sop=GL('pp_sop'),cks=GL('pp_checks'),bts=GL('pp_batches');
+const act=bts.find(b=>b.status==='planned')||bts.find(b=>b.status==='running')||bts.find(b=>b.status==='cooling');
+const logs=GL('pp_logs').filter(l=>l.date===td()).slice().reverse();
+const canStart=['admin','manager','supervisor'].indexOf(U.role)>-1;
+let h='<div class="panel"><h3>✅ چک‌لیست پیش از استارت (Pre-Start)</h3><div class="tbw"><table><tr><th>وضعیت</th><th>شرح مورد</th><th>نوع</th></tr>';
+cks.forEach(function(c,i){h+='<tr><td><input type="checkbox" class="tick" data-i="'+i+'" '+(c.ch?'checked':'')+'></td><td style="text-align:right">'+esc(c.t)+'</td><td>'+(c.c?'<span class="tag-c" style="color:#ff8a80;font-size:11px">بحرانی</span>':'<span style="color:#9fa8b2;font-size:11px">غیر بحرانی</span>')+'</td></tr>'});
+h+='</table></div><div id="stBox" class="stbox">—</div><button id="stBtn" class="fbtn ghost" style="width:100%;margin-top:10px">—</button>';
+if(!canStart)h+='<p class="muted2">⚠️ تأیید Start فقط توسط مسئول شیفت / مدیر انجام می‌شود.</p>';
+h+='</div>';
+h+='<div class="panel"><h3>🕐 ثبت ساعتی فرآیند</h3><div class="fgrid">'+
+'<div><label class="f">ساعت</label><input class="inp" id="lTm" dir="ltr" value="'+nt()+'"></div>'+
+'<div><label class="f">دمای راکتور (°C)</label><input class="inp" id="lTemp" type="number" dir="ltr"></div>'+
+'<div><label class="f">دمای کندانسور (°C)</label><input class="inp" id="lCon" type="number" dir="ltr"></div>'+
+'<div><label class="f">فشار (Bar)</label><input class="inp" id="lPres" type="number" step="0.01" dir="ltr"></div>'+
+'<div><label class="f">مشعل‌های فعال</label><select class="inp" id="lBrn"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div></div>'+
+'<div><label class="f">توضیحات اپراتور</label><input class="inp" id="lNote" placeholder="(اختیاری) 📷 عکس و 🎙 صوت در نسخه بعدی"></div>'+
+'<button id="lAdd" class="fbtn">ثبت رکورد ساعتی</button>'+
+'<div class="tbw" style="margin-top:14px"><table><tr><th>ساعت</th><th>راکتور(°C)</th><th>کندانسور(°C)</th><th>فشار(Bar)</th><th>مشعل</th><th>SOP</th><th>توضیح</th></tr>';
+if(logs.length)logs.forEach(function(l){const cls=+l.temp>=sop.max?'badc':+l.temp>=sop.crack?'badc':+l.temp>=sop.crit?'warnc':'okc';
+h+='<tr><td><b>'+esc(l.tm)+'</b></td><td class="'+cls+'">'+fa(l.temp)+'</td><td>'+fa(l.con)+'</td><td>'+fa(l.pres)+'</td><td>'+fa(l.brn)+'/6</td><td class="'+cls+'">'+(+l.temp>=sop.max?'فراتر از SOP!':+l.temp>=sop.crack?'Cracking':+l.temp>=sop.crit?'بازه بحرانی ⚠':'عادی ✓')+'</td><td>'+esc(l.note||'—')+'</td></tr>'});
+else h+='<tr><td colspan="7">امروز رکوردی ثبت نشده.</td></tr>';
+h+='</table></div><p class="muted2">نگره‌های SOP (مدیر): عادی &lt; '+fa(sop.crit)+'°C · بحرانی '+fa(sop.crit)+'–'+fa(sop.crack)+'°C · Cracking '+fa(sop.crack)+'–'+fa(sop.max)+'°C</p></div>';
+h+='<div class="panel"><h3>🛢 چرخه Batch فعال</h3>';
+if(!act)h+='<p class="muted2">Batch فعالی نیست — از «برنامه و Batch» جدید بسازید.</p>';
+else{h+='<p>شناسه: <b dir="ltr">'+esc(act.id)+'</b> · راکتور: '+esc(act.reactor)+' · خوراک: '+esc(act.feed)+' ('+fa(act.ton)+' تن) · وضعیت: <b class="'+ST[act.status][1]+'">'+ST[act.status][0]+'</b>';
+if(act.startTime)h+=' · شروع پخت: <b dir="ltr">'+esc(act.startTime)+'</b>';
+h+='</p>';
+if(act.status==='running')h+='<button id="btEnd" class="fbtn warn">⏹ پایان پخت — شروع Cooling</button>';
+if(act.status==='cooling'){h+='<div class="fgrid" style="margin-top:10px">'+
+'<div><label class="f">روغن (لیتر)</label><input class="inp" id="uOil" type="number" dir="ltr"></div>'+
+'<div><label class="f">کربن بلک (kg)</label><input class="inp" id="uCar" type="number" dir="ltr"></div>'+
+'<div><label class="f">سیم (kg)</label><input class="inp" id="uWire" type="number" dir="ltr"></div>'+
+'<div><label class="f">ضایعات/افت (kg)</label><input class="inp" id="uWas" type="number" dir="ltr"></div></div>'+
+'<button id="uSave" class="fbtn">📤 ثبت تخلیه و به‌روزرسانی انبار</button>';}
+if(act.status==='planned')h+='<p class="muted2">ابتدا چک‌لیست را کامل کنید سپس از باکس بالا START بزنید.</p>';}
+h+='</div>';
+return h;};
+BIND.process=function(){
+function lockUI(){const cks=GL('pp_checks');const locked=cks.some(c=>c.c&&!c.ch);
+const box=$('#stBox'),btn=$('#stBtn');const canStart=['admin','manager','supervisor'].indexOf(U.role)>-1;
+if(locked){box.className='stbox st-lock';box.textContent='🔴 START LOCKED';btn.className='fbtn ghost';btn.textContent='قفل فعال — ابتدا آیتم‌های بحرانی را تأیید کنید';
+btn.onclick=function(){box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');toast('START قفل است — آیتم‌های بحرانی کامل نیست!','error')};}
+else{box.className='stbox st-open';box.textContent='🟢 START UNLOCKED';btn.className='fbtn';btn.textContent='🔥 START REACTOR (تأیید مسئول شیفت)';
+btn.onclick=function(){const bts=GL('pp_batches');const i=bts.findIndex(b=>b.status==='planned');
+if(i<0){toast('ابتدا از «برنامه و Batch» یک Batch ایجاد کنید.','error');return}
+if(!['admin','manager','supervisor'].includes(U.role)){toast('Start فقط با تأیید مسئول شیفت.','error');return}
+bts[i].status='running';bts[i].startTime=nt();bts[i].startBy=U.name;SL('pp_batches',bts);toast('🔥 راکتور Start شد — ثبت ساعتی آغاز شود');go('process')};}}
+$$('#main .tick').forEach(function(t){t.onchange=function(){const cks=GL('pp_checks');cks[+t.dataset.i].ch=t.checked;SL('pp_checks',cks);lockUI()}});
+lockUI();
+var la=$('#lAdd');if(la)la.onclick=function(){const temp=+$('#lTemp').value;
+if(!temp){toast('دمای راکتور را وارد کنید.','error');return}
+const logs=GL('pp_logs');logs.push({date:td(),tm:$('#lTm').value||nt(),temp:temp,con:+$('#lCon').value||0,pres:+$('#lPres').value||0,brn:+$('#lBrn').value,note:$('#lNote').value.trim(),by:U.name});SL('pp_logs',logs);toast('رکورد ساعتی ثبت شد ✅');go('process')};
+var be=$('#btEnd');if(be)be.onclick=function(){const bts=GL('pp_batches');const i=bts.findIndex(b=>b.status==='running');bts[i].status='cooling';bts[i].coolStart=nt();SL('pp_batches',bts);toast('پخت پایان یافت — Cooling شروع شد ❄️');go('process')};
+var us=$('#uSave');if(us)us.onclick=function(){const o=+$('#uOil').value||0,c=+$('#uCar').value||0,w=+$('#uWire').value||0;
+if(!o&&!c&&!w){toast('حداقل یکی از خروجی‌ها را وارد کنید.','error');return}
+const bts=GL('pp_batches');const i=bts.findIndex(b=>b.status==='cooling');const b=bts[i];
+b.out={oil:o,carbon:c,wire:w,waste:+$('#uWas').value||0};b.outDate=td();b.status='done';SL('pp_batches',bts);
+const pr=GL('pp_invProd');const add=function(n,q,u){const x=pr.find(p=>p.name===n);if(x)x.qty+=q;else pr.push({name:n,qty:q,unit:u})};
+if(o)add('روغن',o,'لیتر');if(c)add('کربن',c,'کیلوگرم');if(w)add('سیم',w,'کیلوگرم');SL('pp_invProd',pr);
+const raw=GL('pp_invRaw');if(raw.length&&b.ton)raw[0].qty=Math.max(0,+raw[0].qty-+b.ton);SL('pp_invRaw',raw);
+toast('تخلیه ثبت شد — انبار محصولات به‌روزرسانی شد ✅');go('process')};};
+
+/* ═══ برنامه و Batch ═══ */
+VIEWS.plan=function(){let h='<div class="panel"><h3>➕ ایجاد Batch جدید</h3><div class="fgrid">'+
+'<div><label class="f">راکتور</label><select class="inp" id="bR"><option>R-01</option><option>R-02</option></select></div>'+
+'<div><label class="f">نوع خوراک</label><select class="inp" id="bF">'+GL('pp_invRaw').map(r=>'<option>'+esc(r.name)+'</option>').join('')+'<option>ترکیبی</option></select></div>'+
+'<div><label class="f">تناژ (تن)</label><input class="inp" id="bT" type="number" dir="ltr" value="10"></div>'+
+'<div><label class="f">اپراتور / گروه</label><input class="inp" id="bO" placeholder="مثلاً شیفت A"></div>'+
+'<div><label class="f">شیفت</label><select class="inp" id="bS"><option>صبح</option><option>عصر</option><option>شب</option></select></div></div>'+
+'<button id="bAdd" class="fbtn">ثبت Batch (آماده چک‌لیست)</button></div>';
+h+='<div class="panel"><h3>📂 فهرست Batch‌ها</h3><div class="tbw"><table><tr><th>شناسه</th><th>تاریخ</th><th>راکتور</th><th>خوراک</th><th>تناژ</th><th>اپراتور</th><th>وضعیت</th><th>خروجی</th><th></th></tr>';
+const bts=GL('pp_batches').slice().reverse();
+if(bts.length)bts.forEach(function(b){const i=GL('pp_batches').findIndex(x=>x.id===b.id);
+h+='<tr><td dir="ltr">'+esc(b.id)+'</td><td>'+esc(b.date)+'</td><td>'+esc(b.reactor)+'</td><td>'+esc(b.feed)+'</td><td>'+fa(b.ton)+'</td><td>'+esc(b.op||'—')+'</td><td class="'+ST[b.status][1]+'">'+ST[b.status][0]+'</td><td>'+(b.out?'روغن '+fa(b.out.oil)+'L · کربن '+fa(b.out.carbon)+'kg':'—')+'</td><td>'+(U.role==='admin'?'<button class="fbtn red" data-del="pp_batches" data-i="'+i+'" data-back="plan">حذف</button>':'')+'</td></tr>'});
+else h+='<tr><td colspan="9">Batchی ثبت نشده.</td></tr>';
+h+='</table></div></div>';return h;};
+BIND.plan=function(){$('#bAdd').onclick=function(){const ton=+$('#bT').value||0;
+if(!ton){toast('تناژ را وارد کنید.','error');return}
+const bts=GL('pp_batches');bts.push({id:'B-'+Date.now().toString().slice(-6),reactor:$('#bR').value,feed:$('#bF').value,ton:ton,op:$('#bO').value.trim()||'—',shift:$('#bS').value,date:td(),status:'planned'});SL('pp_batches',bts);toast('Batch ایجاد شد ✅ — حالا چک‌لیست را کامل و START بزنید');go('plan')};bindDelBack('plan');};
+function bindDelBack(v){$$('#main [data-del]').forEach(function(b){b.onclick=function(){if(!confirm('این رکورد حذف شود؟'))return;const k=b.dataset.del;const a=GL(k);a.splice(+b.dataset.i,1);SL(k,a);go(v);toast('حذف شد.')}})}
+
+/* ═══ انبار ═══ */
+VIEWS.inv=function(){function tbl(items,k,withMin,withPrice){let h='<div class="tbw"><table><tr><th>کالا</th><th>موجودی</th><th>واحد</th>'+(withMin?'<th>حد هشدار</th><th>وضعیت</th>':'')+(withPrice?'<th>میانگین قیمت</th>':'')+'<th></th></tr>';
+items.forEach(function(x,i){h+='<tr><td>'+esc(x.name)+'</td><td>'+fa(x.qty)+'</td><td>'+esc(x.unit)+'</td>';
+if(withMin)h+='<td>'+fa(x.min||0)+'</td><td class="'+(+x.qty<(+x.min||0)?'badc':'okc')+'">'+(+x.qty<(+x.min||0)?'کمبود ⚠':'موجود ✓')+'</td>';
+if(withPrice)h+='<td>'+fm(x.avg||0)+'</td>';
+h+='<td>'+(U.role!=='viewer'?'<button class="fbtn red" data-del="'+k+'" data-i="'+i+'" data-back="inv">حذف</button>':'')+'</td></tr>'});
+return h+'</table></div>';}
+let h='<div class="panel"><h3>🌱 مواد اولیه</h3>'+tbl(GL('pp_invRaw'),'pp_invRaw',true,true)+
+(U.role==='viewer'?'':'<div class="fgrid" style="margin-top:10px"><div><label class="f">نام</label><input class="inp" id="rN"></div><div><label class="f">موجودی</label><input class="inp" id="rQ" type="number" dir="ltr"></div><div><label class="f">واحد</label><input class="inp" id="rU" value="کیلوگرم"></div><div><label class="f">حد هشدار</label><input class="inp" id="rM" type="number" dir="ltr"></div><div><label class="f">قیمت هر واحد (ریال) — اختیاری</label><input class="inp" id="rP" type="number" dir="ltr"></div></div><button id="rAdd" class="fbtn">ثبت / خرید مواد اولیه</button><p class="muted2">💡 با پر کردن قیمت، هزینه خرید خودکار در مالی ثبت می‌شود.</p>')+'</div>';
+h+='<div class="panel"><h3>🛢 محصولات نهایی</h3>'+tbl(GL('pp_invProd'),'pp_invProd',false,false)+
+(U.role==='viewer'?'':'<p class="muted2">این موجودی به‌صورت خودکار با «ثبت تخلیه» در فرآیند پخت افزایش می‌یابد؛ می‌توانید دستی هم اضافه کنید.</p>'+(U.role!=='viewer'?'<div class="fgrid" style="margin-top:8px"><div><label class="f">نام</label><input class="inp" id="pN"></div><div><label class="f">موجودی</label><input class="inp" id="pQ" type="number" dir="ltr"></div><div><label class="f">واحد</label><input class="inp" id="pU" value="لیتر"></div></div><button id="pAdd" class="fbtn">افزودن محصول</button>':''))+'</div>';
+h+='<div class="panel"><h3>🔧 قطعات یدکی</h3>'+tbl(GL('pp_invParts'),'pp_invParts',true,false)+
+(U.role==='viewer'?'':'<div class="fgrid" style="margin-top:10px"><div><label class="f">نام قطعه</label><input class="inp" id="cN"></div><div><label class="f">موجودی</label><input class="inp" id="cQ" type="number" dir="ltr"></div><div><label class="f">واحد</label><input class="inp" id="cU" value="عدد"></div><div><label class="f">حد سفارش</label><input class="inp" id="cM" type="number" dir="ltr"></div></div><button id="cAdd" class="fbtn">افزودن قطعه</button>')+'</div>';
+return h;};
+BIND.inv=function(){var q=function(s){return $(s)};
+var rA=q('#rAdd');if(rA)rA.onclick=function(){const n=q('#rN').value.trim();if(!n){toast('نام ماده را وارد کنید.','error');return}
+const a=GL('pp_invRaw');const ex=a.find(x=>x.name===n);
+const it={name:n,qty:+q('#rQ').value||0,unit:q('#rU').value.trim()||'کیلوگرم',min:+q('#rM').value||0};
+if(ex)ex.qty+=it.qty;else a.push(it);SL('pp_invRaw',a);
+const pr=+q('#rP').value||0;if(pr>0){const f=GL('pp_fin');f.push({date:td(),type:'out',desc:'خرید مواد اولیه: '+n,amount:Math.round(pr*it.qty),by:U.name});SL('pp_fin',f);toast('مواد ثبت شد + هزینه خرید در مالی ثبت شد 💰')}else toast('مواد اولیه ثبت شد ✅');go('inv')};
+var pA=q('#pAdd');if(pA)pA.onclick=function(){const n=q('#pN').value.trim();if(!n){toast('نام محصول را وارد کنید.','error');return}
+const a=GL('pp_invProd');const ex=a.find(x=>x.name===n);const qq=+q('#pQ').value||0;
+if(ex)ex.qty+=qq;else a.push({name:n,qty:qq,unit:q('#pU').value.trim()||'عدد'});SL('pp_invProd',a);toast('محصول ثبت شد ✅');go('inv')};
+var cA=q('#cAdd');if(cA)cA.onclick=function(){const n=q('#cN').value.trim();if(!n){toast('نام قطعه را وارد کنید.','error');return}
+const a=GL('pp_invParts');a.push({name:n,qty:+q('#cQ').value||0,unit:q('#cU').value.trim()||'عدد',min:+q('#cM').value||0});SL('pp_invParts',a);toast('قطعه ثبت شد ✅');go('inv')};
+bindDelBack('inv');};
+
+/* ═══ تعمیرات ═══ */
+VIEWS.maint=function(){let h='<div class="panel"><h3>🔧 ثبت تعمیر / تعویض</h3><div class="fgrid">'+
+'<div><label class="f">تجهیز (مثلاً راکتور R-01)</label><input class="inp" id="mEq"></div>'+
+'<div><label class="f">قطعه مصرفی</label><select class="inp" id="mPart">'+GL('pp_invParts').map(p=>'<option>'+esc(p.name)+'</option>').join('')+'</select></div>'+
+'<div><label class="f">تعداد</label><input class="inp" id="mCnt" type="number" dir="ltr" value="1"></div>'+
+'<div><label class="f">نیروی انجام‌دهنده</label><input class="inp" id="mPer"></div>'+
+'<div><label class="f">هزینه (ریال)</label><input class="inp" id="mCost" type="number" dir="ltr"></div></div>'+
+'<div><label class="f">توضیحات</label><input class="inp" id="mD" placeholder="مثلاً: 14:45 تعویض واشر نسوز خروجی گاز"></div>'+
+'<button id="mAdd" class="fbtn">ثبت تعمیر (کسر از انبار + هزینه + سابقه تجهیز)</button></div>';
+h+='<div class="panel"><h3>📇 سوابق تعمیرات</h3><div class="tbw"><table><tr><th>تاریخ</th><th>تجهیز</th><th>قطعه</th><th>تعداد</th><th>نیرو</th><th>هزینه</th><th>شرح</th></tr>';
+const ms=GL('pp_maint').slice().reverse();
+if(ms.length)ms.forEach(function(m){h+='<tr><td>'+esc(m.date)+'</td><td>'+esc(m.eq)+'</td><td>'+esc(m.part)+'</td><td>'+fa(m.cnt)+'</td><td>'+esc(m.per)+'</td><td>'+fm(m.cost)+'</td><td>'+esc(m.d||'—')+'</td></tr>'});
+else h+='<tr><td colspan="7">موردی ثبت نشده.</td></tr>';
+h+='</table></div></div>';return h;};
+BIND.maint=function(){$('#mAdd').onclick=function(){const eq=$('#mEq').value.trim();
+if(!eq){toast('نام تجهیز را وارد کنید.','error');return}
+const part=$('#mPart').value,cnt=+$('#mCnt').value||1,cost=+$('#mCost').value||0;
+const parts=GL('pp_invParts');const p=parts.find(x=>x.name===part);
+if(p)p.qty=Math.max(0,+p.qty-cnt);SL('pp_invParts',parts);
+if(cost>0){const f=GL('pp_fin');f.push({date:td(),type:'out',desc:'تعمیرات '+eq+' — '+part,amount:cost,by:U.name});SL('pp_fin',f)}
+const ms=GL('pp_maint');ms.push({date:td(),eq:eq,part:part,cnt:cnt,per:$('#mPer').value.trim()||'—',cost:cost,d:$('#mD').value.trim()});SL('pp_maint',ms);
+toast('تعمیر ثبت شد — انبار و مالی به‌روزرسانی شد ✅');go('maint')};};
+
+/* ═══ مالی ═══ */
+VIEWS.fin=function(){const f=GL('pp_fin');
+const inc=f.filter(x=>x.type==='in').reduce((s,x)=>s+ +x.amount,0),exp=f.filter(x=>x.type==='out').reduce((s,x)=>s+ +x.amount,0);
+let h='<div class="kpis"><div class="kpi k-green"><i>📥</i><div><h5>درآمد کل (ریال)</h5><div class="v">'+fm(inc)+'</div></div></div><div class="kpi k-red"><i>📤</i><div><h5>هزینه کل (ریال)</h5><div class="v">'+fm(exp)+'</div></div></div><div class="kpi k-blue"><i>💼</i><div><h5>مانده (ریال)</h5><div class="v">'+fm(inc-exp)+'</div></div></div></div>';
+h+='<div class="panel"><h3>➕ ثبت تراکنش</h3><div class="fgrid">'+
+'<div><label class="f">نوع</label><select class="inp" id="fT"><option value="in">درآمد / دریافت</option><option value="out">هزینه / پرداخت</option></select></div>'+
+'<div><label class="f">تاریخ</label><input class="inp" id="fD" type="date" value="'+td()+'"></div>'+
+'<div><label class="f">مبلغ (ریال)</label><input class="inp" id="fA" type="number" dir="ltr"></div></div>'+
+'<div><label class="f">شرح</label><input class="inp" id="fDe" placeholder="حقوق / گازوئیل / اجاره / فروش نقدی ..."></div>'+
+'<button id="fAdd" class="fbtn">ثبت</button></div>';
+h+='<div class="panel"><h3>📒 دفتر تراکنش‌ها</h3><div class="tbw"><table><tr><th>تاریخ</th><th>نوع</th><th>شرح</th><th>مبلغ (ریال)</th><th>ثبت‌کننده</th><th></th></tr>';
+f.slice().reverse().forEach(function(x){const i=f.findIndex(y=>y===x);
+h+='<tr><td>'+esc(x.date)+'</td><td class="'+(x.type==='in'?'okc':'badc')+'">'+(x.type==='in'?'درآمد':'هزینه')+'</td><td style="text-align:right">'+esc(x.desc)+'</td><td>'+fm(x.amount)+'</td><td>'+esc(x.by||'—')+'</td><td><button class="fbtn red" data-del="pp_fin" data-i="'+i+'" data-back="fin">حذف</button></td></tr>'});
+h+='</table></div></div>';return h;};
+BIND.fin=function(){$('#fAdd').onclick=function(){const a=+$('#fA').value||0;
+if(!a){toast('مبلغ را وارد کنید.','error');return}
+const f=GL('pp_fin');f.push({date:$('#fD').value||td(),type:$('#fT').value,desc:$('#fDe').value.trim()||'—',amount:a,by:U.name});SL('pp_fin',f);toast('تراکنش ثبت شد ✅');go('fin')};bindDelBack('fin');};
+
+/* ═══ فروش ═══ */
+VIEWS.sales=function(){const sal=GL('pp_sales');
+const tot=sal.reduce((s,x)=>s+x.qty*x.price,0),paid=sal.reduce((s,x)=>s+ +x.paid,0);
+let h='<div class="kpis"><div class="kpi k-blue"><i>🧾</i><div><h5>کل فروش (ریال)</h5><div class="v">'+fm(tot)+'</div></div></div><div class="kpi k-green"><i>✅</i><div><h5>دریافت شده</h5><div class="v">'+fm(paid)+'</div></div></div><div class="kpi k-red"><i>💳</i><div><h5>مانده مطالبات</h5><div class="v">'+fm(tot-paid)+'</div></div></div></div>';
+h+='<div class="panel"><h3>➕ ثبت فروش</h3><div class="fgrid">'+
+'<div><label class="f">مشتری</label><input class="inp" id="sC"></div>'+
+'<div><label class="f">محصول</label><select class="inp" id="sP">'+GL('pp_invProd').map(p=>'<option>'+esc(p.name)+'</option>').join('')+'</select></div>'+
+'<div><label class="f">مقدار</label><input class="inp" id="sQ" type="number" dir="ltr"></div>'+
+'<div><label class="f">قیمت واحد (ریال)</label><input class="inp" id="sPr" type="number" dir="ltr"></div>'+
+'<div><label class="f">نوع</label><select class="inp" id="sTy"><option>نقدی</option><option>اعتباری</option></select></div>'+
+'<div><label class="f">مبلغ دریافت‌شده (ریال)</label><input class="inp" id="sPa" type="number" dir="ltr"></div>'+
+'<div><label class="f">سررسید (اعتباری)</label><input class="inp" id="sDu" type="date"></div></div>'+
+'<button id="sAdd" class="fbtn">ثبت فروش (کسر از انبار + درآمد)</button></div>';
+h+='<div class="panel"><h3>📋 فاکتورها و مطالبات</h3><div class="tbw"><table><tr><th>تاریخ</th><th>مشتری</th><th>محصول</th><th>مقدار</th><th>مبلغ کل</th><th>دریافتی</th><th>مانده</th><th>سررسید</th><th>وضعیت</th><th></th></tr>';
+sal.slice().reverse().forEach(function(x){const i=sal.findIndex(y=>y===x);const rem=x.qty*x.price-x.paid;
+const overdue=rem>0&&x.due&&x.due<td();
+h+='<tr><td>'+esc(x.date)+'</td><td>'+esc(x.cus)+'</td><td>'+esc(x.prod)+'</td><td>'+fa(x.qty)+'</td><td>'+fm(x.qty*x.price)+'</td><td>'+fm(x.paid)+'</td><td class="'+(rem>0?(overdue?'badc':'warnc'):'okc')+'">'+fm(rem)+'</td><td>'+esc(x.due||'—')+'</td><td class="'+(rem>0?(overdue?'badc':'warnc'):'okc')+'">'+(rem<=0?'تسویه ✓':overdue?'سررسید گذشته ⚠':'درجریان')+'</td><td>'+(rem>0?'<button class="fbtn warn" data-pay="'+i+'">دریافت</button>':'')+'</td></tr>'});
+h+='</table></div></div>';return h;};
+BIND.sales=function(){$('#sAdd').onclick=function(){const q=+$('#sQ').value||0,pr=+$('#sPr').value||0;
+if(!q||!pr){toast('مقدار و قیمت را وارد کنید.','error');return}
+const name=$('#sP').value;const prd=GL('pp_invProd');const p=prd.find(x=>x.name===name);
+if(!p||+p.qty<q){toast('موجودی «'+name+'» کافی نیست! موجودی: '+(p?p.qty:0),'error');return}
+p.qty-=q;SL('pp_invProd',prd);
+const paid=Math.min(+$('#sPa').value||0,q*pr);
+if(paid>0){const f=GL('pp_fin');f.push({date:td(),type:'in',desc:'فروش '+name+' به '+($('#sC').value.trim()||'مشتری'),amount:paid,by:U.name});SL('pp_fin',f)}
+const sal=GL('pp_sales');sal.push({date:td(),cus:$('#sC').value.trim()||'—',prod:name,qty:q,price:pr,ty:$('#sTy').value,paid:paid,due:$('#sDu').value||''});SL('pp_sales',sal);
+toast('فروش ثبت شد — انبار کسر و وجه دریافتی در مالی ثبت شد ✅');go('sales')};
+$$('#main [data-pay]').forEach(function(b){b.onclick=function(){const sal=GL('pp_sales');const s=sal[+b.dataset.pay];const rem=s.qty*s.price-s.paid;
+if(!confirm('دریافت مانده '+fm(rem)+' ریال از '+s.cus+'؟'))return;
+const f=GL('pp_fin');f.push({date:td(),type:'in',desc:'دریافت مانده فروش — '+s.cus,amount:rem,by:U.name});SL('pp_fin',f);
+s.paid=s.qty*s.price;SL('pp_sales',sal);toast('دریافت ثبت شد ✅');go('sales')}});};
+
+/* ═══ کاربران (مدیر) ═══ */
+VIEWS.users=function(){let h='<div class="panel"><h3>👥 کاربران و تعیین نقش</h3><div class="tbw"><table><tr><th>نام</th><th>ایمیل</th><th>نقش فعلی</th><th>تغییر نقش</th><th></th></tr>';
+GL('pp_users').forEach(function(u,i){h+='<tr><td>'+esc(u.name)+(u.email===U.email?' (شما)':'')+'</td><td dir="ltr">'+esc(u.email)+'</td><td>'+(u.role==='admin'?'<span class="roleb r-admin">👑 مدیر کل</span>':'<span class="roleb">'+ROLES[u.role]+'</span>')+'</td><td><select class="rolesel" data-usr="'+i+'">'+Object.keys(ROLES).map(r=>'<option value="'+r+'" '+(u.role===r?'selected':'')+'>'+ROLES[r]+'</option>').join('')+'</select></td><td>'+(u.email!==U.email?'<button class="fbtn red" data-del="pp_users" data-i="'+i+'" data-back="users">حذف</button>':'')+'</td></tr>'});
+h+='</table></div><p class="muted2">ثبت‌نام‌های جدید به‌صورت «ناظر» وارد می‌شوند تا شما نقششان را تعیین کنید. اولین کاربر همیشه مدیر کل است.</p></div>';
+h+='<div class="panel"><h3>🔐 جدول دسترسی نقش‌ها</h3><div class="tbw"><table><tr><th>نقش</th><th>سطح دسترسی</th></tr>';
+Object.keys(ROLES).forEach(function(r){h+='<tr><td><span class="roleb '+(r==='admin'?'r-admin':'')+'">'+ROLES[r]+'</span></td><td style="text-align:right">'+ROLESEE[r]+'</td></tr>'});
+h+='</table></div></div>';return h;};
+BIND.users=function(){$$('#main .rolesel').forEach(function(s){s.onchange=function(){const us=GL('pp_users');const u=us[+s.dataset.usr];
+if(u.email===U.email&&s.value!=='admin'){toast('نقش خودتان را نمی‌توانید عوض کنید!','error');go('users');return}
+u.role=s.value;SL('pp_users',us);toast('نقش «'+u.name+'» به «'+ROLES[s.value]+'» تغییر یافت ✅');go('users')}});
+bindDelBack('users');};
+
+/* ═══ گزارش‌ها ═══ */
+VIEWS.rep=function(){const f=GL('pp_fin'),sal=GL('pp_sales'),bts=GL('pp_batches');
+const inc=f.filter(x=>x.type==='in').reduce((s,x)=>s+ +x.amount,0),exp=f.filter(x=>x.type==='out').reduce((s,x)=>s+ +x.amount,0);
+const prod=bts.filter(b=>b.out).reduce(function(s,b){s.oil+= +b.out.oil;s.car+= +b.out.carbon;s.wire+= +b.out.wire;return s},{oil:0,car:0,wire:0});
+let h='<div class="kpis"><div class="kpi k-pur"><i>🛢</i><div><h5>روغن تولیدی کل (لیتر)</h5><div class="v">'+fm(prod.oil)+'</div></div></div><div class="kpi k-blue"><i>⚫</i><div><h5>کربن بلک (kg)</h5><div class="v">'+fm(prod.car)+'</div></div></div><div class="kpi k-green"><i>📈</i><div><h5>سود عملیاتی (ریال)</h5><div class="v">'+fm(inc-exp)+'</div></div></div><div class="kpi k-red"><i>💳</i><div><h5>مطالبات (ریال)</h5><div class="v">'+fm(sal.reduce((s,x)=>s+x.qty*x.price-x.paid,0))+'</div></div></div></div>';
+h+='<div class="panel"><h3>📥 خروجی CSV (اکسل)</h3>'+
+'<button id="c1" class="fbtn" style="display:block;width:100%;margin-bottom:8px">🛢 گزارش تولید و Batch‌ها</button>'+
+'<button id="c2" class="fbtn" style="display:block;width:100%;margin-bottom:8px">💰 گزارش مالی</button>'+
+'<button id="c3" class="fbtn" style="display:block;width:100%;margin-bottom:8px">🧾 گزارش فروش و مطالبات</button>'+
+'<button id="c4" class="fbtn" style="display:block;width:100%">🕐 گزارش ثبت ساعتی پخت</button></div>';
+return h;};
+BIND.rep=function(){$('#c1').onclick=function(){dlCSV('production',[['id','date','reactor','feed','ton','status','oil','carbon','wire']].concat(GL('pp_batches').map(b=>[b.id,b.date,b.reactor,b.feed,b.ton,b.status,b.out?b.out.oil:'',b.out?b.out.carbon:'',b.out?b.out.wire:''])))};
+$('#c2').onclick=function(){dlCSV('finance',[['date','type','desc','amount']].concat(GL('pp_fin').map(f=>[f.date,f.type,f.desc,f.amount])))};
+$('#c3').onclick=function(){dlCSV('sales',[['date','customer','product','qty','price','paid','due']].concat(GL('pp_sales').map(s=>[s.date,s.cus,s.prod,s.qty,s.price,s.paid,s.due])))};
+$('#c4').onclick=function(){dlCSV('process_log',[['date','time','reactor_temp','condenser_temp','pressure','burners','note']].concat(GL('pp_logs').map(l=>[l.date,l.tm,l.temp,l.con,l.pres,l.brn,l.note||''])))};};
+
+/* ═══ تنظیمات SOP (مدیر) ═══ */
+VIEWS.set=function(){const sop=GL('pp_sop');
+let h='<div class="panel"><h3>🌡 پارامترهای SOP فرآیند</h3><div class="fgrid">'+
+'<div><label class="f">شروع بازه بحرانی (°C)</label><input class="inp" id="sCrit" type="number" dir="ltr" value="'+sop.crit+'"></div>'+
+'<div><label class="f">شروع Cracking (°C)</label><input class="inp" id="sCrack" type="number" dir="ltr" value="'+sop.crack+'"></div>'+
+'<div><label class="f">حداکثر مجاز (°C)</label><input class="inp" id="sMax" type="number" dir="ltr" value="'+sop.max+'"></div></div>'+
+'<button id="sSave" class="fbtn">ذخیره SOP</button><p class="muted2">⚠️ این مقادیر باید مطابق دستورالعمل مصوب مهندسی کارخانه باشد — سیستم فقط رنگ‌بندی و هشدار می‌دهد، نه فرمان عملیاتی.</p></div>';
+h+='<div class="panel"><h3>📋 ویرایش چک‌لیست استارت</h3><div class="tbw"><table><tr><th>مورد</th><th>نوع</th><th></th></tr>';
+GL('pp_checks').forEach(function(c,i){h+='<tr><td style="text-align:right">'+esc(c.t)+'</td><td>'+(c.c?'بحرانی':'عادی')+'</td><td><button class="fbtn red" data-chk="'+i+'">حذف</button></td></tr>'});
+h+='</table></div><div class="fgrid" style="margin-top:10px"><div><label class="f">مورد جدید</label><input class="inp" id="cT"></div><div><label class="f">نوع</label><select class="inp" id="cC"><option value="1">بحرانی</option><option value="0">غیر بحرانی</option></select></div></div><button id="cAdd" class="fbtn">افزودن به چک‌لیست</button> <button id="cRes" class="fbtn ghost">بازگشت به پیش‌فرض</button></div>';
+return h;};
+BIND.set=function(){$('#sSave').onclick=function(){const a=+$('#sCrit').value,b=+$('#sCrack').value,c=+$('#sMax').value;
+if(!(a>0&&b>a&&c>b)){toast('مقادیر باید صعودی و منطقی باشند.','error');return}
+SL('pp_sop',{crit:a,crack:b,max:c});toast('SOP ذخیره شد ✅ — رنگ‌بندی رکوردها اعمال شد');go('set')};
+$$('#main [data-chk]').forEach(function(b2){b2.onclick=function(){const cks=GL('pp_checks');cks.splice(+b2.dataset.chk,1);SL('pp_checks',cks);go('set');toast('حذف شد.')}});
+$('#cAdd').onclick=function(){const t=$('#cT').value.trim();if(!t){toast('متن مورد را وارد کنید.','error');return}
+const cks=GL('pp_checks');cks.push({t:t,c:$('#cC').value==='1',ch:false});SL('pp_checks',cks);toast('مورد اضافه شد ✅');go('set')};
+$('#cRes').onclick=function(){if(confirm('چک‌لیست به حالت پیش‌فرض برگردد؟')){SL('pp_checks',DEF_CHK.map(c=>({t:c[0],c:!!c[1],ch:false})));go('set');toast('بازنشانی شد.')}};};
+
+/* ═══ شبکه پیرولیز ═══ */
+VIEWS.net=function(){const items=[['🛒','PyroTrade','بازار خرید و فروش مواد و محصولات پیرولیز'],['👷','PyroJobs','کاریابی تخصصی: اپراتور، تعمیرکار، مهندس'],['📚','PyroAcademy','آموزش، SOP و ویدئوهای افزایش راندمان'],['🏭','شبکه کارخانه‌ها','تبادل تجربه، پرسش و پاسخ، اشتراک دانش'],['🔁','Inventory Exchange','معرفی معامله موجودی مازاد کارخانه‌ها'],['🤖','AI Analytics','هشدار و تحلیل هوشمند داده‌های کارخانه']];
+let h='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px">';
+items.forEach(function(x){h+='<div class="panel" style="margin:0;text-align:center;cursor:pointer" data-svc="'+x[1]+'"><div style="font-size:34px">'+x[0]+'</div><h3 style="justify-content:center;margin-top:6px">'+x[1]+'</h3><p style="color:var(--mut);font-size:12.5px;margin:0">'+x[2]+'</p><p class="muted2">در نسخه‌های بعدی فعال می‌شود</p></div>'});
+return h+'</div>';};
+BIND.net=function(){$$('#main [data-svc]').forEach(function(c){c.onclick=function(){toast('سرویس «'+c.dataset.svc+'» در نقشه راه فاز بعدی است 🚀')}});};
