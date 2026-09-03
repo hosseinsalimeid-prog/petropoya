@@ -3,528 +3,139 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>پترو پارسیان اکسیر جوانی | سامانه جامع مدیریت پیرولیز</title>
+<title>پترو پارسیان اکسیر جوانی | PYROHUB</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--gold:#e8b64c;--bg:#040d1f;--pan:rgba(13,35,66,.82);--br:rgba(64,140,255,.22);--tx:#dcebf7;--mut:#7d9bbd;--grn:#10b981;--blu:#2196f3;--org:#ff9800;--red:#f44336;--pur:#ab47bc}
+:root{--gold:#e8b64c;--pan:rgba(13,35,66,.85);--br:rgba(64,140,255,.22);--tx:#dcebf7;--mut:#7d9bbd;--grn:#10b981;--blu:#2196f3;--org:#ff9800;--red:#f44336}
 *{box-sizing:border-box}.hidden{display:none!important}
 html,body{margin:0;background:radial-gradient(1000px 500px at 50% -80px,#0e2c55,#040d1f 65%);color:var(--tx);font-family:Vazirmatn,system-ui,sans-serif}
-/* ===== GATE ===== */
 #gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.gcard{width:min(94vw,420px);background:var(--pan);border:1px solid var(--br);border-radius:18px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center;animation:up .5s ease}
-@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1}}
-.gflame{font-size:52px;filter:drop-shadow(0 0 18px #ff980088)}
-.gcard h1{color:var(--gold);margin:8px 0 2px;font-size:22px}.gcard p{color:var(--mut);margin:0 0 16px;font-size:13px}
-.tabs{display:flex;gap:8px;margin-bottom:14px}
-.tabs button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--br);background:transparent;color:var(--tx);font-family:inherit;cursor:pointer;font-size:14px}
-.tabs button.on{background:linear-gradient(135deg,#e8b64c,#c98a1e);color:#1a1206;font-weight:700;border-color:transparent}
-.gcard label{display:block;text-align:right;margin-top:10px;font-size:13px;color:var(--mut)}
-.gcard input{width:100%;padding:11px;margin-top:6px;border:1px solid #1d3a63;border-radius:10px;background:#081a36;color:var(--tx);font-family:inherit}
+.gcard{width:min(94vw,420px);background:var(--pan);border:1px solid var(--br);border-radius:18px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center;animation:up .5s}
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1}}
+.gflame{font-size:50px}.gcard h1{color:var(--gold);margin:8px 0 2px;font-size:21px}.gcard p{color:var(--mut);margin:0 0 14px;font-size:12.5px}
+.tabs{display:flex;gap:8px;margin-bottom:12px}.tabs button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--br);background:transparent;color:var(--tx);font-family:inherit;cursor:pointer;font-size:14px}
+.tabs button.on{background:linear-gradient(135deg,#e8b64c,#c98a1e);color:#1a1206;font-weight:900;border-color:transparent}
+label.f{display:block;text-align:right;margin-top:10px;font-size:13px;color:var(--mut)}
+.inp{width:100%;padding:11px;margin-top:6px;border:1px solid #1d3a63;border-radius:10px;background:#081a36;color:var(--tx);font-family:inherit}
+.inp option{color:#0f1724}
 .err{color:#ff8a80;font-size:12px;min-height:16px;text-align:right;margin-top:4px}
-.gbtn{width:100%;margin-top:14px;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);color:#03291d;font-weight:900;font-size:15px;cursor:pointer;font-family:inherit}
-/* ===== LAYOUT ===== */
-.wrap{max-width:1560px;margin:0 auto;padding:14px}
-header.hdr{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:linear-gradient(180deg,#0a1f3f,#071530);border:1px solid var(--br);border-radius:16px;padding:12px 16px}
+.gbtn{width:100%;margin-top:12px;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);color:#03291d;font-weight:900;font-size:15px;cursor:pointer;font-family:inherit}
+.wrap{max-width:1500px;margin:0 auto;padding:14px}
+.hdr{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(180deg,#0a1f3f,#071530);border:1px solid var(--br);border-radius:16px;padding:12px 16px}
 .brand{display:flex;align-items:center;gap:10px}
-.logo{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffcc66,#e65100);display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 0 22px #ff980055}
-.bz{font-weight:900;color:var(--gold);font-size:13px;line-height:1.5}.bz small{display:block;color:var(--mut);font-weight:400;font-size:11px}
-.htitle{flex:1;text-align:center;min-width:240px}
-.htitle h1{margin:0;color:var(--gold);font-size:clamp(16px,2.6vw,26px);text-shadow:0 0 18px #e8b64c44}
-.htitle p{margin:2px 0 0;color:var(--mut);font-size:12px}
-.topnav{display:flex;gap:8px;flex-wrap:wrap}
-.tbtn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;min-width:64px;background:#0a2244;border:1px solid var(--br);border-radius:12px;color:var(--tx);font-family:inherit;font-size:10.5px;cursor:pointer;transition:.2s}
-.tbtn:hover{border-color:var(--gold);box-shadow:0 0 14px #e8b64c33;transform:translateY(-2px)}.tbtn span{font-size:18px}
+.logo{width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffcc66,#e65100);display:flex;align-items:center;justify-content:center;font-size:25px;box-shadow:0 0 22px #ff980055}
+.bz{font-weight:900;color:var(--gold);font-size:12.5px}.bz small{display:block;color:var(--mut);font-weight:400;font-size:10.5px}
+.htitle{flex:1;text-align:center;min-width:200px}.htitle h1{margin:0;color:var(--gold);font-size:clamp(15px,2.4vw,24px)}
+.htitle p{margin:2px 0 0;color:var(--mut);font-size:11.5px}
+.ubox{display:flex;align-items:center;gap:10px;background:#0a2244;border:1px solid var(--br);border-radius:12px;padding:7px 12px;font-size:12px}
+.ubox b{color:var(--gold)}
+#outBtn{background:#3a1520;border:none;color:#ff8a80;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:11px;font-family:inherit}
 .layout{display:flex;gap:14px;margin-top:14px;align-items:flex-start}
-aside{width:225px;flex-shrink:0;background:var(--pan);border:1px solid var(--br);border-radius:14px;padding:12px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto}
-.sideuser{display:flex;align-items:center;gap:8px;background:#0a2244;border-radius:10px;padding:8px;margin-bottom:10px;font-size:12px}
-.sideuser b{color:var(--gold)}
-.grp{margin-top:10px}
-.grp h4{margin:0 0 6px;font-size:12px;color:var(--gold);border-bottom:1px dashed #2a4a78;padding-bottom:4px}
-.sitem{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--tx);font-family:inherit;font-size:12.5px;padding:7px 8px;border-radius:8px;cursor:pointer;transition:.15s}
-.sitem:hover{background:#123159;transform:translateX(-3px)}
+aside{width:230px;flex-shrink:0;background:var(--pan);border:1px solid var(--br);border-radius:14px;padding:12px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto}
+.grp h4{margin:10px 0 6px;font-size:11.5px;color:var(--gold);border-bottom:1px dashed #2a4a78;padding-bottom:4px}
+.sitem{display:block;width:100%;text-align:right;background:transparent;border:none;color:var(--tx);font-family:inherit;font-size:12.5px;padding:8px;border-radius:8px;cursor:pointer;transition:.15s}
+.sitem:hover{background:#123159}
+.sitem.on{background:linear-gradient(90deg,#e8b64c22,transparent);border-right:3px solid var(--gold);color:var(--gold);font-weight:700}
 main{flex:1;min-width:0}
-/* ===== KPI ===== */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-.kpi{border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;color:#fff;box-shadow:0 8px 22px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);animation:up .6s both}
-.kpi i{font-style:normal;font-size:26px}
-.kpi h5{margin:0;font-size:11px;font-weight:400;opacity:.9}.kpi .v{font-size:18px;font-weight:900;direction:ltr;text-align:right}
+.view{animation:up .35s both}
+.vhead{background:var(--pan);border:1px solid var(--br);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.vhead h2{margin:0;color:var(--gold);font-size:19px}.vhead p{margin:4px 0 0;color:var(--mut);font-size:12.5px}
+.panel{background:var(--pan);border:1px solid var(--br);border-radius:14px;padding:16px;margin-bottom:14px}
+.panel h3{color:var(--gold);font-size:14.5px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.panel h3::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#e8b64c44,transparent)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:14px}
+.kpi{border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;color:#fff;border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.kpi i{font-style:normal;font-size:26px}.kpi h5{margin:0;font-size:11.5px;font-weight:400;opacity:.9}.kpi .v{font-size:18px;font-weight:900;direction:ltr;text-align:right}
 .k-green{background:linear-gradient(135deg,#0f9d58,#087f43)}.k-blue{background:linear-gradient(135deg,#1e88e5,#0d5bb5)}
-.k-pur{background:linear-gradient(135deg,#8e24aa,#ff9800)}.k-org{background:linear-gradient(135deg,#fb8c00,#ef6c00)}
-.k-red{background:linear-gradient(135deg,#d32f2f,#8e0000)}
-/* ===== PANELS ===== */
-.panel{background:var(--pan);border:1px solid var(--br);border-radius:14px;padding:14px;margin-top:14px;animation:up .6s both}
-.pt{color:var(--gold);font-size:14px;font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:8px}
-.pt::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#e8b64c55,transparent)}
-/* flow */
-.flow{display:flex;align-items:center;gap:4px;overflow-x:auto;padding:8px 2px}
-.fstep{flex-shrink:0;width:80px;text-align:center}
-.fstep .fi{width:44px;height:44px;margin:0 auto 4px;border-radius:50%;background:#0c2951;border:2px solid var(--blu);display:flex;align-items:center;justify-content:center;font-size:19px;animation:pulse 3s infinite}
-.fstep span{font-size:10px;color:var(--mut);line-height:1.4;display:block}
-.far{color:var(--grn);font-size:15px;flex-shrink:0;animation:blink 1.2s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #2196f344}50%{box-shadow:0 0 0 7px transparent}}
-@keyframes blink{50%{opacity:.25}}
-/* tables */
-.tbw{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}
-th{color:var(--gold);font-weight:400;font-size:11px;padding:7px 8px;border-bottom:1px solid #1d3a63}
-td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center}
+.k-pur{background:linear-gradient(135deg,#8e24aa,#ff9800)}.k-org{background:linear-gradient(135deg,#fb8c00,#ef6c00)}.k-red{background:linear-gradient(135deg,#d32f2f,#8e0000)}
+.tbw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
+th{color:var(--gold);font-weight:400;font-size:11.5px;padding:8px;border-bottom:1px solid #1d3a63;text-align:center}
+td{padding:8px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center}
 .okc{color:var(--grn)}.warnc{color:var(--org)}.badc{color:#ff6f60}
-.tick{width:17px;height:17px;accent-color:#10b981;cursor:pointer}
-.tag-c{color:#ff8a80;font-size:11px}.tag-n{color:#9fa8b2;font-size:11px}
-/* start box */
-.startcol{display:flex;flex-direction:column;gap:10px;margin-top:10px}
-.stbox{border-radius:12px;padding:12px;text-align:center;font-weight:900;font-size:15px;letter-spacing:.5px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;align-items:end}
+.fbtn{background:linear-gradient(135deg,#10b981,#059669);color:#03291d;border:none;border-radius:10px;padding:10px 18px;font-family:inherit;font-weight:900;cursor:pointer;font-size:13.5px}
+.fbtn.ghost{background:#123159;color:var(--tx);border:1px solid var(--br)}
+.fbtn.red{background:linear-gradient(135deg,#d32f2f,#8e0000);color:#fff;padding:4px 10px;font-size:11.5px}
+.fbtn.warn{background:linear-gradient(135deg,#fb8c00,#ef6c00);color:#fff}
+.muted2{font-size:11px;color:#7d8ea0;margin-top:8px;line-height:1.9}
+.seg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.seg button{padding:8px 14px;border-radius:10px;border:1px solid var(--br);background:#0a2244;color:var(--tx);font-family:inherit;font-size:12.5px;cursor:pointer}
+.seg button.on{background:linear-gradient(135deg,#e8b64c,#c98a1e);color:#1a1206;font-weight:900}
+.stbox{border-radius:12px;padding:13px;text-align:center;font-weight:900;font-size:15px;margin-top:12px}
 .st-lock{background:rgba(244,67,54,.15);border:1px solid #f44336;color:#ff8a80}
 .st-open{background:rgba(16,185,129,.16);border:1px solid #10b981;color:#34d399;animation:glow 1.6s infinite}
 @keyframes glow{50%{box-shadow:0 0 22px #10b98166}}
-.stbtn{border:none;border-radius:10px;padding:11px;font-family:inherit;font-weight:700;cursor:pointer;font-size:13px;background:#123159;color:var(--mut)}
-.stbtn.on{background:linear-gradient(135deg,#10b981,#059669);color:#03291d}
-.shake{animation:shake .4s}@keyframes shake{25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
-/* bands */
+.tick{width:18px;height:18px;accent-color:#10b981;cursor:pointer}
+.shake{animation:shk .4s}@keyframes shk{25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
 .bands{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
-.band{border-radius:10px;padding:9px 6px;text-align:center;font-size:11.5px;font-weight:700;border:1px solid rgba(255,255,255,.15)}
+.band{border-radius:10px;padding:10px 6px;text-align:center;font-size:11.5px;font-weight:700;border:1px solid rgba(255,255,255,.15)}
 .b1{background:linear-gradient(135deg,#1b5e20,#2e7d32)}.b2{background:linear-gradient(135deg,#e65100,#f57c00)}
 .b3{background:linear-gradient(135deg,#b71c1c,#d32f2f)}.b4{background:linear-gradient(135deg,#0d47a1,#1565c0)}
 .band small{display:block;font-weight:400;opacity:.85;direction:ltr}
-/* grid helpers */
-.g2{display:grid;grid-template-columns:1fr 1.4fr;gap:14px;align-items:start}
-.g3{display:grid;grid-template-columns:1.2fr 1fr 1.2fr;gap:14px;align-items:start}
-.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:start}
-.g812{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 2fr;gap:14px;align-items:start}
-/* timeline */
-.tl{position:relative;padding-right:16px}
-.tl::before{content:'';position:absolute;right:5px;top:6px;bottom:6px;width:2px;background:#1d3a63}
-.tli{position:relative;padding:5px 0 5px 0;font-size:12px}
-.tli::before{content:'';position:absolute;right:-15.5px;top:10px;width:11px;height:11px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);animation:pulse2 2.4s infinite}
+.flow{display:flex;align-items:center;gap:5px;overflow-x:auto;padding:8px 2px}
+.fs{flex-shrink:0;width:74px;text-align:center}
+.fs .fi{width:42px;height:42px;margin:0 auto 4px;border-radius:50%;background:#0c2951;border:2px solid var(--blu);display:flex;align-items:center;justify-content:center;font-size:18px;animation:pul 3s infinite}
+.fs span{font-size:10px;color:var(--mut);line-height:1.4;display:block}
+.far{color:var(--grn);font-size:15px;flex-shrink:0;animation:blk 1.2s infinite}
+@keyframes pul{0%,100%{box-shadow:0 0 0 0 #2196f344}50%{box-shadow:0 0 0 7px transparent}}
+@keyframes blk{50%{opacity:.25}}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.gauge{background:#081a36;border:1px solid var(--br);border-radius:12px;padding:10px;text-align:center}
+.gauge .gv{font-size:22px;font-weight:900;color:var(--gold);direction:ltr}.gauge .gt{font-size:11px;color:var(--mut);margin-top:2px}
+.tl{position:relative;padding-right:16px}.tl::before{content:'';position:absolute;right:5px;top:6px;bottom:6px;width:2px;background:#1d3a63}
+.tli{position:relative;padding:5px 0;font-size:12.5px}.tli::before{content:'';position:absolute;right:-15.5px;top:11px;width:11px;height:11px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
 .tli b{direction:ltr;display:inline-block;margin-left:6px;color:var(--c)}
-@keyframes pulse2{50%{transform:scale(1.25)}}
-/* gauges + cards */
-.ggrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.gauge{background:#081a36;border:1px solid var(--br);border-radius:12px;padding:8px;text-align:center}
-.gauge .gv{font-size:17px;font-weight:900;color:var(--gold);direction:ltr}.gauge .gt{font-size:11px;color:var(--mut)}
-.ocard{display:flex;align-items:center;gap:10px;background:#081a36;border:1px solid var(--br);border-radius:12px;padding:10px;margin-bottom:8px}
-.ocard i{font-style:normal;font-size:24px}.ocard h6{margin:0;font-size:11px;color:var(--mut);font-weight:400}.ocard b{font-size:16px}
-.ocard small{color:var(--mut)}
-/* AI */
-.aii{display:flex;gap:9px;align-items:flex-start;background:#081a36;border:1px solid var(--br);border-right:3px solid var(--org);border-radius:10px;padding:9px 11px;margin-bottom:8px;font-size:12px;animation:up .6s both}
+.aii{display:flex;gap:9px;align-items:flex-start;background:#081a36;border:1px solid var(--br);border-right:3px solid var(--org);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;animation:up .5s both}
 .aii.b{border-right-color:var(--blu)}.aii i{font-style:normal;font-size:16px}
-/* money */
-.mcards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.mc{border-radius:12px;padding:12px 8px;text-align:center;color:#fff}
-.mc h6{margin:0 0 6px;font-size:11px;font-weight:400;opacity:.9}.mc b{font-size:15px;direction:ltr}
-/* charts */
-.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:11.5px;color:var(--mut);margin-top:8px}
-.leg s{text-decoration:none;width:11px;height:11px;border-radius:3px;display:inline-block;margin-left:5px;vertical-align:-1px}
-/* services */
-.svc{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-top:14px}
-.sv{background:linear-gradient(180deg,#0a2244,#071530);border:1px solid var(--br);border-radius:12px;padding:12px 6px;text-align:center;font-size:10.5px;cursor:pointer;transition:.2s;color:var(--tx);font-family:inherit}
-.sv:hover{transform:translateY(-3px);border-color:var(--gold)}.sv span{display:block;font-size:19px;margin-bottom:4px}
-.sv b{color:var(--gold);display:block;font-size:11.5px;margin-bottom:2px}
-footer{color:var(--mut);font-size:11px;text-align:center;margin:16px 0 8px}
-/* toast */
+.roleb{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;background:#123159;border:1px solid var(--br)}
+.r-admin{background:#3d2f10;border-color:var(--gold);color:var(--gold)}
+.rolesel{padding:6px;border-radius:8px;background:#081a36;color:var(--tx);border:1px solid #1d3a63;font-family:inherit;font-size:12px}
 .tw{position:fixed;bottom:16px;right:16px;z-index:300;display:flex;flex-direction:column;gap:8px}
 .toast{background:#0a2244;color:var(--tx);border:1px solid var(--br);border-right:4px solid var(--grn);padding:11px 15px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(12px);transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.toast.error{border-right-color:var(--red)}
 .toast.show{opacity:1;transform:none}
-/* svg anims */
-.fl-gas{stroke-dasharray:7 6;animation:dash 1.1s linear infinite}
-@keyframes dash{to{stroke-dashoffset:-13}}
-.fl-flame{animation:flick .7s infinite alternate;transform-origin:center bottom}
-@keyframes flick{from{opacity:.75;transform:scaleY(.92)}to{opacity:1;transform:scaleY(1.08)}}
-/* responsive */
-@media(max-width:1250px){.kpis{grid-template-columns:repeat(3,1fr)}.g5,.g812{grid-template-columns:1fr 1fr 1fr}.svc{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:1fr 1fr}}
 @media(max-width:960px){
- .layout{flex-direction:column}aside{position:static;width:100%;max-height:none;order:2}main{order:1}
- .kpis{grid-template-columns:1fr 1fr}.g2,.g3,.g5,.g812{grid-template-columns:1fr}
- .g960{grid-template-columns:1fr 1fr!important}.svc{grid-template-columns:1fr 1fr}
- .htitle{order:-1;width:100%}
+.layout{flex-direction:column}
+aside{position:static;width:100%;max-height:none;display:flex;gap:8px;overflow-x:auto;align-items:center;padding:8px}
+.grp{display:flex;gap:4px;flex-shrink:0;align-items:center}.grp h4{display:none}
+.sitem{white-space:nowrap;padding:7px 10px}.g2{grid-template-columns:1fr}
 }
-@media(max-width:560px){.kpis{grid-template-columns:1fr}.g960{grid-template-columns:1fr!important}.svc{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 
-<!-- ══════════ GATE ══════════ -->
 <div id="gate">
  <div class="gcard">
   <div class="gflame">🔥</div>
   <h1>پترو پارسیان — اکسیر جوانی</h1>
   <p>PYROHUB · سامانه جامع مدیریت کارخانه‌های پیرولیز</p>
   <div class="tabs"><button id="tLogin" class="on">ورود</button><button id="tReg">ثبت‌نام</button></div>
-  <div id="gName" class="hidden" style="text-align:right"><label>نام و نام خانوادگی<input id="qName"></label></div>
-  <label style="text-align:right">ایمیل<input id="qEmail" type="email" dir="ltr" autocomplete="email"></label>
-  <div class="err" id="eE"></div>
-  <label style="text-align:right">رمز عبور<input id="qPass" type="password" dir="ltr" placeholder="حداقل ۶ کاراکتر" autocomplete="current-password"></label>
-  <div class="err" id="eP"></div>
-  <div id="gPass2" class="hidden"><label style="text-align:right">تکرار رمز<input id="qPass2" type="password" dir="ltr"></label><div class="err" id="eP2"></div></div>
+  <div id="gName" class="hidden"><label class="f">نام و نام خانوادگی<input id="qName" class="inp"></label></div>
+  <label class="f">ایمیل<input id="qEmail" class="inp" type="email" dir="ltr" autocomplete="email"></label><div class="err" id="eE"></div>
+  <label class="f">رمز عبور<input id="qPass" class="inp" type="password" dir="ltr" placeholder="حداقل ۶ کاراکتر"></label><div class="err" id="eP"></div>
+  <div id="gPass2" class="hidden"><label class="f">تکرار رمز<input id="qPass2" class="inp" type="password" dir="ltr"></label><div class="err" id="eP2"></div></div>
   <div class="err" id="eTop"></div>
   <button class="gbtn" id="goBtn">ورود به سامانه</button>
-  <p style="margin-top:12px;font-size:11px">اولین ثبت‌نام = مدیر کل سیستم · رمزها SHA-256 هش می‌شوند</p>
+  <p style="margin-top:10px;font-size:11px;line-height:1.9">اولین ثبت‌نام = <b style="color:var(--gold)">مدیر کل</b> 👑<br>ثبت‌نام‌های بعدی «ناظر» می‌شوند تا مدیر نقششان را تعیین کند.</p>
  </div>
 </div>
 
-<!-- ══════════ APP ══════════ -->
 <div id="app" class="hidden">
 <div class="wrap">
  <header class="hdr">
   <div class="brand"><div class="logo">🔥</div><div class="bz">PETRO PARSIAN<small>EXIR JAVANI · 09154040240</small></div></div>
-  <div class="htitle"><h1>پترو پارسیان اکسیر جوانی</h1><p>سامانه جامع مدیریت کارخانه‌های پیرولیز — PYROHUB ERP</p></div>
-  <nav class="topnav">
-   <button class="tbtn" data-s="top"><span>📊</span>داشبورد</button>
-   <button class="tbtn" data-s="secCharts"><span>🧾</span>گزارش‌ها</button>
-   <button class="tbtn" data-s="svcAca"><span>📚</span>آموزش</button>
-   <button class="tbtn" data-s="svcTrade"><span>🛒</span>بازار یابی</button>
-   <button class="tbtn" data-s="svcNet"><span>🏭</span>شبکه کارخانه‌ها</button>
-   <button class="tbtn" data-s="secAI"><span>⚙️</span>تنظیمات</button>
-  </nav>
+  <div class="htitle"><h1>پترو پارسیان اکسیر جوانی</h1><p>سامانه جامع مدیریت کارخانه‌های پیرولیز — PYROHUB</p></div>
+  <div class="ubox"><span id="uIcon">👤</span><div><b id="uName">—</b><div style="color:var(--mut);font-size:10px" id="uRole">—</div></div><button id="outBtn">خروج</button></div>
  </header>
-
  <div class="layout">
-  <aside id="sidebar">
-   <div class="sideuser"><span>👤</span><div><b id="uName">—</b><div style="color:var(--mut);font-size:10.5px" id="uRole">—</div></div>
-   <button id="outBtn" style="margin-right:auto;background:#3a1520;border:none;color:#ff8a80;border-radius:8px;padding:5px 9px;cursor:pointer;font-size:11px;font-family:inherit">خروج</button></div>
-   <div class="grp"><h4>🏭 عملیات</h4>
-    <button class="sitem" data-s="secChk">🛒 خرید و تأمین مواد</button>
-    <button class="sitem" data-s="secChk">⚖️ دریافت و توزین</button>
-    <button class="sitem" data-s="secMon">🏭 انبار مواد اولیه</button>
-    <button class="sitem" data-s="secPlan">📅 برنامه‌ریزی تولید</button></div>
-   <div class="grp"><h4>🔥 تولید</h4>
-    <button class="sitem" data-s="secChk">✅ چک‌لیست استارت راکتور</button>
-    <button class="sitem" data-s="secLog">🕐 ثبت ساعتی فرآیند</button>
-    <button class="sitem" data-s="secBatch">🛢 Batch فعال</button></div>
-   <div class="grp"><h4>📦 انبار و موجودی</h4>
-    <button class="sitem" data-s="secMon">🛢 انبار محصولات</button>
-    <button class="sitem" data-s="secOut">📊 خروجی Batch</button>
-    <button class="sitem" onclick="toast('مدیریت قطعات — نسخه بعدی')">🔧 قطعات و لوازم یدکی</button></div>
-   <div class="grp"><h4>🔧 تعمیرات و نگهداری</h4>
-    <button class="sitem" onclick="toast('ماشین‌آلات — نسخه بعدی')">⚙️ تنظیمات ماشین‌آلات</button>
-    <button class="sitem" onclick="toast('برنامه PM — نسخه بعدی')">🗓 برنامه نگهداری PM</button>
-    <button class="sitem" onclick="toast('سفارش تعمیرات — نسخه بعدی')">📝 سفارش تعمیرات</button></div>
-   <div class="grp"><h4>💰 مالی و فروش</h4>
-    <button class="sitem" onclick="toast('فروش و فاکتور — نسخه بعدی')">🧾 فروش و فاکتور</button>
-    <button class="sitem" data-s="secMoney">💳 مطالبات و دریافت</button>
-    <button class="sitem" data-s="secCharts">📈 سود و زیان</button></div>
-   <div class="grp"><h4>👥 منابع انسانی</h4>
-    <button class="sitem" onclick="toast('مدیریت کاربران — نسخه بعدی')">👤 کاربران و نقش‌ها</button>
-    <button class="sitem" onclick="toast('عملکرد پرسنل — نسخه بعدی')">📊 عملکرد پرسنل</button>
-    <button class="sitem" onclick="toast('شیفت‌ها — نسخه بعدی')">🕐 شیفت‌های کاری</button></div>
-  </aside>
-
-  <main>
-   <!-- KPI -->
-   <section class="kpis" id="top">
-    <div class="kpi k-green" style="animation-delay:.05s"><i>🏭</i><div><h5>تعداد کارخانه‌ها</h5><div class="v" data-cnt="7"></div></div></div>
-    <div class="kpi k-blue" style="animation-delay:.12s"><i>⚙️</i><div><h5>خط‌های فعال</h5><div class="v" data-cnt="3"></div></div></div>
-    <div class="kpi k-pur" style="animation-delay:.19s"><i>🛢</i><div><h5>تولید امروز (لیتر روغن)</h5><div class="v" data-cnt="12450"></div></div></div>
-    <div class="kpi k-org" style="animation-delay:.26s"><i>💰</i><div><h5>فروش امروز (ریال)</h5><div class="v" data-cnt="1240000000"></div></div></div>
-    <div class="kpi k-red" style="animation-delay:.33s"><i>📈</i><div><h5>سود خالص امروز (ریال)</h5><div class="v" data-cnt="285450000"></div></div></div>
-   </section>
-
-   <!-- FLOW -->
-   <section class="panel"><p class="pt">⚡ نمودار جریان کامل فرآیند</p><div class="flow" id="flowBox"></div></section>
-
-   <!-- checklist + log -->
-   <div class="g2" id="secChk">
-    <section class="panel">
-     <p class="pt">✅ چک‌لیست پیش از استارت (Pre-Start)</p>
-     <div class="tbw"><table><tr><th>وضعیت</th><th>شرح مورد</th><th>نوع</th></tr><tbody id="chkBody"></tbody></table></div>
-     <div class="startcol">
-      <div id="stBox" class="stbox st-open">🟢 START UNLOCKED</div>
-      <button id="stBtn" class="stbtn on">امکان شروع فرآیند — امضای مسئول شیفت:SENSI ✓</button>
-     </div>
-    </section>
-    <section class="panel" id="secLog">
-     <p class="pt">🕐 ثبت ساعتی فرآیند</p>
-     <div class="tbw"><table><tr><th>ساعت</th><th>دمای راکتور(°C)</th><th>کندانسور(°C)</th><th>لوله سنگین(°C)</th><th>Sight Glass(°C)</th><th>گاز چپ(°C)</th><th>گاز راست(°C)</th><th>فشار(Bar)</th><th>جهت</th><th>مشعل‌ها</th><th>وضعیت</th></tr><tbody id="logBody"></tbody></table></div>
-     <p style="font-size:10.5px;color:var(--mut);margin:8px 0 0">📷 عکس + 🎙 ثبت صوتی + ✍ توضیحات اپراتور در هر رکورد (نسخه بعدی)</p>
-    </section>
-   </div>
-
-   <!-- batch + zones -->
-   <div class="g2" id="secBatch">
-    <section class="panel" id="secPlan">
-     <p class="pt">🌋 نقشه کلی سیستم پیرولیز</p>
-     <svg viewBox="0 0 560 290" style="width:100%">
-      <defs>
-       <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#78909c"/><stop offset=".5" stop-color="#37474f"/><stop offset="1" stop-color="#1c262e"/></linearGradient>
-       <linearGradient id="cop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a1887f"/><stop offset=".5" stop-color="#5d4037"/><stop offset="1" stop-color="#3e2723"/></linearGradient>
-      </defs>
-      <ellipse cx="280" cy="268" rx="255" ry="14" fill="rgba(56,130,246,.07)"/>
-      <!-- flare stack -->
-      <rect x="70" y="150" width="9" height="95" rx="3" fill="url(#steel)"/>
-      <text x="74" y="138" font-size="20" class="fl-flame">🔥</text>
-      <text x="74" y="262" font-size="10" fill="#7d9bbd" text-anchor="middle">مشعل</text>
-      <!-- gas line flare -->
-      <path d="M250 118 H75 V150" fill="none" stroke="#90a4ae" stroke-width="2.5" class="fl-gas"/>
-      <!-- reactor -->
-      <rect x="150" y="112" width="190" height="86" rx="42" fill="url(#steel)" stroke="#b0bec5" stroke-width="1.5"/>
-      <rect x="140" y="130" width="26" height="50" rx="12" fill="url(#steel)"/>
-      <path d="M175 198 A86 86 0 0 0 315 198" fill="none" stroke="#e8b64c" stroke-width="1.4" class="fl-gas" opacity=".7"/>
-      <text x="245" y="160" font-size="12" fill="#eceff1" text-anchor="middle">راکتور R-01</text>
-      <text x="245" y="176" font-size="9" fill="#b0bec5" text-anchor="middle">۵۰تن · دما ۳۱۲°C</text>
-      <text x="245" y="220" font-size="10" fill="#7d9bbd" text-anchor="middle">خانه کروی انتقال</text>
-      <!-- gas to condensers -->
-      <path d="M340 128 H372 V80" fill="none" stroke="#ff8a65" stroke-width="2.5" class="fl-gas"/>
-      <path d="M340 150 H430 V80" fill="none" stroke="#ff8a65" stroke-width="2.5" class="fl-gas"/>
-      <text x="352" y="98" font-size="9" fill="#ff8a65">خط انتقال گاز</text>
-      <!-- condensers -->
-      <rect x="358" y="42" width="30" height="95" rx="14" fill="url(#cop)" stroke="#8d6e63"/>
-      <rect x="416" y="42" width="30" height="95" rx="14" fill="url(#cop)" stroke="#8d6e63"/>
-      <text x="373" y="156" font-size="10" fill="#bcaaa4" text-anchor="middle">کندانسور</text>
-      <text x="431" y="156" font-size="10" fill="#bcaaa4" text-anchor="middle">کندانسور</text>
-      <!-- oil out -->
-      <path d="M373 137 V240 H470" fill="none" stroke="#4db6ac" stroke-width="2.5" class="fl-gas"/>
-      <text x="300" y="252" font-size="9" fill="#4db6ac">خط روغن به مخازن</text>
-      <!-- sphere -->
-      <circle cx="495" cy="225" r="26" fill="url(#steel)" stroke="#b0bec5"/>
-      <line x1="482" y1="244" x2="482" y2="262" stroke="#78909c" stroke-width="3"/>
-      <line x1="508" y1="244" x2="508" y2="262" stroke="#78909c" stroke-width="3"/>
-      <text x="495" y="278" font-size="10" fill="#7d9bbd" text-anchor="middle">مخزن گاز</text>
-     </svg>
-    </section>
-    <div>
-     <section class="panel"><p class="pt">🧭 تایم‌لاین Batch فعال</p><p style="margin:0 0 8px;font-size:11px;color:var(--mut);direction:ltr;text-align:left" dir="ltr">Batch-1404-06-12-001</p><div class="tl" id="tlBox"></div></section>
-     <section class="panel"><p class="pt">🌡 پنجره‌های دمایی فرآیند</p>
-      <div class="bands">
-       <div class="band b1">دمای عادی<small>&lt; 220°C</small></div>
-       <div class="band b2">بازه بحرانی<small>220 – 270°C</small></div>
-       <div class="band b3">Cracking<small>270 – 320°C</small></div>
-       <div class="band b4">روغن‌گیری / پایدار<small>&gt; 320°C</small></div>
-      </div>
-      <p style="font-size:10px;color:var(--mut);margin:8px 0 0">مقادیر SOP قابل تنظیم در پنل کارخانه (نسخه بعدی)</p>
-     </section>
-    </div>
-   </div>
-
-   <!-- gauges + outputs + inventory -->
-   <div class="g3">
-    <section class="panel"><p class="pt">📡 پارامترهای لحظه‌ای</p><div class="ggrid" id="gGrid"></div></section>
-    <section class="panel" id="secOut"><p class="pt">🛢 خروجی‌های Batch</p><div id="outBox"></div>
-     <p class="pt" style="margin-top:12px">📦 موجودی انبار محصولات</p><div id="invBox"></div></section>
-    <section class="panel"><p class="pt">🗓 وضعیت فرآیند کلی</p>
-     <table style="font-size:12px"><tbody>
-      <tr><td>Batch فعال</td><td class="okc" style="direction:ltr">B-1404-06-12-001</td></tr>
-      <tr><td>فاز جاری</td><td class="warnc">Cracking — بازه بحرانی</td></tr>
-      <tr><td>زمان سپری‌شده</td><td style="direction:ltr">۶ ساعت ۱۵ دقیقه</td></tr>
-      <tr><td>زمان باقی‌مانده (تخمینی)</td><td style="direction:ltr">۱۰ ساعت ۴۵ دقیقه</td></tr>
-      <tr><td>اپراتور شیفت</td><td>قاسم احمدی</td></tr>
-      <tr><td>وضعیت قطعات حساس</td><td class="okc">سالم</td></tr>
-      <tr><td>آخرین Audit</td><td class="okc">۱۲:۴۰ ✓</td></tr>
-     </tbody></table></section>
-   </div>
-
-   <!-- charts -->
-   <div class="g5" id="secCharts">
-    <section class="panel" style="grid-column:1/-1"><p class="pt">📊 نمودار تولید و فروش (۳۰ روز اخیر)</p><canvas id="barC" height="180"></canvas><div class="leg" id="barLeg"></div></section>
-    <section class="panel"><p class="pt">🧪 ترکیب خوراک</p><canvas id="pieFeed" width="220" height="220" style="max-width:100%"></canvas><div class="leg" id="legFeed"></div></section>
-    <section class="panel" id="secAI"><p class="pt">🤖 تحلیل AI — هشدارها و پیشنهادات</p><div id="aiBox"></div></section>
-    <section class="panel"><p class="pt">💹 سود و زیان ماه جاری</p><canvas id="pieFin" width="220" height="220" style="max-width:100%"></canvas><div class="leg" id="legFin"></div></section>
-    <section class="panel" id="secMoney"><p class="pt">💳 وضعیت مطالبات (ریال)</p>
-     <div class="mcards g-cards">
-      <div class="mc" style="background:linear-gradient(135deg,#2e7d32,#1b5e20)"><h6>کل مطالبات</h6><b>1,850,000,000</b></div>
-      <div class="mc" style="background:linear-gradient(135deg,#ef6c00,#e65100)"><h6>وصول شده</h6><b>620,000,000</b></div>
-      <div class="mc" style="background:linear-gradient(135deg,#c62828,#8e0000)"><h6>مانده مطالبات</h6><b>1,230,000,000</b></div>
-     </div>
-     <p style="font-size:11px;color:var(--mut);margin-top:10px">هشدار سررسید: ۲ فاکتور اعتباری طی ۳ روز آینده — نسخه بعدی: اعلان SMS/Email</p>
-    </section>
-    <section class="panel"><p class="pt">⚙️ تنظیمات کارخانه</p>
-     <div style="font-size:12.5px;line-height:2.1">
-      ➕ ماده اولیه جدید · ✏️ ویرایش مرکز هزینه<br>➕ تجهیز/قطعه/محصول جدید · راکتور جدید<br>
-      ⚙️ پارامترهای SOP · 📋 چک‌لیست اختصاصی<br>🔐 نقش‌ها و دسترسی‌ها (RBAC)
-      <br><span style="color:var(--mut);font-size:11px">فرم‌های تنظیمات در نسخه‌های بعدی فعال می‌شوند.</span>
-     </div></section>
-   </div>
-
-   <!-- services -->
-   <section class="svc" id="svcBar">
-    <button class="sv" id="svcTrade"><span>🛒</span><b>PyroTrade</b>بازار تخصصی</button>
-    <button class="sv" id="svcJobs"><span>👷</span><b>PyroJobs</b>کاریابی تخصصی</button>
-    <button class="sv" id="svcAca"><span>📚</span><b>PyroAcademy</b>آموزش و SOP</button>
-    <button class="sv" id="svcNet"><span>🌐</span><b>شبکه کارخانه‌ها</b>همدلی و تبادل</button>
-    <button class="sv" onclick="toast('پیام و اعلان — نسخه بعدی')"><span>💬</span><b>پیام و اعلان</b>هشدار لحظه‌ای</button>
-    <button class="sv" onclick="toast('گزارش‌ساز هوشمند — نسخه بعدی')"><span>🧠</span><b>گزارش هوشمند</b>گزارش‌های سفارشی</button>
-    <button class="sv" onclick="toast('نسخه iOS/Android — نقشه راه آینده')"><span>📱</span><b>دسترسی موبایل</b>iOS / Android</button>
-    <button class="sv" onclick="toast('پشتیبانی: 09154040240')"><span>🎧</span><b>پشتیبانی</b>آنلاین و تلفنی</button>
-   </section>
-   <footer>© ۲۰۲۶ پترو پارسیان اکسیر جوانی · PYROHUB — ERP + MES + CMMS + WMS + Finance + AI</footer>
-  </main>
+  <aside id="aside"></aside>
+  <main><div id="main"></div></main>
  </div>
 </div>
 </div>
 
 <div class="tw" id="tw"></div>
-
-<script>
-'use strict';
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const GL=k=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?[]:v}catch(e){return[]}};
-const SL=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-const fa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
-const fmt=n=>fa(Number(n).toLocaleString('en-US'));
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const isEm=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-function toast(m){const e=document.createElement('div');e.className='toast';e.textContent=m;$('#tw').appendChild(e);requestAnimationFrame(()=>e.classList.add('show'));setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),350)},2800)}
-function hsh(t){return crypto.subtle?crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)).then(b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')):Promise.resolve('f'+t.length)}
-
-/* ═══ AUTH ═══ */
-let mode='login';
-function tabUI(m){mode=m;$('#tLogin').classList.toggle('on',m==='login');$('#tReg').classList.toggle('on',m==='register');
- $('#gName').classList.toggle('hidden',m!=='register');$('#gPass2').classList.toggle('hidden',m!=='register');
- $('#goBtn').textContent=m==='login'?'ورود به سامانه':'ایجاد حساب و ورود';
- ['eE','eP','eP2','eTop'].forEach(i=>$('#'+i).textContent='')}
-$('#tLogin').onclick=()=>tabUI('login');$('#tReg').onclick=()=>tabUI('register');
-$('#goBtn').onclick=async()=>{
- const em=$('#qEmail').value.trim().toLowerCase(),p=$('#qPass').value;
- let ok=true;const E=(i,m)=>{$('#'+i).textContent=m;if(m)ok=false};
- E('eE',!isEm(em)?'ایمیل معتبر وارد کنید.':'');E('eP',p.length<6?'رمز حداقل ۶ کاراکتر.':'');
- if(mode==='register'&&$('#qPass2').value!==p){E('eP2','تکرار رمز مطابقت ندارد.');ok=false}
- if(!ok)return;
- const users=GL('pp_users'),h=await hsh(p);
- if(mode==='register'){
-  if(users.some(u=>u.email===em)){$('#eE').textContent='این ایمیل قبلاً ثبت شده است.';return}
-  const role=users.length===0?'admin':'user';
-  const u={name:$('#qName').value.trim()||em.split('@')[0],email:em,hash:h,role};
-  users.push(u);SL('pp_users',users);SL('pp_session',em);start(u);
-  toast(role==='admin'?'خوش آمدید — شما مدیر کل سیستم هستید 👑':'حساب ساخته شد. خوش آمدید!');
- }else{
-  const u=users.find(u=>u.email===em&&u.hash===h);
-  if(!u){$('#eTop').textContent='ایمیل یا رمز اشتباه است. اگر حساب ندارید ثبت‌نام کنید.';return}
-  SL('pp_session',em);start(u);toast('خوش آمدید، '+u.name);
- }
-};
-$('#outBtn').onclick=()=>{localStorage.removeItem('pp_session');location.reload()};
-(function(){const em=localStorage.getItem('pp_session');if(!em)return;const u=GL('pp_users').find(u=>u.email===JSON.parse(em));if(u)start(u)})();
-
-function start(u){
- $('#gate').classList.add('hidden');$('#app').classList.remove('hidden');
- $('#uName').textContent=u.name;
- $('#uRole').textContent=u.role==='admin'?'👑 مدیر کل سیستم':'کاربر';
- requestAnimationFrame(()=>{animateKpis();buildAll()});
-}
-
-/* ═══ COUNTERS ═══ */
-function cnt(el,target,dur,suf){
- const t0=performance.now();
- (function f(ts){const p=Math.min((ts-t0)/(dur||1600),1);const e=1-Math.pow(1-p,3);
-  el.textContent=fmt(Math.round(target*e))+(suf||'');if(p<1)requestAnimationFrame(f)})(t0);
-}
-function animateKpis(){$$('.kpi .v').forEach((el,i)=>{const t=+el.dataset.cnt;cnt(el,t,1600+(i*150))})}
-
-/* ═══ FLOW ═══ */
-const FLOW=[['🛒','خرید'],['⚖️','دریافت و توزین'],['🧰','آماده‌سازی مواد'],['📋','چک‌لیست استارت'],['▶️','Start راکتور'],['📈','ثبت ساعتی'],['⚠️','بازه بحرانی'],['🔥','Cracking'],['🛢','روغن‌گیری'],['⏹️','خاموش‌سازی'],['❄️','Cooling'],['📤','تخلیه کوره'],['🧾','ثبت خروجی'],['💰','فروش'],['🏭','انبار']];
-function buildFlow(){$('#flowBox').innerHTML=FLOW.map((f,i)=>
- `<div class="fstep" style="animation-delay:${i*.18}s"><div class="fi" style="animation-delay:${i*.18}s">${f[0]}</div><span>${f[1]}</span></div>${i<FLOW.length-1?'<div class="far">➜</div>':''}`).join('')}
-
-/* ═══ CHECKLIST ═══ */
-const CHK=[{t:'انجام پروتکل‌های دستورالعمل عملیاتی',c:1},{t:'نبش و آب‌بندی درب راکتور',c:1},{t:'وضعیت شعله و مشعل‌ها',c:1},{t:'سنجش کاتالیست و بررسی رطوبت',c:0},{t:'سیستم برق و کنتاکتور',c:1},{t:'مسیر خروجی مخزن ضدانفجار',c:1},{t:'تجهیزات اطفاء و خاموش‌کننده‌ها',c:0},{t:'صحت مسیرهای فرآیندی',c:1}];
-chkState=CHK.map(()=>true);var chkState;
-function drawChk(){$('#chkBody').innerHTML=CHK.map((r,i)=>
- `<tr><td><input type="checkbox" class="tick" data-i="${i}" ${chkState[i]?'checked':''}></td><td style="text-align:right">${r.t}</td><td>${r.c?'<span class="tag-c">بحرانی</span>':'<span class="tag-n">غیر بحرانی</span>'}</td></tr>`).join('');
- $$('#chkBody .tick').forEach(t=>t.onchange=()=>{chkState[+t.dataset.i]=t.checked;updLock()});
- updLock()}
-function updLock(){const locked=CHK.some((r,i)=>r.c&&!chkState[i]);
- const b=$('#stBox'),btn=$('#stBtn');
- if(locked){b.className='stbox st-lock';b.textContent='🔴 START LOCKED';btn.className='stbtn';btn.textContent='قفل فعال — ابتدا آیتم‌های بحرانی را تأیید کنید';
-  btn.onclick=()=>{b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');toast('شروع فرآیند قفل است! آیتم‌های بحرانی تأیید نشده‌اند.')}
- }else{b.className='stbox st-open';b.textContent='🟢 START UNLOCKED';btn.className='stbtn on';btn.textContent='شروع فرآیند مجاز است — امضای مسئول شیفت: ✓';
-  btn.onclick=()=>toast('تأیید مسئول شیفت ثبت شد — راکتور آماده Start است ✅')}}
-
-/* ═══ HOURLY LOG ═══ */
-const HLOG=[['06:00',180,85,120,150,110,112,'0.25','CW','6/6'],['07:00',195,88,125,160,115,118,'0.28','CW','6/6'],['08:00',215,90,130,170,120,124,'0.32','CW','6/6'],['09:00',235,92,135,180,125,128,'0.35','CW','6/6'],['10:00',262,95,141,188,131,136,'0.38','CW','6/6'],['11:00',288,98,146,196,137,143,'0.40','CW','5/6']];
-function drawLog(){$('#logBody').innerHTML=HLOG.map(r=>'<tr><td><b>'+r[0]+'</b></td>'+
- [...r.slice(1,7)].map(v=>'<td>'+fa(v)+'</td>').join('')+'<td>'+fa(r[7])+'</td><td>'+r[8]+'</td><td>'+fa(r[9])+'</td><td class="okc">ثبت ✓</td></tr>').join('')}
-
-/* ═══ TIMELINE ═══ */
-const TL=[['06:00','Start راکتور','#2196f3'],['08:30','ورود به بازه بحرانی','#ff9800'],['11:10','شروع Cracking','#f44336'],['12:15','شروع روغن‌گیری','#e91e63'],['18:45','پایان پخت — خاموش‌سازی','#ab47bc'],['19:00','شروع Cooling','#00bcd4'],['23:40','رسیدن به دمای مجاز تخلیه','#8bc34a'],['24:10','تخلیه / محصول','#4caf50']];
-function buildTL(){$('#tlBox').innerHTML=TL.map(t=>`<div class="tli" style="--c:${t[2]}"><b>${t[0]}</b>${t[1]}</div>`).join('')}
-
-/* ═══ GAUGES ═══ */
-function gauge(box,title,min,max,val,unit,col,dec){
- const cx=100,cy=92,r=68;
- const ratio=(val-min)/(max-min),ang=Math.PI*(1-ratio);
- const ex=cx+r*Math.cos(ang),ey=cy-r*Math.sin(ang);
- const deg=-90+ratio*180;
- box.innerHTML=`<div class="gauge"><svg viewBox="0 0 200 110" style="width:100%">
-  <path d="M ${cx-r} ${cy} A ${r} ${r} 0 0 1 ${cx+r} ${cy}" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="11" stroke-linecap="round"/>
-  <path d="M ${cx-r} ${cy} A ${r} ${r} 0 0 1 ${ex.toFixed(1)} ${ey.toFixed(1)}" fill="none" stroke="${col}" stroke-width="11" stroke-linecap="round" opacity=".95"/>
-  <line class="ndl" x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-r+14}" stroke="#fff" stroke-width="3" stroke-linecap="round" style="transform-origin:${cx}px ${cy}px;transform:rotate(-90deg);transition:transform 1.6s cubic-bezier(.2,.8,.3,1)"/>
-  <circle cx="${cx}" cy="${cy}" r="5" fill="#fff"/></svg>
-  <div class="gv"><span class="gnum">0</span> ${unit}</div><div class="gt">${title}</div></div>`;
- requestAnimationFrame(()=>requestAnimationFrame(()=>{box.querySelectorAll('.ndl');const n=box.querySelector('.ndl');n.style.transform=`rotate(${deg}deg)`;cnt(box.querySelector('.gnum'),Math.round(val*10)/10===val?val:val,1600)}));
-}
-function buildGauges(){const g=$('#gGrid');g.innerHTML='';
- ['a','b','c','d'].forEach(id=>{const d=document.createElement('div');d.id='g_'+id;g.appendChild(d)});
- const bonus=$('#g_d').querySelector.bind($('#g_d'));
- gauge($('#g_a'),'دمای راکتور',0,500,312,'°C','#f44336',0);
- gauge($('#g_b'),'فشار سیستم',0,1,0.42,'Bar','#ff9800',2);
- gauge($('#g_c'),'سرعت چرخش',0,3,1.2,'rpm','#2196f3',1);
- gauge($('#g_d'),'مشعل‌های فعال',0,6,4,'/ 6','#10b981',0);
-}
-
-/* ═══ OUTPUT / INVENTORY ═══ */
-function buildOut(){
- $('#outBox').innerHTML=[['🛢','روغن تولیدی','12,450','لیتر','#ffb300'],['⚫','کربن تولیدی','8,700','کیلوگرم','#90a4ae'],['🧵','سیم تولیدی','320','کیلوگرم','#4db6ac']]
- .map(o=>`<div class="ocard"><i>${o[0]}</i><div><h6>${o[1]}</h6><b style="color:${o[4]}">${o[2]}</b> <small>${o[3]}</small></div></div>`).join('');
- $('#invBox').innerHTML=[['🛢','روغن','45,600','لیتر','#ffb300'],['⚫','کربن','32,400','کیلوگرم','#90a4ae'],['🧵','سیم','1,250','کیلوگرم','#4db6ac']]
- .map(o=>`<div class="ocard"><i>${o[0]}</i><div><h6>${o[1]}</h6><b>${o[2]}</b> <small>${o[3]}</small></div></div>`).join('');
-}
-
-/* ═══ AI ═══ */
-const AI=[['⚠️','ب','افت عملکرد اپراتور دیگ در ۳ نوبت اخیر (شیفت شب) — بررسی سوابق'],['⚠️','ب','کاهش ۱۵٪ بازده روغن نسبت به ماه قبل — تحلیل علت در جریان است'],['💡','a','پیشنهاد: بررسی و سرویس سیستم رطوبت‌گیر کربن'],['💡','a','کاهش ۱۰٪ زمان پخت در بار بحرانی → صرفه‌جویی سوخت (پیشنهاد — تصمیم با مسئول فنی)']];
-function buildAI(){$('#aiBox').innerHTML=AI.map((a,i)=>`<div class="aii ${a[1]}" style="animation-delay:${i*.15}s"><i>${a[0]}</i><span>${a[2]}</span></div>`).join('')+
- '<p style="font-size:10px;color:var(--mut);margin:4px 0 0">❌ AI فرمان عملیاتی صادر نمی‌کند · ✅ فقط تحلیل و پیشنهاد — تصمیم با فرد مجاز</p>'}
-
-/* ═══ CHARTS ═══ */
-function barChart(cv){
- const ctx=cv.getContext('2d'),W=cv.width=cv.offsetWidth*2,H=cv.height;
- const n=30,d1=[],d2=[];for(let i=0;i<n;i++){d1.push(6000+Math.random()*9000);d2.push(3500+Math.random()*8500)}
- const pad=40,pw=(W-pad-20)/n;
- let t=0;const t0=performance.now();
- (function f(ts){t=Math.min((ts-t0)/1400,1);const e=1-Math.pow(1-t,3);
-  ctx.clearRect(0,0,W,H);
-  ctx.font='18px Vazirmatn';ctx.fillStyle='#7d9bbd';
-  for(let g2=0;g2<=4;g2++){const y=14+(H-44)*g2/4;ctx.strokeStyle='rgba(255,255,255,.07)';ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-10,y);ctx.stroke();ctx.fillText(fa(String(Math.round((40000/4)*(4-g2)/1000))+'k'),2,y+5)}
-  for(let i=0;i<n;i++){const bh=(H-44);
-   const h1=d1[i]/42000*bf(e),h2=d2[i]/42000*bf(e);
-   ctx.fillStyle='#1e88e5';ctx.fillRect(pad+i*pw+3,H-30-bh*h1,pw*.34,h1*bf(e));
-   ctx.fillStyle='#10b981';ctx.fillRect(pad+i*pw+pw*.42,H-30-bh*h2,pw*.34,h2*bf(e));
-   if(i%5===0){ctx.fillStyle='#7d9bbd';ctx.fillText(fa(String(i+1)),pad+i*pw,H-8)}}
-  if(t<1)requestAnimationFrame(f)})(t0);
- function bf(x){return x}
- $('#barLeg').innerHTML='<span><s style="background:#1e88e5"></s>تولید (لیتر)</span><span><s style="background:#10b981"></s>فروش (میلیون ریال)</span>';
-}
-function pie(cv0,legId,items){
- const cv=cv0,ctx=cv.getContext('2d'),W=cv.width,hx=W/2,hy=W/2,r=W/2-14;
- let t=0;const t0=performance.now(),tot=items.reduce((s,x)=>s+x.v,0);
- (function f(ts){t=Math.min((ts-t0)/1300,1);const e=1-Math.pow(1-t,3);
-  ctx.clearRect(0,0,W,W);let a=-Math.PI/2;
-  items.forEach(it=>{const sw=it.v/tot*Math.PI*2*e;
-   ctx.beginPath();ctx.moveTo(hx,hy);ctx.arc(hx,hy,r,a,a+sw);ctx.closePath();
-   const g2=ctx.createRadialGradient(hx,hy,10,hx,hy,r);g2.addColorStop(0,it.c2);g2.addColorStop(1,it.c);
-   ctx.fillStyle=g2;ctx.fill();ctx.strokeStyle='#061226';ctx.lineWidth=3;ctx.stroke();a+=sw});
-  ctx.beginPath();ctx.arc(hx,hy,r*.55,0,7);ctx.fillStyle='#081a36';ctx.fill();
-  ctx.fillStyle='#e8b64c';ctx.font='900 22px Vazirmatn';ctx.textAlign='center';
-  ctx.fillText(items[0].center||'',hx,hy+7);
-  if(t<1)requestAnimationFrame(f)})(t0);
- $(legId).innerHTML=items.map(it=>`<span><s style="background:${it.c}"></s>${it.l}: ${it.txt}</span>`).join('');
-}
-function buildCharts(){requestAnimationFrame(()=>{
- barChart($('#barC'));
- pie($('#pieFeed'),'#legFeed',[
-  {v:65,l:'لاستیک',txt:'٪۶۵',c:'#2196f3',c2:'#0d47a1'},{v:20,l:'پلاستیک',txt:'٪۲۰',c:'#ff9800',c2:'#e65100'},
-  {v:10,l:'روغن سوخته',txt:'٪۱۰',c:'#4caf50',c2:'#1b5e20'},{v:5,l:'گریس سوخته',txt:'٪۵',c:'#ab47bc',c2:'#4a148c'}]);
- pie($('#pieFin'),'#legFin',[
-  {v:6250,l:'درآمد',txt:'6,250M',c:'#2e7d32',c2:'#1b5e20'},{v:4180,l:'هزینه‌ها',txt:'4,180M',c:'#e53935',c2:'#8e0000'},
-  {v:2070,l:'سود خالص',txt:'2,070M',c:'#fb8c00',c2:'#e65100'}]);
-})}
-
-/* ═══ NAV ═══ */
-function nav(t){const el=document.querySelector(t);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
-$$('.tbtn,.sitem').forEach(b=>b.addEventListener('click',()=>{
- const s=b.getAttribute('data-s')||b.dataset.s;if(s)nav('[id="'+s+'"]')}));
-
-/* ═══ BUILD ALL ═══ */
-function buildAll(){buildFlow();drawChk();drawLog();buildTL();buildGauges();buildOut();buildAI();buildCharts()}
-</script>
+<script src="app.js"></script>
 </body>
 </html>
