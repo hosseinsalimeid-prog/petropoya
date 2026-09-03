@@ -1,356 +1,494 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Petro Poya - Demo (Production-like)</title>
-
-  <!-- فونت فارسی (Vazirmatn) -->
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --bg:#f6f8fb;
-      --card:#fff;
-      --muted:#6b7280;
-      --accent:#2bd9a8;
-      --text:#0f1724;
-      --glass: rgba(255,255,255,0.7);
-    }
-    html,body{height:100%;margin:0;font-family:'Vazirmatn',system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
-    .container{max-width:1100px;margin:30px auto;padding:20px;}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-    h1{font-size:20px;margin:0}
-    .hero{display:flex;gap:24px;align-items:stretch;flex-wrap:wrap;}
-    .hero-left{flex:1;min-width:260px}
-    .hero-right{flex:1.3;min-width:320px;height:380px;background:linear-gradient(180deg,#ffffff,#f3f6f9);border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(15,23,45,0.06);display:flex;align-items:center;justify-content:center}
-    .hstat{display:flex;align-items:baseline;gap:8px;margin-top:8px}
-    .hnum{font-size:28px;font-weight:700}
-    .hlabel{color:var(--muted);font-size:13px}
-    .muted{color:var(--muted);font-size:13px}
-    .btn{display:inline-block;padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
-    .btn.secondary{background:#e6eef3;color:var(--text)}
-    .btn.ghost{background:transparent;border:1px solid #e6eef3;color:var(--text)}
-    /* Modal */
-    .modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:60;background:rgba(12,18,26,0.45);visibility:hidden;opacity:0;transition:opacity .18s ease,visibility .18s;}
-    .modal-overlay.show{visibility:visible;opacity:1;}
-    .modal{background:var(--card);border-radius:10px;padding:18px;min-width:320px;max-width:460px;box-shadow:0 10px 30px rgba(2,6,23,0.2);position:relative}
-    .modal h3{margin:0 0 8px;font-size:18px}
-    .modal label{display:block;margin-top:8px;font-size:13px;color:var(--muted)}
-    .modal input{width:100%;padding:10px;margin-top:6px;border:1px solid #e6e9ef;border-radius:8px}
-    .modal .actions{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
-    .modal-close{position:absolute;top:10px;left:10px;background:transparent;border:0;font-size:18px;cursor:pointer}
-    /* iframe app */
-    .app-frame-wrap{position:fixed;inset:18px;background:rgba(255,255,255,0.95);border-radius:10px;box-shadow:0 10px 40px rgba(2,6,23,0.18);z-index:80;display:none;flex-direction:column}
-    .app-frame-wrap.show{display:flex}
-    .app-top{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #eef2f7}
-    .app-frame{flex:1;border:0;border-bottom-left-radius:10px;border-bottom-right-radius:10px}
-    .back-fab{background:var(--card);border-radius:6px;border:1px solid #e6eef3;padding:8px 12px;cursor:pointer}
-    /* feature cards */
-    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:18px}
-    .feature-card{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(15,23,45,0.03)}
-    .feat-ico{font-size:22px;margin-bottom:8px}
-    /* architecture */
-    #architecture{margin-top:22px}
-    .arch-diagram{height:160px;background:linear-gradient(90deg,#f8fafc,#ffffff);border-radius:8px;padding:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
-    footer{margin-top:30px;text-align:center;color:var(--muted);font-size:13px}
-    /* small responsiveness */
-    @media (max-width:720px){ .hero{flex-direction:column} .hero-right{height:260px} }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Petro Poya</h1>
-      <div>
-        <button id="openLoginBtn" class="btn">ورود</button>
-      </div>
-    </header>
-
-    <main>
-      <section class="hero" aria-labelledby="heroTitle">
-        <div class="hero-left">
-          <h2 id="heroTitle">آنالیز جریان و خروجی‌ها</h2>
-          <p class="muted">نمایش شماتیک خروجی‌ها و آمار اصلی سامانه.</p>
-
-          <div class="hstat" aria-live="polite">
-            <!-- مقدار نهایی داخل HTML قرار دارد تا بدون JS هم نمایش درست باشد -->
-            <span class="hnum" data-count="100">100</span>
-            <span class="hlabel">٪ بهره‌وری</span>
-          </div>
-
-          <div style="margin-top:14px;">
-            <button type="button" id="openDemoBtn" class="btn secondary">درخواست دمو</button>
-            <button type="button" id="openLoginBtn2" class="btn ghost" style="margin-left:8px">ورود به داشبورد نمونه</button>
-          </div>
-
-          <!-- feature cards (از محتوای فایل شما استفاده و بازبینی شد) -->
-          <div class="features" style="margin-top:16px">
-            <div class="feature-card"><div class="feat-ico">🌐</div><h3>شبکه صنعت</h3><p>تأمین‌کنندگان، تعمیرکاران، بازار پیرولیز و مرکز آموزش.</p></div>
-            <div class="feature-card"><div class="feat-ico">🤝</div><h3>سهامداران و شرکا</h3><p>محاسبه خودکار سود، داشبورد اختصاصی سرمایه‌گذار، ROI و Payback.</p></div>
-            <div class="feature-card"><div class="feat-ico">📸</div><h3>OCR اسناد</h3><p>عکس فیش باسکول یا فرم دست‌نویس → استخراج و ثبت خودکار.</p></div>
-            <div class="feature-card"><div class="feat-ico">🔐</div><h3>دسترسی و امنیت</h3><p>RBAC، Audit Log و ردپای کامل عملیات کاربران.</p></div>
-          </div>
-        </div>
-
-        <div class="hero-right" role="img" aria-label="نمودار شماتیک خروجی‌ها">
-          <!-- نمونهٔ SVG ساده شده و اصلاح‌شده -->
-          <svg viewBox="0 0 460 380" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="false">
-            <defs>
-              <linearGradient id="hTank" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#3a4757"/><stop offset="100%" stop-color="#161e28"/>
-              </linearGradient>
-              <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto">
-                <path d="M0,0 L10,5 L0,10 L3,5 z" fill="#29323d"/>
-              </marker>
-            </defs>
-
-            <rect x="40" y="60" width="120" height="200" rx="10" fill="url(#hTank)" />
-            <circle cx="100" cy="40" r="20" fill="#c8d4de" opacity=".6"/>
-            <path d="M160 160 L220 160 L220 300" fill="none" stroke="#29323d" stroke-width="2" marker-end="url(#arrow)"/>
-            <g font-family="Vazirmatn" text-anchor="middle">
-              <circle cx="320" cy="300" r="26" fill="#2bd9a822" stroke="#2bd9a8" stroke-width="1.5"/>
-              <text x="320" y="305" font-size="16" dominant-baseline="middle">🛢</text>
-              <text x="320" y="335" font-size="11" fill="#9aa4b8">روغن</text>
-            </g>
-          </svg>
-        </div>
-      </section>
-
-      <!-- DEMO FORM -->
-      <section style="margin-top:18px;" id="demoSection">
-        <form id="demoForm">
-          <label for="demoName" class="muted">نام و نام خانوادگی</label>
-          <input id="demoName" name="name" required />
-          <div style="margin-top:8px">
-            <button type="submit" class="btn">درخواست دمو</button>
-          </div>
-        </form>
-      </section>
-
-      <!-- ARCHITECTURE (از محتوای فایل شما استفاده شده) -->
-      <section class="section" id="architecture">
-        <div class="section-head" style="margin-top:18px">
-          <span class="tag">معماری فنی</span>
-          <h2>Multi-Tenant · Modular · API Ready</h2>
-          <p class="muted">ساختاری آماده برای رشد، اتصال به IoT/PLC و مقیاس‌پذیری میان چندین کارخانه.</p>
-        </div>
-        <div class="arch-diagram">نمودار معماری (نمایش نمونه)</div>
-      </section>
-
-    </main>
-
-    <footer>
-      © 2026 Petro Poya
-    </footer>
-  </div>
-
-  <!-- LOGIN MODAL -->
-  <div id="loginModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="loginTitle">
-    <div class="modal" role="document" aria-describedby="loginDesc">
-      <button class="modal-close" aria-label="بستن پنجره">✕</button>
-      <h3 id="loginTitle">ورود به پلتفرم</h3>
-      <p id="loginDesc" class="muted">این محیط دمو است — در حالت واقعی این فرم به سرور ارسال می‌شود.</p>
-
-      <form id="loginForm" novalidate>
-        <label for="username">نام کاربری / ایمیل</label>
-        <input id="username" name="username" type="email" autocomplete="username" placeholder="factory.admin@pyroflow.demo" required>
-
-        <label for="password">رمز عبور</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="رمز دمو: demo" required>
-
-        <div class="actions">
-          <button type="button" class="btn secondary" id="cancelLogin">انصراف</button>
-          <button type="submit" class="btn">ورود به داشبورد</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- EMBEDDED APP WRAP (iframe) -->
-  <div id="appFrameWrap" class="app-frame-wrap" aria-hidden="true" role="region" aria-label="Embedded application">
-    <div class="app-top">
-      <div style="display:flex;gap:12px;align-items:center">
-        <strong>PyroFlow Dashboard (نمونه)</strong>
-        <span class="muted">— محیط embed</span>
-      </div>
-      <div>
-        <button class="back-fab" id="backToLandingBtn">← بازگشت</button>
-      </div>
-    </div>
-    <iframe id="appFrame" class="app-frame" title="PyroFlow Dashboard"></iframe>
-  </div>
-
-  <script>
-    // Helper selectors
-    const qs = (s, r=document) => r.querySelector(s);
-    const qsa = (s, r=document) => Array.from(r.querySelectorAll(s));
-
-    // ============ Counters ============
-    function animateCounters(){
-      qsa('.hnum').forEach(el => {
-        const raw = el.getAttribute('data-count') || el.textContent.trim().replace(/[^0-9]/g,'');
-        const target = parseInt(raw,10) || 0;
-        const duration = 1000;
-        let startTime = null;
-        const start = 0;
-        el.textContent = start;
-        function step(ts){
-          if (!startTime) startTime = ts;
-          const progress = Math.min((ts - startTime) / duration, 1);
-          el.textContent = Math.floor(progress * (target - start) + start);
-          if (progress < 1) requestAnimationFrame(step);
-          else el.textContent = target;
-        }
-        requestAnimationFrame(step);
-      });
-    }
-    setTimeout(animateCounters, 300);
-
-    // ============ Modal (Accessible) ============
-    const loginModal = qs('#loginModal');
-    const loginForm = qs('#loginForm');
-    const openLoginBtn = qs('#openLoginBtn');
-    const openLoginBtn2 = qs('#openLoginBtn2');
-    const cancelLoginBtn = qs('#cancelLogin');
-    const modalCloseBtn = qs('.modal-close');
-
-    let lastFocused = null;
-    function openModal(){
-      lastFocused = document.activeElement;
-      loginModal.classList.add('show');
-      loginModal.setAttribute('aria-hidden','false');
-      const first = qs('#username');
-      first?.focus();
-      document.addEventListener('focus', trapFocus, true);
-      document.addEventListener('keydown', handleModalKeys);
-    }
-    function closeModal(){
-      loginModal.classList.remove('show');
-      loginModal.setAttribute('aria-hidden','true');
-      document.removeEventListener('focus', trapFocus, true);
-      document.removeEventListener('keydown', handleModalKeys);
-      if (lastFocused) lastFocused.focus();
-    }
-    function trapFocus(e){
-      if (!loginModal.contains(e.target)) {
-        e.stopPropagation();
-        qs('#username')?.focus();
-      }
-    }
-    function handleModalKeys(e){
-      if (e.key === 'Escape') closeModal();
-      if (e.key === 'Tab') {
-        const focusable = qsa('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])', loginModal).filter(n => n.offsetParent !== null);
-        if (focusable.length === 0) return;
-        const first = focusable[0], last = focusable[focusable.length - 1];
-        if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
-        else if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-      }
-    }
-
-    openLoginBtn?.addEventListener('click', openModal);
-    openLoginBtn2?.addEventListener('click', openModal);
-    cancelLoginBtn?.addEventListener('click', closeModal);
-    modalCloseBtn?.addEventListener('click', closeModal);
-    loginModal?.addEventListener('click', (e) => { if (e.target === loginModal) closeModal(); });
-
-    // ============ Demo form ============ 
-    qs('#demoForm')?.addEventListener('submit', function(e){
-      e.preventDefault();
-      alert('درخواست دمو با موفقیت ثبت شد. کارشناسان PyroFlow به‌زودی با شما تماس می‌گیرند.');
-      this.reset();
-    });
-
-    // ============ Embedded App (iframe) handling ============
-    const appWrap = qs('#appFrameWrap');
-    const appFrame = qs('#appFrame');
-    const backBtn = qs('#backToLandingBtn');
-
-    function showAppWithContent(htmlString){
-      appFrame.srcdoc = htmlString;
-      appWrap.classList.add('show');
-      appWrap.setAttribute('aria-hidden','false');
-      // focus iframe for keyboard users
-      appFrame.focus();
-    }
-    function hideApp(){
-      appWrap.classList.remove('show');
-      appWrap.setAttribute('aria-hidden','true');
-      // clear iframe content (optional)
-      appFrame.srcdoc = '';
-    }
-    backBtn?.addEventListener('click', hideApp);
-
-    // Example dashboard HTML (نمونهٔ واقعی‌شده ولی ساده)
-    function getSampleDashboardHTML(userEmail = 'کاربر دمو'){
-      return `
-<!doctype html>
-<html lang="fa" dir="rtl">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard - Demo</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>پترو پویا | سامانه هوشمند مدیریت پیرولیز</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛢</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-  body{font-family: Vazirmatn, system-ui; margin:0; background:#0f1724; color:#e6eef3}
-  header{padding:12px;background:linear-gradient(90deg,#0b1220,#122033);display:flex;justify-content:space-between;align-items:center}
-  main{padding:16px}
-  .card{background:rgba(255,255,255,0.04);padding:12px;border-radius:8px;margin-bottom:12px}
+:root{--bg:#f6f8fb;--card:#fff;--muted:#6b7280;--accent:#2bd9a8;--accent-h:#22c296;--danger:#e5484d;--text:#0f1724}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;font-family:'Vazirmatn',system-ui,sans-serif;background:var(--bg);color:var(--text)}
+.container{max-width:1100px;margin:30px auto;padding:20px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:16px}h1{font-size:22px;margin:0}
+.muted{color:var(--muted);font-size:13px}
+.btn{display:inline-block;padding:9px 14px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;text-decoration:none}
+.btn:hover{background:var(--accent-h)}
+.btn.secondary{background:#e6eef3;color:var(--text)}.btn.ghost{background:transparent;border:1px solid #dde5ec;color:var(--text)}
+.btn.danger{background:var(--danger);padding:4px 10px;font-size:12px}
+.hero{display:flex;gap:24px;flex-wrap:wrap}.hero-left{flex:1;min-width:260px}
+.hero-right{flex:1.3;min-width:320px;height:360px;background:linear-gradient(180deg,#fff,#f3f6f9);border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(15,23,45,.06);display:flex;align-items:center;justify-content:center}
+.hnum{font-size:28px;font-weight:700}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:18px}
+.feature-card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(15,23,45,.03)}
+.feature-card h3{margin:6px 0;font-size:15px}.feature-card p{margin:0;font-size:13px;color:var(--muted)}.feat-ico{font-size:22px}
+.err{color:var(--danger);font-size:12px;min-height:16px;margin-top:4px}
+.sec{margin-top:24px;background:var(--card);border-radius:10px;padding:18px;box-shadow:0 4px 14px rgba(15,23,45,.04);max-width:560px}
+.sec h2{margin:0 0 10px;font-size:17px}
+.sec label{display:block;margin-top:10px;font-size:13px;color:var(--muted)}
+.sec input,.sec select{width:100%;padding:10px;margin-top:6px;border:1px solid #e6e9ef;border-radius:8px;font-family:inherit}
+#architecture{margin-top:22px}.arch{height:120px;background:linear-gradient(90deg,#f8fafc,#fff);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+footer{margin:30px 0 20px;text-align:center;color:var(--muted);font-size:13px}
+.ov{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:60;background:rgba(12,18,26,.45);visibility:hidden;opacity:0;transition:.18s}
+.ov.show{visibility:visible;opacity:1}
+.modal{background:var(--card);border-radius:10px;padding:18px;width:min(92vw,440px);box-shadow:0 10px 30px rgba(2,6,23,.2);position:relative;max-height:92vh;overflow-y:auto}
+.modal h3{margin:0 0 8px;font-size:18px}
+.modal label{display:block;margin-top:10px;font-size:13px;color:var(--muted)}
+.modal input{width:100%;padding:10px;margin-top:6px;border:1px solid #e6e9ef;border-radius:8px;font-family:inherit}
+.modal .actions{display:flex;gap:8px;margin-top:14px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.modal-close{position:absolute;top:10px;left:10px;background:transparent;border:0;font-size:18px;cursor:pointer}
+.app{position:fixed;inset:0;z-index:80;background:#0f1724;color:#e6eef3;display:none}
+.app.show{display:flex}
+aside{width:200px;background:#0b1220;padding:14px 10px;display:flex;flex-direction:column;gap:6px;flex-shrink:0;overflow-y:auto}
+.logo{font-weight:700;color:#2bd9a8;margin:2px 8px 12px;font-size:15px}
+aside button{all:unset;cursor:pointer;padding:9px 12px;border-radius:8px;font-family:inherit;font-size:13.5px;color:#c7d2de}
+aside button:hover{background:rgba(255,255,255,.06)}
+aside button.on{background:#2bd9a8;color:#04281d;font-weight:700}
+main{flex:1;padding:16px 20px;overflow-y:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+.topbar h2{margin:0;font-size:18px}.user{font-size:12px;color:#9aa4b8}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px}
+.kpi h4{margin:0;font-size:12px;color:#9aa4b8;font-weight:400}.kpi .v{font-size:20px;font-weight:700;margin-top:4px}
+.ok{color:#2bd9a8}.warn{color:#f5b301}.bad{color:#ff7b7b}
+.panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:14px;margin-bottom:14px}
+.panel h3{margin:0 0 10px;font-size:14px;color:#c7d2de}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid rgba(255,255,255,.08)}
+th{color:#9aa4b8;font-weight:400;font-size:12px}
+.bars{display:flex;align-items:flex-end;gap:10px;height:170px;padding-top:24px}
+.bar{flex:1;background:linear-gradient(180deg,#2bd9a8,#1a8f70);border-radius:6px 6px 0 0;position:relative;min-width:14px}
+.bar b{position:absolute;top:-20px;left:0;right:0;text-align:center;font-size:11px;font-weight:400}
+.bar span{position:absolute;bottom:-22px;left:0;right:0;text-align:center;font-size:11px;color:#9aa4b8}
+.fbtn{background:#2bd9a8;color:#04281d;border:none;border-radius:8px;padding:8px 16px;font-family:inherit;font-weight:700;cursor:pointer;font-size:13px}
+.fbtn.ghost{background:transparent;border:1px solid rgba(255,255,255,.25);color:#e6eef3}
+.inp{width:100%;padding:9px;border:1px solid rgba(255,255,255,.15);border-radius:8px;background:rgba(255,255,255,.06);color:#e6eef3;font-family:inherit;margin-bottom:8px}
+.inp option{color:#0f1724}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.muted2{font-size:11px;color:#7d8ea0;margin-top:8px}
+canvas{width:100%}
+#ocrPrev{max-width:100%;max-height:160px;border-radius:8px;margin-top:8px;display:none}
+@media(max-width:700px){aside{width:56px}.logo,.lbl{display:none}aside button{font-size:17px;padding:10px 8px}.fgrid{grid-template-columns:1fr}}
+.tw{position:fixed;bottom:18px;right:18px;z-index:200;display:flex;flex-direction:column;gap:8px}
+.toast{background:#0f1724;color:#fff;padding:11px 16px;border-radius:8px;font-size:14px;border-inline-start:4px solid var(--accent);opacity:0;transform:translateY(10px);transition:.25s}
+.toast.error{border-color:var(--danger)}.toast.show{opacity:1;transform:none}
 </style>
 </head>
 <body>
-  <header><div>PyroFlow Dashboard (نمونه)</div><div>${userEmail}</div></header>
+
+<!-- ======================= لندینگ ======================= -->
+<div class="container" id="landing">
+  <header>
+    <h1>پترو پویا</h1>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a href="services.html" class="btn secondary">خدمات و عملکرد</a>
+      <button class="btn ghost" onclick="openAuth('register')">ثبت‌نام</button>
+      <button class="btn" onclick="openAuth('login')">ورود</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-left">
+      <h2>آنالیز جریان و خروجی‌ها</h2>
+      <p class="muted">پایش لحظه‌ای خط تولید، مدیریت انبار و مالی، گزارش‌گیری و شفافیت کامل برای سهامداران.</p>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-top:8px">
+        <span class="hnum" data-count="100">100</span><span class="muted">٪ بهره‌وری</span>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn secondary" onclick="document.getElementById('reqSec').scrollIntoView({behavior:'smooth'})">درخواست مشاوره</button>
+        <button class="btn ghost" onclick="openAuth('login')">ورود به داشبورد</button>
+      </div>
+      <div class="features">
+        <div class="feature-card"><div class="feat-ico">🌡</div><h3>پایش آنلاین</h3><p>نمودار زنده دما، فشار و جریان خط تولید.</p></div>
+        <div class="feature-card"><div class="feat-ico">📦</div><h3>انبار</h3><p>ثبت کالا، موجودی و هشدار کمبود هوشمند.</p></div>
+        <div class="feature-card"><div class="feat-ico">💰</div><h3>مالی</h3><p>درآمد، هزینه و موجودی با محاسبه خودکار.</p></div>
+        <div class="feature-card"><div class="feat-ico">🤝</div><h3>سهامداران</h3><p>سهم، آورده و سود هر شریک — محاسبه خودکار.</p></div>
+        <div class="feature-card"><div class="feat-ico">📸</div><h3>OCR اسناد</h3><p>عکس فیش باسکول ← استخراج خودکار اعداد.</p></div>
+        <div class="feature-card"><div class="feat-ico">🔐</div><h3>کاربران و نقش‌ها</h3><p>ثبت‌نام واقعی، هش رمز و پنل مدیریت.</p></div>
+      </div>
+    </div>
+    <div class="hero-right" role="img" aria-label="نمودار خط تولید">
+      <svg viewBox="0 0 460 380" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a4757"/><stop offset="100%" stop-color="#161e28"/></linearGradient>
+        <marker id="ar" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 L3,5 z" fill="#29323d"/></marker></defs>
+        <rect x="40" y="60" width="120" height="200" rx="10" fill="url(#t)"/>
+        <circle cx="100" cy="40" r="20" fill="#c8d4de" opacity=".6"/>
+        <text x="100" y="150" font-family="Vazirmatn" font-size="13" fill="#c8d4de" text-anchor="middle">مخزن خوراک</text>
+        <path d="M160 160 H320 V268" fill="none" stroke="#29323d" stroke-width="2" marker-end="url(#ar)"/>
+        <g text-anchor="middle"><circle cx="320" cy="300" r="26" fill="#2bd9a822" stroke="#2bd9a8" stroke-width="1.5"/>
+        <text x="320" y="306" font-size="16">🛢</text><text x="320" y="345" font-size="11" fill="#9aa4b8">روغن تولیدی</text></g>
+      </svg>
+    </div>
+  </section>
+
+  <section class="sec" id="reqSec">
+    <h2>درخواست مشاوره</h2>
+    <form id="reqForm" novalidate>
+      <label>نام و نام خانوادگی<input id="rName" required></label><div class="err" id="eRName"></div>
+      <label>شماره موبایل<input id="rPhone" dir="ltr" placeholder="09xxxxxxxxx" required></label><div class="err" id="eRPhone"></div>
+      <label>ایمیل<input id="rEmail" type="email" dir="ltr" required></label><div class="err" id="eREmail"></div>
+      <button class="btn" style="margin-top:12px" id="rSubmit">ثبت درخواست</button>
+    </form>
+  </section>
+
+  <section id="architecture">
+    <span class="muted">معماری فنی</span>
+    <h2 style="margin:6px 0">Multi-Tenant · Modular · API Ready</h2>
+    <p class="muted">آماده اتصال به IoT/PLC و مقیاس‌پذیری میان چند کارخانه.</p>
+    <div class="arch">نمودار معماری سامانه</div>
+  </section>
+
+  <footer>© ۲۰۲۶ پترو پویا — رمزها با SHA-256 هش می‌شوند · اولین ثبت‌نام = مدیر کل</footer>
+</div>
+
+<!-- ======================= اپ (داشبورد) ======================= -->
+<div class="app" id="app" role="region" aria-label="داشبورد">
+  <aside>
+    <div class="logo">🛢 پترو پویا</div>
+    <button data-t="monitor" class="on">📡<span class="lbl"> پایش زنده</span></button>
+    <button data-t="perf">⚙️<span class="lbl"> عملکرد</span></button>
+    <button data-t="prod">🛢<span class="lbl"> تولید</span></button>
+    <button data-t="inv">📦<span class="lbl"> انبار</span></button>
+    <button data-t="fin">💰<span class="lbl"> مالی</span></button>
+    <button data-t="share">🤝<span class="lbl"> سهامداران</span></button>
+    <button data-t="rep">🧾<span class="lbl"> گزارش‌ها</span></button>
+    <button data-t="ocr">📸<span class="lbl"> اسناد OCR</span></button>
+    <button data-t="users" id="usersTab" hidden>👥<span class="lbl"> کاربران</span></button>
+  </aside>
   <main>
-    <div class="card"><h3>وضعیت کلی</h3><p>نمونه داشبورد embed برای نمایش امکانات.</p></div>
-    <div class="card"><h3>عملیات</h3><p>خواندن سنسورها، نمودارها و لاگ‌ها در این بخش قرار می‌گیرد.</p></div>
+    <div class="topbar">
+      <h2 id="tt">پایش زنده</h2>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <span class="user" id="uInfo"></span>
+        <button class="fbtn ghost" onclick="logout()">خروج</button>
+      </div>
+    </div>
+    <div id="view"></div>
   </main>
-</body>
-</html>
-      `;
-    }
+</div>
 
-    // ============ Login handling (Demo) ============
-    loginForm?.addEventListener('submit', function(e){
-      e.preventDefault();
-      const email = qs('#username').value.trim();
-      const pwd = qs('#password').value.trim();
+<!-- ======================= مودال احراز هویت ======================= -->
+<div class="ov" id="authModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <h3 id="authTitle">ورود به سامانه</h3>
+    <div class="err" id="eTop"></div>
+    <form id="authForm" novalidate>
+      <div id="regName" hidden><label>نام و نام خانوادگی<input id="aName"></label><div class="err" id="eName"></div></div>
+      <label>ایمیل<input id="aEmail" type="email" dir="ltr" autocomplete="email"></label><div class="err" id="eEmail"></div>
+      <label>رمز عبور<input id="aPass" type="password" dir="ltr" autocomplete="current-password" placeholder="حداقل ۶ کاراکتر"></label><div class="err" id="ePass"></div>
+      <div id="regPass2" hidden><label>تکرار رمز عبور<input id="aPass2" type="password" dir="ltr"></label></div>
+      <div class="actions">
+        <button type="button" class="btn ghost" id="authSwitch">حساب ندارم — ثبت‌نام</button>
+        <button type="submit" class="btn" id="authSubmit">ورود</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-      // مثال: در حالت واقعی اینجا باید درخواست POST به سرور داده شود (HTTPS) و CSRF/جلسه مدیریت شود.
-      // برای دمو: اگر ایمیل demo مشخص یا هر ورودی معتبر باشد، وارد می‌شویم.
-      const demoEmail = 'factory.admin@pyroflow.demo';
-      const demoPassword = 'demo';
+<div class="tw" id="tw" aria-live="polite"></div>
 
-      if (!email || !pwd){
-        alert('لطفاً نام کاربری و رمز عبور را وارد کنید.');
-        return;
-      }
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const get=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const fa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const money=n=>fa((+n||0).toLocaleString('en-US'));
+const today=()=>new Date().toISOString().slice(0,10);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isEmail=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+function hash(t){if(crypto.subtle)return crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)).then(b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''));let h=0;for(const c of t){h=(h*31+c.charCodeAt(0))|0}return Promise.resolve('f'+h)}
+function toast(m,type){const e=document.createElement('div');e.className='toast'+(type==='error'?' error':'');e.textContent=m;$('#tw').appendChild(e);requestAnimationFrame(()=>e.classList.add('show'));setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),300)},3500)}
+/* شمارنده */
+setTimeout(()=>{document.querySelectorAll('.hnum').forEach(el=>{const t=+el.dataset.count||0;let s=null;const f=ts=>{if(!s)s=ts;const p=Math.min((ts-s)/1000,1);el.textContent=Math.floor(p*t);if(p<1)requestAnimationFrame(f);else el.textContent=t};requestAnimationFrame(f)})},300);
 
-      // ساده‌سازی: پذیرش فقط با رمز دمو یا ایمیل دمو — برای نمونهٔ واقعی باید به سرور استعلام کنید.
-      if ((email === demoEmail && pwd === demoPassword) || pwd === demoPassword){
-        closeModal();
-        // بارگذاری داشبورد داخل iframe
-        showAppWithContent(getSampleDashboardHTML(email));
-      } else {
-        // خطای سادهٔ سمت کلاینت
-        alert('نام کاربری یا رمز عبور اشتباه است (برای دمو از demo/demo استفاده کنید).');
-      }
-    });
+/* ============ احراز هویت ============ */
+let mode='login';
+function openAuth(m){mode=m;authUI();$('#authModal').classList.add('show');setTimeout(()=>$(mode==='login'?'#aEmail':'#aName').focus(),80)}
+function closeAuth(){$('#authModal').classList.remove('show')}
+function authUI(){$('#authTitle').textContent=mode==='login'?'ورود به سامانه':'ایجاد حساب جدید';$('#regName').hidden=mode!=='register';$('#regPass2').hidden=mode!=='register';$('#authSubmit').textContent=mode==='login'?'ورود':'ثبت‌نام';$('#authSwitch').textContent=mode==='login'?'حساب ندارم — ثبت‌نام':'دارم حساب — ورود';$('#eTop').textContent='';['eName','eEmail','ePass'].forEach(i=>$('#'+i).textContent='')}
+$('#authSwitch').onclick=()=>{mode=mode==='login'?'register':'login';authUI()};
+$('#authModal').addEventListener('click',e=>{if(e.target.id==='authModal')closeAuth()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAuth()});
+$('#authForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const name=$('#aName').value.trim(),email=$('#aEmail').value.trim().toLowerCase(),p1=$('#aPass').value,p2=$('#aPass2').value;
+  let ok=true;const E=(id,m)=>{$('#'+id).textContent=m;if(m)ok=false};
+  $('#eTop').textContent='';E('eName',mode==='register'&&name.length<3?'نام باید حداقل ۳ حرف باشد.':'');
+  E('eEmail',!isEmail(email)?'ایمیل معتبر وارد کنید.':'');
+  E('ePass',p1.length<6?'رمز حداقل ۶ کاراکتر.':'');
+  if(mode==='register'&&p1!==p2){E('ePass','رمز و تکرار آن یکسان نیست.');ok=false}
+  if(!ok)return;
+  const users=get('pp_users',[]);
+  const h=await hash(p1);
+  if(mode==='register'){
+    if(users.some(u=>u.email===email)){$('#eEmail').textContent='این ایمیل قبلاً ثبت شده است.';return}
+    const role=users.length===0?'admin':'user';
+    const u={name,email,hash:h,role,created:today()};
+    users.push(u);set('pp_users',users);
+    set('pp_session',email);closeAuth();startApp(u);
+    toast(role==='admin'?'حساب شما ساخته شد — شما مدیر کل سامانه هستید!':'حساب شما ساخته شد. خوش آمدید!');
+  }else{
+    const u=users.find(u=>u.email===email&&u.hash===h);
+    if(!u){$('#eTop').textContent='ایمیل یا رمز عبور اشتباه است. اگر حساب ندارید، ثبت‌نام کنید.';return}
+    set('pp_session',email);closeAuth();startApp(u);toast('خوش آمدید، '+u.name);
+  }
+});
+function logout(){localStorage.removeItem('pp_session');stopChart();$('#app').classList.remove('show');toast('از حساب خارج شدید.')}
+async function session(){const e=get('pp_session',null);if(!e)return;const u=get('pp_users',[]).find(u=>u.email===e);if(u)startApp(u);else localStorage.removeItem('pp_session')}
 
-    // ============ Small UI behaviors ============
-    // navbar shadow on scroll (از فایل شما بود)
-    window.addEventListener('scroll', () => {
-      // اگر عنصر navbar وجود نداشت این بخش امن است
-      const nav = document.getElementById('navbar');
-      if (nav) nav.style.boxShadow = window.scrollY > 10 ? '0 4px 20px rgba(0,0,0,.12)' : 'none';
-    });
+/* ============ شروع اپ ============ */
+function startApp(u){
+  $('#uInfo').innerHTML=esc(u.name)+(u.role==='admin'?' · <b class="ok">مدیر کل</b>':'');
+  $('#usersTab').hidden=u.role!=='admin';
+  $('#usersTab').setAttribute('data-t','users');
+  $('#app').classList.add('show');
+  go('monitor');
+}
+document.querySelectorAll('aside button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.t)));
+const TITLES={monitor:'پایش زنده',perf:'عملکرد',prod:'تولید و بارها',inv:'انبار',fin:'مالی',share:'سهامداران',rep:'گزارش‌ها',ocr:'اسناد و OCR',users:'مدیریت کاربران'};
+let chartTimer=null,ocrBusy=false;
+function stopChart(){if(chartTimer){clearInterval(chartTimer);chartTimer=null}}
+function go(t){
+  stopChart();
+  document.querySelectorAll('aside button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  $('#tt').textContent=TITLES[t]||t;
+  ({monitor:renderMonitor,perf:renderPerf,prod:renderProd,inv:renderInv,fin:renderFin,share:renderShare,rep:renderRep,ocr:renderOcr,users:renderUsers}[t]||(()=>{}))();
+}
 
-    // open demo section (از دکمهٔ درخواست دمو)
-    qs('#openDemoBtn')?.addEventListener('click', () => {
-      qs('#demoSection')?.scrollIntoView({behavior:'smooth',block:'center'});
-      qs('#demoName')?.focus();
-    });
+/* ============ داده‌ها ============ */
+const getProd=()=>get('pp_prod',[]);
+const getInv=()=>get('pp_inv',[]);
+const getFin=()=>get('pp_fin',[]);
+const getShare=()=>get('pp_share',[]);
 
-    // defensive: close app when user presses Escape while iframe open
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && appWrap.classList.contains('show')) hideApp();
-    });
-  </script>
+/* ============ پایش زنده ============ */
+function renderMonitor(){
+  $('#view').innerHTML=`<div class="kpis">
+  <div class="kpi"><h4>دمای راکتور</h4><div class="v" id="kT">۴۲۵ °C</div></div>
+  <div class="kpi"><h4>فشار خط</h4><div class="v" id="kP">۲.۴ bar</div></div>
+  <div class="kpi"><h4>جریان خوراک</h4><div class="v" id="kF">۳.۸ t/h</div></div>
+  <div class="kpi"><h4>وضعیت خط</h4><div class="v ok">فعال ●</div></div>
+  <div class="kpi"><h4>روغن امروز</h4><div class="v">${fa(getProd().filter(r=>r.date===today()).reduce((s,r)=>s+ +r.oil,0).toFixed(1))} t</div></div>
+  <div class="kpi"><h4>موجودی انبار</h4><div class="v">${fa(getInv().length)} قلم</div></div>
+  </div>
+  <div class="panel"><h3>نمودار زنده دما (°C)</h3><canvas id="lc" width="800" height="220"></canvas>
+  <p class="muted2">نمایش زنده — در نسخه نهایی از سنسور IoT/PLC خوانده می‌شود.</p></div>`;
+  let data=[];for(let i=0;i<40;i++)data.push(415+Math.random()*20);
+  const c=$('#lc'),ctx=c.getContext('2d'),fa2=s=>fa(s);
+  function draw(){
+    const w=c.width,h=c.height,min=390,max=460;ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle='rgba(255,255,255,.08)';ctx.fillStyle='#7d8ea0';ctx.font='12px Vazirmatn';
+    for(let g=0;g<=4;g++){const y=10+(h-30)*g/4;ctx.beginPath();ctx.moveTo(40,y);ctx.lineTo(w-8,y);ctx.stroke();ctx.fillStyle='#7d8ea0';ctx.fillText(fa2(String(Math.round(max-(max-min)*g/4))),6,y+4)}
+    ctx.strokeStyle='#2bd9a8';ctx.lineWidth=2;ctx.beginPath();
+    data.forEach((d,i)=>{const x=40+(w-48)*i/(data.length-1),y=10+(h-30)*(1-(d-min)/(max-min));i?ctx.lineTo(x,y):ctx.moveTo(x,y)});
+    ctx.stroke();
+  }
+  draw();
+  chartTimer=setInterval(()=>{
+    data.push(415+Math.random()*22);if(data.length>40)data.shift();draw();
+    $('#kT').textContent=fa(Math.round(data[data.length-1]))+' °C';
+    $('#kP').textContent=fa((2+Math.random()).toFixed(1))+' bar';
+    $('#kF').textContent=fa((3.2+Math.random()).toFixed(1))+' t/h';
+  },2000);
+}
+
+/* ============ عملکرد ============ */
+function renderPerf(){
+  const p=getProd(),last=p.slice(-7);
+  const mo=p.filter(r=>r.date&&r.date.slice(0,7)===today().slice(0,7));
+  const moOil=mo.reduce((s,r)=>s+ +r.oil,0),moGas=mo.reduce((s,r)=>s+ +r.gas,0),moCoal=mo.reduce((s,r)=>s+ +r.coal,0);
+  $('#view').innerHTML=`<div class="kpis">
+  <div class="kpi"><h4>بارهای ثبت‌شده</h4><div class="v">${fa(p.length)}</div></div>
+  <div class="kpi"><h4>روغن این ماه</h4><div class="v ok">${fa(moOil.toFixed(1))} t</div></div>
+  <div class="kpi"><h4>گاز این ماه</h4><div class="v">${fa(moGas.toFixed(1))} t</div></div>
+  <div class="kpi"><h4>زغال این ماه</h4><div class="v">${fa(moCoal.toFixed(1))} t</div></div>
+  </div>
+  <div class="panel"><h3>روغن ۷ بار اخیر (تن)</h3>
+  ${last.length?`<div class="bars">${(()=>{const mx=Math.max(...last.map(r=>+r.oil||0),1);return last.map(r=>`<div class="bar" style="height:${Math.max(8,+r.oil/mx*100)}%"><b>${fa((+r.oil||0).toFixed(1))}</b><span>${esc(r.date.slice(5))}</span></div>`).join('')})()}</div>`:'<p class="muted2">هنوز باری ثبت نشده — از تب «تولید» ثبت کنید.</p>'}
+  </div>`;
+}
+
+/* ============ تولید ============ */
+function renderProd(){
+  const rows=getProd().map((r,i)=>`<tr><td>${esc(r.date)}</td><td>${esc(r.feed)}</td><td>${fa(r.oil)}</td><td>${fa(r.gas)}</td><td>${fa(r.coal)}</td><td><button class="btn danger" data-del="pp_prod" data-i="${i}">حذف</button></td></tr>`).join('');
+  $('#view').innerHTML=`
+  <div class="panel"><h3>ثبت بار جدید</h3>
+  <div class="fgrid"><input class="inp" type="date" id="pDate" value="${today()}"><input class="inp" id="pFeed" placeholder="نوع خوراک (پلاستیک / لاستیک) kg"></div>
+  <div class="fgrid"><input class="inp" type="number" id="pOil" placeholder="روغن (تن)"><input class="inp" type="number" id="pGas" placeholder="گاز (تن)"></div>
+  <div class="fgrid"><input class="inp" type="number" id="pCoal" placeholder="زغال (تن)"><button class="fbtn" id="pAdd">ثبت بار</button></div></div>
+  <div class="panel"><h3>بارها (${fa(getProd().length)})</h3>
+  ${getProd().length?`<table><tr><th>تاریخ</th><th>خوراک</th><th>روغن</th><th>گاز</th><th>زغال</th><th></th></tr>${rows}</table>`:'<p class="muted2">هنوز باری ثبت نشده.</p>'}</div>`;
+  $('#pAdd').onclick=()=>{
+    const r={date:$('#pDate').value||today(),feed:$('#pFeed').value.trim()||'—',oil:+$('#pOil').value||0,gas:+$('#pGas').value||0,coal:+$('#pCoal').value||0};
+    if(!r.oil&&!r.gas&&!r.coal){toast('حداقل یکی از مقادیر خروجی را وارد کنید.','error');return}
+    const a=getProd();a.push(r);set('pp_prod',a);toast('بار ثبت شد.');go('prod');
+  };
+  bindDel();
+}
+
+/* ============ انبار ============ */
+function renderInv(){
+  const rows=getInv().map((r,i)=>`<tr><td>${esc(r.name)}</td><td>${fa(r.qty)} ${esc(r.unit)}</td><td class="${r.qty<+r.min?'bad':'ok'}">${r.qty<+r.min?'کمبود!':'موجود'}</td><td>${fa(r.min)}</td><td><button class="btn danger" data-del="pp_inv" data-i="${i}">حذف</button></td></tr>`).join('');
+  const low=getInv().filter(r=>r.qty<+r.min).length;
+  $('#view').innerHTML=`
+  <div class="kpis"><div class="kpi"><h4>اقلام</h4><div class="v">${fa(getInv().length)}</div></div>
+  <div class="kpi"><h4>هشدار کمبود</h4><div class="v ${low?'bad':'ok'}">${fa(low)}</div></div></div>
+  <div class="panel"><h3>افزودن / به‌روزرسانی کالا</h3>
+  <div class="fgrid"><input class="inp" id="iName" placeholder="نام کالا (مثل کاتالیست)"></div>
+  <div class="fgrid"><input class="inp" type="number" id="iQty" placeholder="موجودی"><input class="inp" id="iUnit" placeholder="واحد (kg / عدد / بشکه)"></div>
+  <div class="fgrid"><input class="inp" type="number" id="iMin" placeholder="حد هشدار"><button class="fbtn" id="iAdd">ذخیره</button></div></div>
+  <div class="panel"><h3>موجودی انبار</h3>
+  ${getInv().length?`<table><tr><th>کالا</th><th>موجودی</th><th>وضعیت</th><th>حد هشدار</th><th></th></tr>${rows}</table>`:'<p class="muted2">انبار خالی است.</p>'}</div>`;
+  $('#iAdd').onclick=()=>{
+    const name=$('#iName').value.trim();if(!name){toast('نام کالا را وارد کنید.','error');return}
+    const a=getInv();const ex=a.find(x=>x.name===name);
+    const it={name,qty:+$('#iQty').value||0,unit:$('#iUnit').value.trim()||'kg',min:+$('#iMin').value||0};
+    ex?Object.assign(ex,it):a.push(it);
+    set('pp_inv',a);toast('انبار به‌روزرسانی شد.');go('inv');
+  };
+  bindDel();
+}
+
+/* ============ مالی ============ */
+function renderFin(){
+  const f=getFin(),inc=f.filter(r=>r.type==='in').reduce((s,r)=>s+ +r.amount,0),exp=f.filter(r=>r.type==='out').reduce((s,r)=>s+ +r.amount,0);
+  const rows=f.map((r,i)=>`<tr><td>${esc(r.date)}</td><td>${r.type==='in'?'<span class="ok">درآمد</span>':'<span class="bad">هزینه</span>'}</td><td>${esc(r.desc)}</td><td>${money(r.amount)}</td><td><button class="btn danger" data-del="pp_fin" data-i="${i}">حذف</button></td></tr>`).join('');
+  const mx=Math.max(inc,exp,1);
+  $('#view').innerHTML=`
+  <div class="kpis"><div class="kpi"><h4>درآمد کل</h4><div class="v ok">${money(inc)}</div></div>
+  <div class="kpi"><h4>هزینه کل</h4><div class="v bad">${money(exp)}</div></div>
+  <div class="kpi"><h4>موجودی خالص</h4><div class="v ${inc-exp>=0?'ok':'bad'}">${money(inc-exp)}</div></div></div>
+  <div class="panel"><h3>نمای کلی درآمد / هزینه</h3><div class="bars">
+  <div class="bar" style="height:${Math.max(6,inc/mx*100)}%"><b>${money(inc)}</b><span>درآمد</span></div>
+  <div class="bar" style="height:${Math.max(6,exp/mx*100)}%;background:linear-gradient(180deg,#e5484d,#8f2326)"><b>${money(exp)}</b><span>هزینه</span></div>
+  </div></div>
+  <div class="panel"><h3>ثبت تراکنش</h3>
+  <div class="fgrid"><select class="inp" id="fType"><option value="in">درآمد</option><option value="out">هزینه</option></select>
+  <input class="inp" type="date" id="fDate" value="${today()}"></div>
+  <div class="fgrid"><input class="inp" id="fDesc" placeholder="شرح (فروش روغن / خرید لوله و ...)"><input class="inp" type="number" id="fAmt" placeholder="مبلغ (تومان)"></div>
+  <button class="fbtn" id="fAdd" style="margin-top:6px">ثبت</button></div>
+  <div class="panel"><h3>تراکنش‌ها (${fa(f.length)})</h3>
+  ${f.length?`<table><tr><th>تاریخ</th><th>نوع</th><th>شرح</th><th>مبلغ</th><th></th></tr>${rows}</table>`:'<p class="muted2">تراکنشی ثبت نشده.</p>'}</div>`;
+  $('#fAdd').onclick=()=>{
+    const amt=+$('#fAmt').value;if(!amt){toast('مبلغ را وارد کنید.','error');return}
+    const a=getFin();a.push({date:$('#fDate').value||today(),type:$('#fType').value,desc:$('#fDesc').value.trim()||'—',amount:amt});
+    set('pp_fin',a);toast('تراکنش ثبت شد.');go('fin');
+  };
+  bindDel();
+}
+
+/* ============ سهامداران ============ */
+function renderShare(){
+  const f=getFin(),net=f.filter(r=>r.type==='in').reduce((s,r)=>s+ +r.amount,0)-f.filter(r=>r.type==='out').reduce((s,r)=>s+ +r.amount,0);
+  const sh=getShare();
+  const rows=sh.map((r,i)=>{const pr=net*r.pct/100;return `<tr><td>${esc(r.name)}</td><td>${fa(r.pct)}٪</td><td>${money(r.invested)}</td><td class="${pr>=0?'ok':'bad'}">${money(pr)}</td><td><button class="btn danger" data-del="pp_share" data-i="${i}">حذف</button></td></tr>`}).join('');
+  const sum=sh.reduce((s,r)=>s+ +r.pct,0);
+  $('#view').innerHTML=`
+  <div class="kpis"><div class="kpi"><h4سود خالص ماه (از مالی)</h4><div class="v ${net>=0?'ok':'bad'}">${money(net)}</div></div>
+  <div class="kpi"><h4>جمع سهام</h4><div class="v ${sum===100?'ok':'warn'}">${fa(sum)}٪</div></div></div>
+  <div class="panel"><h3>افزودن شریک</h3>
+  <div class="fgrid"><input class="inp" id="sName" placeholder="نام شریک"><input class="inp" type="number" id="sPct" placeholder="درصد سهم"></div>
+  <div class="fgrid"><input class="inp" type="number" id="sInv" placeholder="آورده (تومان)"><button class="fbtn" id="sAdd">ذخیره</button></div></div>
+  <div class="panel"><h3>سهامداران و سود</h3>
+  ${sh.length?`<table><tr><th>شریک</th><th>سهم</th><th>آورده</th><th>سود (بر اساس سود خالص)</th><th></th></tr>${rows}</table>`:'<p class="muted2">شریکی ثبت نشده.</p>'}
+  ${sum!==100&&sh.length?'<p class="muted2" style="color:#f5b301">جمع درصد سهام ۱۰۰ نیست!</p>':''}</div>`;
+  $('#sAdd').onclick=()=>{
+    const name=$('#sName').value.trim(),pct=+$('#sPct').value;
+    if(!name||!pct){toast('نام و درصد سهم را وارد کنید.','error');return}
+    const a=getShare();a.push({name,pct,invested:+$('#sInv').value||0});set('pp_share',a);toast('شریک ثبت شد.');go('share');
+  };
+  bindDel();
+}
+
+/* ============ گزارش‌ها ============ */
+function csv(name,rows){const nl='\n';const c=rows.map(r=>r.join(',')).join(nl);const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+c],{type:'text/csv;charset=utf-8'}));a.download=name+'.csv';a.click()}
+function renderRep(){
+  const p=getProd(),f=getFin(),iv=getInv(),sh=getShare();
+  $('#view').innerHTML=`<div class="panel">
+  <button class="fbtn" style="display:block;width:100%;margin-bottom:8px" onclick="csv('production',${JSON.stringify([['تاریخ','خوراک','روغن','گاز','زغال'],...p.map(r=>[r.date,r.feed,r.oil,r.gas,r.coal])]).replace(/"/g,'&quot;')})">🛢 دانلود گزارش تولید (${fa(p.length)} رکورد)</button>
+  <button class="fbtn" style="display:block;width:100%;margin-bottom:8px" onclick="csv('finance',${JSON.stringify([['تاریخ','نوع','شرح','مبلغ'],...f.map(r=>[r.date,r.type,r.desc,r.amount])]).replace(/"/g,'&quot;')})">💰 دانلود گزارش مالی (${fa(f.length)} رکورد)</button>
+  <button class="fbtn" style="display:block;width:100%;margin-bottom:8px" onclick="csv('inventory',${JSON.stringify([['کالا','موجودی','واحد','حد هشدار'],...iv.map(r=>[r.name,r.qty,r.unit,r.min])]).replace(/"/g,'&quot;')})">📦 دانلود گزارش انبار (${fa(iv.length)} رکورد)</button>
+  <button class="fbtn" style="display:block;width:100%" onclick="csv('shareholders',${JSON.stringify([['شریک','درصد','آورده'],...sh.map(r=>[r.name,r.pct,r.invested])]).replace(/"/g,'&quot;')})">🤝 دانلود گزارش سهامداران (${fa(sh.length)} رکورد)</button>
+  </div>`;
+}
+
+/* ============ OCR واقعی ============ */
+function renderOcr(){
+  $('#view').innerHTML=`<div class="panel"><h3>ثبت سند از روی عکس</h3>
+  <input class="inp" type="file" id="of" accept="image/*" capture="environment">
+  <img id="ocrPrev" alt="پیش‌نمایش">
+  <div id="ocrSt" class="muted2"></div>
+  <button class="fbtn" id="ocrGo" style="margin-top:8px">🔍 استخراج متن (OCR واقعی)</button>
+  <div class="fgrid" style="margin-top:10px">
+  <input class="inp" id="oGross" placeholder="وزن ناخالص (kg)"><input class="inp" id="oNet" placeholder="وزن خالص (kg)"></div>
+  <input class="inp" id="oNote" placeholder="یادداشت / شماره فیش">
+  <button class="fbtn" id="oSave">ذخیره در گزارش مالی</button>
+  <p class="muted2">موتور Tesseract.js روی مرورگر شما اجرا می‌شود؛ اعداد اسلیپ را استخراج می‌کند. بهترین نتیجه: عکس واضح و صاف.</p></div>`;
+  let imgUrl=null;
+  $('#of').onchange=e=>{const f=e.target.files[0];if(!f)return;imgUrl=URL.createObjectURL(f);const p=$('#ocrPrev');p.src=imgUrl;p.style.display='block';$('#ocrSt').textContent='عکس انتخاب شد — دکمه استخراج را بزنید.'};
+  $('#ocrGo').onclick=()=>{
+    if(!imgUrl){$('#ocrSt').textContent='ابتدا یک عکس انتخاب کنید.';return}
+    $('#ocrSt').textContent='⏳ در حال پردازش OCR (بار اول مدل دانلود می‌شود، ممکن است طول بکشد)...';
+    $('#ocrGo').disabled=true;
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    s.onload=()=>{Tesseract.recognize(imgUrl,'eng').then(({data})=>{
+      const nums=(data.text.match(/\d[\d,.]{2,}/g)||[]).slice(0,6);
+      $('#ocrSt').textContent='✅ متن استخراج شد. اعداد یافت‌شده: '+nums.join(' | ');
+      if(nums[0])$('#oGross').value=nums[0].replace(/[,.]/g,'');
+      if(nums[1])$('#oNet').value=nums[1].replace(/[,.]/g,'');
+      $('#ocrGo').disabled=false;
+    }).catch(()=>{$('#ocrSt').textContent='❌ خطا در پردازش. اعداد را دستی وارد کنید.';$('#ocrGo').disabled=false})};
+    s.onerror=()=>{$('#ocrSt').textContent='❌ بارگذاری موتور OCR ناموفق بود (اینترنت). اعداد را دستی وارد کنید.';$('#ocrGo').disabled=false};
+    document.head.appendChild(s);
+  };
+  $('#oSave').onclick=()=>{
+    const g=+$('#oGross').value||0,n=+$('#oNet').value||0;
+    if(!g&&!n){toast('چیزی برای ذخیره نیست.','error');return}
+    const a=getFin();a.push({date:today(),type:'in',desc:'سند باسکول — '+($('#oNote').value.trim()||'بدون یادداشت')+' (خالص '+n+' kg)',amount:0});
+    set('pp_fin',a);toast('سند ذخیره شد (در تب مالی، شرح سند).');go('fin');
+  };
+}
+
+/* ============ کاربران (مدیر) ============ */
+function renderUsers(){
+  const me=get('pp_session');
+  const users=get('pp_users',[]);
+  $('#view').innerHTML=`<div class="panel"><h3>کاربران سامانه (${fa(users.length)})</h3>
+  <table><tr><th>نام</th><th>ایمیل</th><th>نقش</th><th>تاریخ ثبت</th><th></th></tr>
+  ${users.map((u,i)=>`<tr><td>${esc(u.name)}</td><td dir="ltr">${esc(u.email)}</td><td>${u.role==='admin'?'<b class="ok">مدیر کل</b>':'کاربر'}</td><td>${esc(u.created)}</td><td>${u.email!==me?`<button class="btn danger" data-del="pp_users" data-i="${i}">حذف</button>`:'<span class="muted2">شما</span>'}</td></tr>`).join('')}
+  </table><p class="muted2">نخستین ثبت‌نام، مدیر کل است. رمزها به‌صورت هش SHA-256 ذخیره می‌شوند.</p></div>`;
+}
+
+/* ============ حذف رکورد ============ */
+function bindDel(){
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.del;if(!confirm('این رکورد حذف شود؟'))return;
+    const a=get(k,[]);a.splice(+b.dataset.i,1);set(k,a);
+    go(document.querySelector('aside button.on').dataset.t);toast('حذف شد.');
+  });
+}
+
+/* ============ فرم درخواست ============ */
+$('#reqForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const n=$('#rName').value.trim(),ph=$('#rPhone').value.trim(),em=$('#rEmail').value.trim();
+  const isPh=v=>/^(\+98|0098|98|0)?9\d{9}$/.test(v.replace(/[\s-]/g,''));
+  let ok=true;const E=(id,m)=>{$('#'+id).textContent=m;if(m)ok=false};
+  E('eRName',n.length<3?'نام حداقل ۳ حرف.':'');E('eRPhone',!isPh(ph)?'موبایل معتبر نیست.':'');E('eREmail',!isEmail(em)?'ایمیل معتبر نیست.':'');
+  if(!ok)return;
+  const b=$('#rSubmit');b.disabled=true;b.textContent='در حال ارسال…';
+  try{const fd=new FormData();fd.append('نوع','درخواست مشاوره');fd.append('نام',n);fd.append('تلفن',ph);fd.append('ایمیل',em);
+  const r=await fetch('https://formspree.io/f/mbgjybrg',{method:'POST',body:fd,headers:{Accept:'application/json'}});
+  r.ok?(e.target.reset(),toast('درخواست ثبت شد. با شما تماس می‌گیریم.')):toast('خطا در ارسال.','error')}
+  catch(x){toast('خطای اینترنت.','error')}
+  b.disabled=false;b.textContent='ثبت درخواست';
+});
+
+session();
+</script>
 </body>
 </html>
