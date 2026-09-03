@@ -3,69 +3,67 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>پترو پویا | سامانه هوشمند مدیریت پیرولیز</title>
-  <meta name="description" content="پایش آنلاین خط تولید، OCR اسناد، داشبورد سهامداران و گزارش‌گیری." />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛢</text></svg>">
+  <title>Petro Poya - Demo (Production-like)</title>
+
+  <!-- فونت فارسی (Vazirmatn) -->
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
+
   <style>
-    :root{--bg:#f6f8fb;--card:#fff;--muted:#6b7280;--accent:#2bd9a8;--accent-hover:#22c296;--danger:#e5484d;--text:#0f1724}
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:'Vazirmatn',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-    .container{max-width:1100px;margin:30px auto;padding:20px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-    h1{font-size:22px;margin:0}
-    .muted{color:var(--muted);font-size:13px}
-    .btn{display:inline-block;padding:9px 14px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-family:inherit;font-weight:700;transition:background .2s;text-decoration:none;font-size:14px}
-    .btn:hover{background:var(--accent-hover)}
-    .btn.secondary{background:#e6eef3;color:var(--text)}
-    .btn.ghost{background:transparent;border:1px solid #dde5ec;color:var(--text)}
-    .hero{display:flex;gap:24px;align-items:stretch;flex-wrap:wrap}
+    :root{
+      --bg:#f6f8fb;
+      --card:#fff;
+      --muted:#6b7280;
+      --accent:#2bd9a8;
+      --text:#0f1724;
+      --glass: rgba(255,255,255,0.7);
+    }
+    html,body{height:100%;margin:0;font-family:'Vazirmatn',system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+    .container{max-width:1100px;margin:30px auto;padding:20px;}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+    h1{font-size:20px;margin:0}
+    .hero{display:flex;gap:24px;align-items:stretch;flex-wrap:wrap;}
     .hero-left{flex:1;min-width:260px}
-    .hero-right{flex:1.3;min-width:320px;height:380px;background:linear-gradient(180deg,#fff,#f3f6f9);border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(15,23,45,.06);display:flex;align-items:center;justify-content:center}
+    .hero-right{flex:1.3;min-width:320px;height:380px;background:linear-gradient(180deg,#ffffff,#f3f6f9);border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(15,23,45,0.06);display:flex;align-items:center;justify-content:center}
     .hstat{display:flex;align-items:baseline;gap:8px;margin-top:8px}
     .hnum{font-size:28px;font-weight:700}
-    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:18px}
-    .feature-card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(15,23,45,.03)}
-    .feature-card h3{margin:6px 0;font-size:15px}
-    .feature-card p{margin:0;font-size:13px;color:var(--muted)}
-    .feat-ico{font-size:22px}
-    .field-error{color:var(--danger);font-size:12px;margin-top:4px;min-height:16px}
-    #demoSection{margin-top:24px;background:var(--card);border-radius:10px;padding:18px;box-shadow:0 4px 14px rgba(15,23,45,.04);max-width:520px}
-    #demoSection h2{margin:0 0 12px;font-size:17px}
-    #demoSection label{display:block;margin-top:10px;font-size:13px;color:var(--muted)}
-    #demoSection input{width:100%;padding:10px;margin-top:6px;border:1px solid #e6e9ef;border-radius:8px;font-family:inherit}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media (max-width:560px){.form-row{grid-template-columns:1fr}}
-    #architecture{margin-top:22px}
-    .arch-diagram{height:160px;background:linear-gradient(90deg,#f8fafc,#fff);border-radius:8px;padding:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
-    footer{margin-top:30px;text-align:center;color:var(--muted);font-size:13px}
-    .modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:60;background:rgba(12,18,26,.45);visibility:hidden;opacity:0;transition:opacity .18s,visibility .18s}
-    .modal-overlay.show{visibility:visible;opacity:1}
-    .modal{background:var(--card);border-radius:10px;padding:18px;min-width:320px;max-width:460px;box-shadow:0 10px 30px rgba(2,6,23,.2);position:relative}
+    .hlabel{color:var(--muted);font-size:13px}
+    .muted{color:var(--muted);font-size:13px}
+    .btn{display:inline-block;padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
+    .btn.secondary{background:#e6eef3;color:var(--text)}
+    .btn.ghost{background:transparent;border:1px solid #e6eef3;color:var(--text)}
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:60;background:rgba(12,18,26,0.45);visibility:hidden;opacity:0;transition:opacity .18s ease,visibility .18s;}
+    .modal-overlay.show{visibility:visible;opacity:1;}
+    .modal{background:var(--card);border-radius:10px;padding:18px;min-width:320px;max-width:460px;box-shadow:0 10px 30px rgba(2,6,23,0.2);position:relative}
     .modal h3{margin:0 0 8px;font-size:18px}
-    .modal label{display:block;margin-top:10px;font-size:13px;color:var(--muted)}
-    .modal input{width:100%;padding:10px;margin-top:6px;border:1px solid #e6e9ef;border-radius:8px;font-family:inherit}
+    .modal label{display:block;margin-top:8px;font-size:13px;color:var(--muted)}
+    .modal input{width:100%;padding:10px;margin-top:6px;border:1px solid #e6e9ef;border-radius:8px}
     .modal .actions{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
     .modal-close{position:absolute;top:10px;left:10px;background:transparent;border:0;font-size:18px;cursor:pointer}
-    .app-frame-wrap{position:fixed;inset:0;background:#fff;z-index:80;display:none;flex-direction:column}
+    /* iframe app */
+    .app-frame-wrap{position:fixed;inset:18px;background:rgba(255,255,255,0.95);border-radius:10px;box-shadow:0 10px 40px rgba(2,6,23,0.18);z-index:80;display:none;flex-direction:column}
     .app-frame-wrap.show{display:flex}
-    .app-top{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#0f1724;color:#fff}
-    .app-frame{flex:1;border:0}
-    .toast-wrap{position:fixed;bottom:18px;right:18px;z-index:100;display:flex;flex-direction:column;gap:8px}
-    .toast{background:#0f1724;color:#fff;padding:11px 16px;border-radius:8px;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.25);border-inline-start:4px solid var(--accent);opacity:0;transform:translateY(10px);transition:all .25s}
-    .toast.error{border-color:var(--danger)}
-    .toast.show{opacity:1;transform:none}
-    @media (max-width:720px){.hero{flex-direction:column}.hero-right{height:260px}}
-    @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.toast{opacity:1;transform:none}}
+    .app-top{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #eef2f7}
+    .app-frame{flex:1;border:0;border-bottom-left-radius:10px;border-bottom-right-radius:10px}
+    .back-fab{background:var(--card);border-radius:6px;border:1px solid #e6eef3;padding:8px 12px;cursor:pointer}
+    /* feature cards */
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:18px}
+    .feature-card{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(15,23,45,0.03)}
+    .feat-ico{font-size:22px;margin-bottom:8px}
+    /* architecture */
+    #architecture{margin-top:22px}
+    .arch-diagram{height:160px;background:linear-gradient(90deg,#f8fafc,#ffffff);border-radius:8px;padding:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+    footer{margin-top:30px;text-align:center;color:var(--muted);font-size:13px}
+    /* small responsiveness */
+    @media (max-width:720px){ .hero{flex-direction:column} .hero-right{height:260px} }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>پترو پویا</h1>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <a href="services.html" class="btn secondary">خدمات و عملکرد</a>
-        <button id="openLoginBtn" class="btn">ورود به پنل</button>
+      <h1>Petro Poya</h1>
+      <div>
+        <button id="openLoginBtn" class="btn">ورود</button>
       </div>
     </header>
 
@@ -73,24 +71,31 @@
       <section class="hero" aria-labelledby="heroTitle">
         <div class="hero-left">
           <h2 id="heroTitle">آنالیز جریان و خروجی‌ها</h2>
-          <p class="muted">پایش لحظه‌ای خط تولید، گزارش‌گیری خودکار و شفافیت کامل برای سهامداران.</p>
+          <p class="muted">نمایش شماتیک خروجی‌ها و آمار اصلی سامانه.</p>
+
           <div class="hstat" aria-live="polite">
+            <!-- مقدار نهایی داخل HTML قرار دارد تا بدون JS هم نمایش درست باشد -->
             <span class="hnum" data-count="100">100</span>
             <span class="hlabel">٪ بهره‌وری</span>
           </div>
-          <div style="margin-top:14px">
+
+          <div style="margin-top:14px;">
             <button type="button" id="openDemoBtn" class="btn secondary">درخواست دمو</button>
-            <button type="button" id="openLoginBtn2" class="btn ghost" style="margin-inline-start:8px">ورود به داشبورد</button>
+            <button type="button" id="openLoginBtn2" class="btn ghost" style="margin-left:8px">ورود به داشبورد نمونه</button>
           </div>
+
+          <!-- feature cards (از محتوای فایل شما استفاده و بازبینی شد) -->
           <div class="features" style="margin-top:16px">
             <div class="feature-card"><div class="feat-ico">🌐</div><h3>شبکه صنعت</h3><p>تأمین‌کنندگان، تعمیرکاران، بازار پیرولیز و مرکز آموزش.</p></div>
-            <div class="feature-card"><div class="feat-ico">🤝</div><h3>سهامداران و شرکا</h3><p>محاسبه خودکار سود، داشبورد سرمایه‌گذار، ROI و بازگشت سرمایه.</p></div>
-            <div class="feature-card"><div class="feat-ico">📸</div><h3>OCR اسناد</h3><p>عکس فیش باسکول یا فرم دست‌نویس ← استخراج و ثبت خودکار.</p></div>
+            <div class="feature-card"><div class="feat-ico">🤝</div><h3>سهامداران و شرکا</h3><p>محاسبه خودکار سود، داشبورد اختصاصی سرمایه‌گذار، ROI و Payback.</p></div>
+            <div class="feature-card"><div class="feat-ico">📸</div><h3>OCR اسناد</h3><p>عکس فیش باسکول یا فرم دست‌نویس → استخراج و ثبت خودکار.</p></div>
             <div class="feature-card"><div class="feat-ico">🔐</div><h3>دسترسی و امنیت</h3><p>RBAC، Audit Log و ردپای کامل عملیات کاربران.</p></div>
           </div>
         </div>
-        <div class="hero-right" role="img" aria-label="نمودار شماتیک خط تولید">
-          <svg viewBox="0 0 460 380" xmlns="http://www.w3.org/2000/svg" focusable="false">
+
+        <div class="hero-right" role="img" aria-label="نمودار شماتیک خروجی‌ها">
+          <!-- نمونهٔ SVG ساده شده و اصلاح‌شده -->
+          <svg viewBox="0 0 460 380" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="false">
             <defs>
               <linearGradient id="hTank" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="#3a4757"/><stop offset="100%" stop-color="#161e28"/>
@@ -99,356 +104,253 @@
                 <path d="M0,0 L10,5 L0,10 L3,5 z" fill="#29323d"/>
               </marker>
             </defs>
-            <rect x="40" y="60" width="120" height="200" rx="10" fill="url(#hTank)"/>
+
+            <rect x="40" y="60" width="120" height="200" rx="10" fill="url(#hTank)" />
             <circle cx="100" cy="40" r="20" fill="#c8d4de" opacity=".6"/>
-            <text x="100" y="150" font-family="Vazirmatn" font-size="13" fill="#c8d4de" text-anchor="middle">مخزن خوراک</text>
-            <path d="M160 160 H320 V268" fill="none" stroke="#29323d" stroke-width="2" marker-end="url(#arrow)"/>
+            <path d="M160 160 L220 160 L220 300" fill="none" stroke="#29323d" stroke-width="2" marker-end="url(#arrow)"/>
             <g font-family="Vazirmatn" text-anchor="middle">
               <circle cx="320" cy="300" r="26" fill="#2bd9a822" stroke="#2bd9a8" stroke-width="1.5"/>
-              <text x="320" y="306" font-size="16">🛢</text>
-              <text x="320" y="345" font-size="11" fill="#9aa4b8">روغن تولیدی</text>
+              <text x="320" y="305" font-size="16" dominant-baseline="middle">🛢</text>
+              <text x="320" y="335" font-size="11" fill="#9aa4b8">روغن</text>
             </g>
           </svg>
         </div>
       </section>
 
-      <section id="demoSection">
-        <h2>درخواست دمو / مشاوره</h2>
-        <form id="demoForm" novalidate>
-          <label for="demoName">نام و نام خانوادگی</label>
-          <input id="demoName" name="name" required minlength="3">
-          <div class="field-error" id="eName" aria-live="polite"></div>
-          <div class="form-row">
-            <div>
-              <label for="demoPhone">شماره موبایل</label>
-              <input id="demoPhone" name="phone" inputmode="tel" dir="ltr" placeholder="09xxxxxxxxx" required>
-              <div class="field-error" id="ePhone" aria-live="polite"></div>
-            </div>
-            <div>
-              <label for="demoEmail">ایمیل</label>
-              <input id="demoEmail" name="email" type="email" dir="ltr" required>
-              <div class="field-error" id="eEmail" aria-live="polite"></div>
-            </div>
+      <!-- DEMO FORM -->
+      <section style="margin-top:18px;" id="demoSection">
+        <form id="demoForm">
+          <label for="demoName" class="muted">نام و نام خانوادگی</label>
+          <input id="demoName" name="name" required />
+          <div style="margin-top:8px">
+            <button type="submit" class="btn">درخواست دمو</button>
           </div>
-          <button type="submit" class="btn" id="demoSubmit" style="margin-top:12px">ثبت درخواست</button>
         </form>
       </section>
 
-      <section id="architecture">
-        <span class="muted">معماری فنی</span>
-        <h2 style="margin:6px 0">Multi-Tenant · Modular · API Ready</h2>
-        <p class="muted">ساختاری آماده برای رشد، اتصال به IoT/PLC و مقیاس‌پذیری میان چندین کارخانه.</p>
-        <div class="arch-diagram">نمودار معماری سامانه</div>
+      <!-- ARCHITECTURE (از محتوای فایل شما استفاده شده) -->
+      <section class="section" id="architecture">
+        <div class="section-head" style="margin-top:18px">
+          <span class="tag">معماری فنی</span>
+          <h2>Multi-Tenant · Modular · API Ready</h2>
+          <p class="muted">ساختاری آماده برای رشد، اتصال به IoT/PLC و مقیاس‌پذیری میان چندین کارخانه.</p>
+        </div>
+        <div class="arch-diagram">نمودار معماری (نمایش نمونه)</div>
       </section>
+
     </main>
 
-    <footer>© ۲۰۲۶ پترو پویا — تمامی حقوق محفوظ است.</footer>
+    <footer>
+      © 2026 Petro Poya
+    </footer>
   </div>
 
-  <div id="loginModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal" role="document">
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="loginTitle">
+    <div class="modal" role="document" aria-describedby="loginDesc">
       <button class="modal-close" aria-label="بستن پنجره">✕</button>
-      <h3>ورود به پنل مدیریت</h3>
-      <p class="muted">دمو: هر ایمیل + رمز <b>demo</b></p>
+      <h3 id="loginTitle">ورود به پلتفرم</h3>
+      <p id="loginDesc" class="muted">این محیط دمو است — در حالت واقعی این فرم به سرور ارسال می‌شود.</p>
+
       <form id="loginForm" novalidate>
-        <label for="username">ایمیل</label>
-        <input id="username" type="email" autocomplete="username" dir="ltr" required>
-        <div class="field-error" id="eLoginEmail"></div>
+        <label for="username">نام کاربری / ایمیل</label>
+        <input id="username" name="username" type="email" autocomplete="username" placeholder="factory.admin@pyroflow.demo" required>
+
         <label for="password">رمز عبور</label>
-        <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
-        <div class="field-error" id="eLoginPass"></div>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="رمز دمو: demo" required>
+
         <div class="actions">
           <button type="button" class="btn secondary" id="cancelLogin">انصراف</button>
-          <button type="submit" class="btn">ورود</button>
+          <button type="submit" class="btn">ورود به داشبورد</button>
         </div>
       </form>
     </div>
   </div>
 
-  <div id="appFrameWrap" class="app-frame-wrap" aria-hidden="true" role="region" aria-label="پنل مدیریت">
+  <!-- EMBEDDED APP WRAP (iframe) -->
+  <div id="appFrameWrap" class="app-frame-wrap" aria-hidden="true" role="region" aria-label="Embedded application">
     <div class="app-top">
-      <strong>داشبورد مدیریت پترو پویا</strong>
-      <button class="btn ghost" id="closeAppBtn" style="border-color:#3b4a63;color:#fff">✕ بستن</button>
+      <div style="display:flex;gap:12px;align-items:center">
+        <strong>PyroFlow Dashboard (نمونه)</strong>
+        <span class="muted">— محیط embed</span>
+      </div>
+      <div>
+        <button class="back-fab" id="backToLandingBtn">← بازگشت</button>
+      </div>
     </div>
-    <iframe id="appFrame" class="app-frame" title="داشبورد"></iframe>
+    <iframe id="appFrame" class="app-frame" title="PyroFlow Dashboard"></iframe>
   </div>
 
-  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
-
   <script>
-    const qs = (s,r=document)=>r.querySelector(s);
-    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Helper selectors
+    const qs = (s, r=document) => r.querySelector(s);
+    const qsa = (s, r=document) => Array.from(r.querySelectorAll(s));
 
-    function toast(msg,type='success'){
-      const el=document.createElement('div');
-      el.className='toast'+(type==='error'?' error':'');
-      el.textContent=msg;
-      qs('#toastWrap').appendChild(el);
-      requestAnimationFrame(()=>el.classList.add('show'));
-      setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),300);},3500);
-    }
-
+    // ============ Counters ============
     function animateCounters(){
-      document.querySelectorAll('.hnum').forEach(el=>{
-        const target=parseInt(el.dataset.count,10)||0;
-        if(reduceMotion){el.textContent=target;return;}
-        const t0=performance.now(),dur=1000;
-        (function step(ts){
-          const p=Math.min((ts-t0)/dur,1);
-          el.textContent=Math.floor(p*target);
-          p<1?requestAnimationFrame(step):el.textContent=target;
-        })(t0);
+      qsa('.hnum').forEach(el => {
+        const raw = el.getAttribute('data-count') || el.textContent.trim().replace(/[^0-9]/g,'');
+        const target = parseInt(raw,10) || 0;
+        const duration = 1000;
+        let startTime = null;
+        const start = 0;
+        el.textContent = start;
+        function step(ts){
+          if (!startTime) startTime = ts;
+          const progress = Math.min((ts - startTime) / duration, 1);
+          el.textContent = Math.floor(progress * (target - start) + start);
+          if (progress < 1) requestAnimationFrame(step);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(step);
       });
     }
-    setTimeout(animateCounters,300);
+    setTimeout(animateCounters, 300);
 
-    /* ---- مودال ورود ---- */
-    const loginModal=qs('#loginModal');let lastFocused=null;
-    function openModal(){lastFocused=document.activeElement;loginModal.classList.add('show');loginModal.setAttribute('aria-hidden','false');qs('#username').focus();document.addEventListener('keydown',handleModalKeys,true);}
-    function closeModal(){loginModal.classList.remove('show');loginModal.setAttribute('aria-hidden','true');document.removeEventListener('keydown',handleModalKeys,true);lastFocused?.focus();}
-    function handleModalKeys(e){
-      if(e.key==='Escape')return closeModal();
-      if(e.key!=='Tab')return;
-      const f=Array.from(loginModal.querySelectorAll('button,input')).filter(n=>!n.disabled);
-      if(!f.length)return;
-      const first=f[0],last=f[f.length-1];
-      if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
-      else if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+    // ============ Modal (Accessible) ============
+    const loginModal = qs('#loginModal');
+    const loginForm = qs('#loginForm');
+    const openLoginBtn = qs('#openLoginBtn');
+    const openLoginBtn2 = qs('#openLoginBtn2');
+    const cancelLoginBtn = qs('#cancelLogin');
+    const modalCloseBtn = qs('.modal-close');
+
+    let lastFocused = null;
+    function openModal(){
+      lastFocused = document.activeElement;
+      loginModal.classList.add('show');
+      loginModal.setAttribute('aria-hidden','false');
+      const first = qs('#username');
+      first?.focus();
+      document.addEventListener('focus', trapFocus, true);
+      document.addEventListener('keydown', handleModalKeys);
     }
-    qs('#openLoginBtn').addEventListener('click',openModal);
-    qs('#openLoginBtn2').addEventListener('click',openModal);
-    qs('#cancelLogin').addEventListener('click',closeModal);
-    qs('.modal-close').addEventListener('click',closeModal);
-    loginModal.addEventListener('click',e=>{if(e.target===loginModal)closeModal();});
+    function closeModal(){
+      loginModal.classList.remove('show');
+      loginModal.setAttribute('aria-hidden','true');
+      document.removeEventListener('focus', trapFocus, true);
+      document.removeEventListener('keydown', handleModalKeys);
+      if (lastFocused) lastFocused.focus();
+    }
+    function trapFocus(e){
+      if (!loginModal.contains(e.target)) {
+        e.stopPropagation();
+        qs('#username')?.focus();
+      }
+    }
+    function handleModalKeys(e){
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'Tab') {
+        const focusable = qsa('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])', loginModal).filter(n => n.offsetParent !== null);
+        if (focusable.length === 0) return;
+        const first = focusable[0], last = focusable[focusable.length - 1];
+        if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+        else if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      }
+    }
 
-    const isEmail=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-    qs('#loginForm').addEventListener('submit',e=>{
+    openLoginBtn?.addEventListener('click', openModal);
+    openLoginBtn2?.addEventListener('click', openModal);
+    cancelLoginBtn?.addEventListener('click', closeModal);
+    modalCloseBtn?.addEventListener('click', closeModal);
+    loginModal?.addEventListener('click', (e) => { if (e.target === loginModal) closeModal(); });
+
+    // ============ Demo form ============ 
+    qs('#demoForm')?.addEventListener('submit', function(e){
       e.preventDefault();
-      const email=qs('#username').value.trim(),pass=qs('#password').value;
-      qs('#eLoginEmail').textContent='';qs('#eLoginPass').textContent='';
-      if(!isEmail(email)){qs('#eLoginEmail').textContent='ایمیل معتبر وارد کنید.';return;}
-      if(!pass){qs('#eLoginPass').textContent='رمز عبور را وارد کنید.';return;}
-      if(pass!=='demo'){qs('#eLoginPass').textContent='رمز دمو اشتباه است (demo).';return;}
-      closeModal();openDashboard(email);toast('خوش آمدید!');
+      alert('درخواست دمو با موفقیت ثبت شد. کارشناسان PyroFlow به‌زودی با شما تماس می‌گیرند.');
+      this.reset();
     });
 
-    /* ---- فرم درخواست دمو → Formspree (واقعاً ایمیل می‌فرستد) ---- */
-    const isPhone=v=>/^(\+98|0098|98|0)?9\d{9}$/.test(v.replace(/[\s-]/g,''));
-    qs('#demoForm').addEventListener('submit',async e=>{
-      e.preventDefault();
-      const name=qs('#demoName').value.trim(),phone=qs('#demoPhone').value.trim(),email=qs('#demoEmail').value.trim();
-      let ok=true;
-      const set=(id,msg)=>{qs(id).textContent=msg;if(msg)ok=false;};
-      set('#eName',name.length<3?'نام باید حداقل ۳ حرف باشد.':'');
-      set('#ePhone',!isPhone(phone)?'شماره موبایل معتبر نیست.':'');
-      set('#eEmail',!isEmail(email)?'ایمیل معتبر وارد کنید.':'');
-      if(!ok)return;
-      const btn=qs('#demoSubmit');
-      btn.disabled=true;btn.textContent='در حال ارسال…';
-      try{
-        const fd=new FormData();
-        fd.append('نوع','درخواست دمو');
-        fd.append('نام',name);fd.append('تلفن',phone);fd.append('ایمیل',email);
-        const res=await fetch('https://formspree.io/f/mbgjybrg',{method:'POST',body:fd,headers:{'Accept':'application/json'}});
-        if(res.ok){e.target.reset();toast('درخواست شما ثبت شد. کارشناسان با شما تماس می‌گیرند.');}
-        else toast('خطا در ارسال! دوباره تلاش کنید.','error');
-      }catch(err){toast('خطای اینترنت! دوباره تلاش کنید.','error');}
-      btn.disabled=false;btn.textContent='ثبت درخواست';
-    });
+    // ============ Embedded App (iframe) handling ============
+    const appWrap = qs('#appFrameWrap');
+    const appFrame = qs('#appFrame');
+    const backBtn = qs('#backToLandingBtn');
 
-    qs('#openDemoBtn').addEventListener('click',()=>{
-      qs('#demoSection').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});
-      qs('#demoName').focus();
-    });
-
-    /* ---- داشبورد کامل ---- */
-    const appWrap=qs('#appFrameWrap'),appFrame=qs('#appFrame');
-    function openDashboard(email){
-      const safeEmail=email.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-      appFrame.srcdoc=`<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>داشبورد | پترو پویا</title><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet"><style>
-body{font-family:Vazirmatn,system-ui;margin:0;background:#0f1724;color:#e6eef3}
-.app{display:flex;height:100vh}
-aside{width:200px;background:#0b1220;padding:14px 10px;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
-.logo{font-weight:700;color:#2bd9a8;margin:2px 8px 12px;font-size:15px}
-aside button{all:unset;cursor:pointer;padding:9px 12px;border-radius:8px;font-family:inherit;font-size:13.5px;color:#c7d2de}
-aside button:hover{background:rgba(255,255,255,.06)}
-aside button.on{background:#2bd9a8;color:#04281d;font-weight:700}
-main{flex:1;padding:16px 20px;overflow-y:auto}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap}
-.topbar h2{margin:0;font-size:18px}
-.user{font-size:12px;color:#9aa4b8}
-.sub{color:#8ea0b5;font-size:12px;margin:0 0 14px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
-.kpi{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px}
-.kpi h4{margin:0;font-size:12px;color:#9aa4b8;font-weight:400}
-.kpi .v{font-size:21px;font-weight:700;margin-top:4px}
-.ok{color:#2bd9a8}.warn{color:#f5b301}
-.panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:14px;margin-bottom:14px}
-.panel h3{margin:0 0 10px;font-size:14px;color:#c7d2de}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:8px 10px;text-align:right;border-bottom:1px solid rgba(255,255,255,.08)}
-th{color:#9aa4b8;font-weight:400;font-size:12px}
-.bars{display:flex;align-items:flex-end;gap:10px;height:170px;padding-top:24px}
-.bar{flex:1;background:linear-gradient(180deg,#2bd9a8,#1a8f70);border-radius:6px 6px 0 0;position:relative;min-width:18px}
-.bar b{position:absolute;top:-20px;left:0;right:0;text-align:center;font-size:11px;font-weight:400}
-.bar span{position:absolute;bottom:-22px;left:0;right:0;text-align:center;font-size:11px;color:#9aa4b8}
-.tab{display:none}.tab.on{display:block}
-.btn{background:#2bd9a8;color:#04281d;border:none;border-radius:8px;padding:7px 14px;font-family:inherit;font-weight:700;cursor:pointer;font-size:13px}
-.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.25);color:#e6eef3}
-.rep-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
-.note{font-size:11px;color:#7d8ea0;margin-top:8px}
-.ocr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin-top:10px}
-.ocr-grid div{background:rgba(255,255,255,.04);border-radius:8px;padding:8px 10px}
-.ocr-grid b{color:#9aa4b8;font-weight:400;font-size:11px;display:block}
-@media(max-width:700px){aside{width:52px}.logo,.lbl{display:none}aside button{font-size:17px;padding:10px 7px}.ocr-grid{grid-template-columns:1fr}}
-</style></head><body>
-<div class="app">
-<aside>
-<div class="logo">🛢 پترو پویا</div>
-<button class="on" data-t="monitor">📡<span class="lbl"> پایش زنده</span></button>
-<button data-t="perf">⚙️<span class="lbl"> عملکرد</span></button>
-<button data-t="prod">🛢<span class="lbl"> تولید</span></button>
-<button data-t="share">🤝<span class="lbl"> سهامداران</span></button>
-<button data-t="rep">🧾<span class="lbl"> گزارش‌ها</span></button>
-<button data-t="ocr">📸<span class="lbl"> اسناد OCR</span></button>
-</aside>
-<main>
-<div class="topbar"><h2 id="tt">پایش زنده</h2><div style="display:flex;gap:10px;align-items:center"><span class="user">${safeEmail}</span><button class="btn ghost" onclick="parent.hideApp()">خروج</button></div></div>
-
-<div class="tab on" id="tab-monitor">
-<p class="sub">داده‌های نمایشی — در نسخه نهایی از سنسورهای IoT/PLC خوانده می‌شود.</p>
-<div class="kpis">
-<div class="kpi"><h4>دمای راکتور</h4><div class="v" id="tv">۴۲۵ °C</div></div>
-<div class="kpi"><h4>فشار خط</h4><div class="v" id="pv">۲.۴ bar</div></div>
-<div class="kpi"><h4>جریان خوراک</h4><div class="v" id="fv">۳.۸ t/h</div></div>
-<div class="kpi"><h4>وضعیت خط</h4><div class="v ok">فعال ●</div></div>
-</div>
-<div class="panel"><h3>نمودار زنده دما (°C)</h3><canvas id="lc" width="800" height="230" style="width:100%"></canvas></div>
-</div>
-
-<div class="tab" id="tab-perf">
-<div class="kpis">
-<div class="kpi"><h4>بهره‌وری</h4><div class="v ok">۹۴٪</div></div>
-<div class="kpi"><h4>راندمان تبدیل</h4><div class="v">۸۷٪</div></div>
-<div class="kpi"><h4>تولید این ماه</h4><div class="v">۳۴۸ تن</div></div>
-<div class="kpi"><h4>توقفات ماه</h4><div class="v warn">۲</div></div>
-</div>
-<div class="panel"><h3>تولید هفته (تن)</h3><div class="bars">
-<div class="bar" style="height:55%"><b>۹.۲</b><span>ش</span></div>
-<div class="bar" style="height:72%"><b>۱۲.۱</b><span>ی</span></div>
-<div class="bar" style="height:64%"><b>۱۰.۸</b><span>د</span></div>
-<div class="bar" style="height:80%"><b>۱۳.۵</b><span>س</span></div>
-<div class="bar" style="height:47%"><b>۷.۹</b><span>چ</span></div>
-<div class="bar" style="height:88%"><b>۱۴.۸</b><span>پ</span></div>
-<div class="bar" style="height:38%"><b>۶.۴</b><span>ج</span></div>
-</div></div>
-</div>
-
-<div class="tab" id="tab-prod">
-<div class="panel"><h3>بارهای اخیر خط تولید</h3>
-<table><tr><th>تاریخ</th><th>خوراک</th><th>روغن (تن)</th><th>گاز (تن)</th><th>زغال (تن)</th><th>وضعیت</th></tr>
-<tr><td>۱۴۰۴/۰۶/۱۲</td><td>پسماند پلاستیک — ۲۰t</td><td>۹.۲</td><td>۳.۱</td><td>۴.۵</td><td class="ok">تکمیل</td></tr>
-<tr><td>۱۴۰۴/۰۶/۱۱</td><td>پسماند پلاستیک — ۱۸t</td><td>۸.۴</td><td>۲.۸</td><td>۴.۱</td><td class="ok">تکمیل</td></tr>
-<tr><td>۱۴۰۴/۰۶/۱۰</td><td>لاستیک — ۱۵t</td><td>۷.۱</td><td>۲.۵</td><td>۳.۶</td><td class="warn">در حال اجرا</td></tr>
-<tr><td>۱۴۰۴/۰۶/۰۹</td><td>پسماند پلاستیک — ۲۲t</td><td>۱۰.۱</td><td>۳.۴</td><td>۵.۰</td><td class="ok">تکمیل</td></tr>
-<tr><td>۱۴۰۴/۰۶/۰۸</td><td>لاستیک — ۱۷t</td><td>۸.۰</td><td>۲.۹</td><td>۴.۲</td><td class="ok">تکمیل</td></tr>
-</table><p class="note">داده‌ها نمونه هستند.</p></div>
-</div>
-
-<div class="tab" id="tab-share">
-<div class="panel"><h3>سهامداران و بازدهی (ماه جاری)</h3>
-<table><tr><th>شریک</th><th>سهم</th><th>آورده (میلیارد ت)</th><th>سود ماه (میلیون ت)</th><th>ROI</th></tr>
-<tr><td>مهندس حسین سالاری</td><td>۴۰٪</td><td>۴.۸</td><td>۱۶۸</td><td class="ok">٪۱۴.۲</td></tr>
-<tr><td>آقای رضا کریمی</td><td>۳۰٪</td><td>۳.۶</td><td>۱۲۶</td><td class="ok">٪۱۴.۲</td></tr>
-<tr><td>خانم مریم نوری</td><td>۲۰٪</td><td>۲.۴</td><td>۸۴</td><td class="ok">٪۱۴.۲</td></tr>
-<tr><td>شرکت پترو تدبیر</td><td>۱۰٪</td><td>۱.۲</td><td>۴۲</td><td class="ok">٪۱۴.۲</td></tr>
-<tr><td><b>جمع</b></td><td><b>۱۰۰٪</b></td><td><b>۱۲</b></td><td><b>۴۲۰</b></td><td>—</td></tr>
-</table><p class="note">محاسبات در نسخه نهایی به‌صورت خودکار از اسناد انجام می‌شود.</p></div>
-</div>
-
-<div class="tab" id="tab-rep">
-<div class="panel">
-<div class="rep-row"><div><b>گزارش روزانه</b> — ۱۴۰۴/۰۶/۱۲</div><button class="btn" data-csv="daily">دانلود CSV</button></div>
-<div class="rep-row"><div><b>گزارش هفتگی</b> — هفته ۳۶</div><button class="btn" data-csv="weekly">دانلود CSV</button></div>
-<div class="rep-row"><div><b>گزارش سود سهامداران</b> — مرداد</div><button class="btn" data-csv="share">دانلود CSV</button></div>
-</div>
-</div>
-
-<div class="tab" id="tab-ocr">
-<div class="panel"><h3>ثبت سند با عکس (OCR)</h3>
-<input type="file" id="f" accept="image/*" capture="environment" style="display:none">
-<button class="btn" onclick="document.getElementById('f').click()">📷 انتخاب عکس فیش/فرم</button>
-<div id="res" style="display:none;margin-top:6px"><div class="ocr-grid">
-<div><b>نوع سند</b>فیش باسکول</div><div><b>شماره فیش</b>۴۵۲۱</div>
-<div><b>راننده</b>قاسم احمدی</div><div><b>پلاک</b>۲۲ ع ۴۸۱ ـ ۱۱</div>
-<div><b>وزن ناخالص</b>۳۲٬۴۵۰ kg</div><div><b>وزن خالص</b>۲۹٬۱۲۰ kg</div>
-</div><p class="note">نمونه دمو — نسخه نهایی به موتور OCR واقعی متصل می‌شود.</p></div>
-</div>
-</div>
-</main></div>
-<script>
-var tt=document.getElementById('tt');
-var titles={monitor:'پایش زنده',perf:'عملکرد',prod:'تولید و بارها',share:'سهامداران',rep:'گزارش‌ها',ocr:'اسناد و OCR'};
-var btns=document.querySelectorAll('aside button');
-for(var i=0;i<btns.length;i++){btns[i].addEventListener('click',function(){
-  document.querySelectorAll('aside button').forEach(function(b){b.classList.remove('on')});
-  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});
-  this.classList.add('on');
-  var t=this.getAttribute('data-t');
-  document.getElementById('tab-'+t).classList.add('on');
-  tt.textContent=titles[t];
-});}
-var m='۰۱۲۳۴۵۶۷۸۹';
-function fa(s){var o='',i,c;for(i=0;i<s.length;i++){c=s[i];o+=(c>='0'&&c<='9')?m[+c]:c;}return o;}
-var data=[],j;for(j=0;j<40;j++)data.push(420+Math.random()*14);
-var c=document.getElementById('lc'),ctx=c.getContext('2d');
-function draw(){
- var w=c.width,h=c.height;ctx.clearRect(0,0,w,h);
- var min=400,max=450,g;
- ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.fillStyle='#7d8ea0';ctx.font='12px Vazirmatn';
- for(g=0;g<=4;g++){var y=10+(h-30)*g/4;ctx.beginPath();ctx.moveTo(40,y);ctx.lineTo(w-10,y);ctx.stroke();ctx.fillText(fa(String(Math.round(max-(max-min)*g/4))),6,y+4);}
- ctx.strokeStyle='#2bd9a8';ctx.lineWidth=2;ctx.beginPath();
- for(var d=0;d<data.length;d++){var x=40+(w-50)*d/(data.length-1);var y2=10+(h-30)*(1-(data[d]-min)/(max-min));d?ctx.lineTo(x,y2):ctx.moveTo(x,y2);}
- ctx.stroke();
-}
-draw();
-setInterval(function(){
- data.push(420+Math.random()*16);if(data.length>40)data.shift();draw();
- document.getElementById('tv').textContent=fa(Math.round(420+Math.random()*18))+' °C';
- document.getElementById('pv').textContent=fa((2+Math.random()).toFixed(1))+' bar';
- document.getElementById('fv').textContent=fa((3.2+Math.random()).toFixed(1))+' t/h';
-},2000);
-function dl(name,rows){
- var nl=String.fromCharCode(10);
- var csv=rows.map(function(r){return r.join(',')}).join(nl);
- var a=document.createElement('a');
- a.href=URL.createObjectURL(new Blob(['ufeff',csv],{type:'text/csv;charset=utf-8'}));
- a.download=name;a.click();
-}
-var csvs={
- daily:[['تاریخ','خوراک','روغن','گاز','زغال'],['1404/06/12','20t','9.2','3.1','4.5'],['1404/06/11','18t','8.4','2.8','4.1']],
- weekly:[['روز','تولید(تن)'],['شنبه','9.2'],['یکشنبه','12.1'],['دوشنبه','10.8'],['سه‌شنبه','13.5'],['چهارشنبه','7.9'],['پنجشنبه','14.8'],['جمعه','6.4']],
- share:[['شریک','سهم','سود(میلیون)'],['حسین سالاری','40','168'],['رضا کریمی','30','126'],['مریم نوری','20','84'],['پترو تدبیر','10','42']]
-};
-document.querySelectorAll('[data-csv]').forEach(function(b){b.addEventListener('click',function(){dl(this.getAttribute('data-csv')+'.csv',csvs[this.getAttribute('data-csv')]);});});
-document.getElementById('f').addEventListener('change',function(){
- if(!this.files.length)return;
- var r=document.getElementById('res');
- r.style.display='none';
- setTimeout(function(){r.style.display='block';},1200);
-});
-<\/script></body></html>`;
+    function showAppWithContent(htmlString){
+      appFrame.srcdoc = htmlString;
       appWrap.classList.add('show');
       appWrap.setAttribute('aria-hidden','false');
+      // focus iframe for keyboard users
       appFrame.focus();
     }
     function hideApp(){
       appWrap.classList.remove('show');
       appWrap.setAttribute('aria-hidden','true');
-      appFrame.srcdoc='';
+      // clear iframe content (optional)
+      appFrame.srcdoc = '';
     }
-    qs('#closeAppBtn').addEventListener('click',hideApp);
-    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&appWrap.classList.contains('show'))hideApp();});
+    backBtn?.addEventListener('click', hideApp);
+
+    // Example dashboard HTML (نمونهٔ واقعی‌شده ولی ساده)
+    function getSampleDashboardHTML(userEmail = 'کاربر دمو'){
+      return `
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard - Demo</title>
+<style>
+  body{font-family: Vazirmatn, system-ui; margin:0; background:#0f1724; color:#e6eef3}
+  header{padding:12px;background:linear-gradient(90deg,#0b1220,#122033);display:flex;justify-content:space-between;align-items:center}
+  main{padding:16px}
+  .card{background:rgba(255,255,255,0.04);padding:12px;border-radius:8px;margin-bottom:12px}
+</style>
+</head>
+<body>
+  <header><div>PyroFlow Dashboard (نمونه)</div><div>${userEmail}</div></header>
+  <main>
+    <div class="card"><h3>وضعیت کلی</h3><p>نمونه داشبورد embed برای نمایش امکانات.</p></div>
+    <div class="card"><h3>عملیات</h3><p>خواندن سنسورها، نمودارها و لاگ‌ها در این بخش قرار می‌گیرد.</p></div>
+  </main>
+</body>
+</html>
+      `;
+    }
+
+    // ============ Login handling (Demo) ============
+    loginForm?.addEventListener('submit', function(e){
+      e.preventDefault();
+      const email = qs('#username').value.trim();
+      const pwd = qs('#password').value.trim();
+
+      // مثال: در حالت واقعی اینجا باید درخواست POST به سرور داده شود (HTTPS) و CSRF/جلسه مدیریت شود.
+      // برای دمو: اگر ایمیل demo مشخص یا هر ورودی معتبر باشد، وارد می‌شویم.
+      const demoEmail = 'factory.admin@pyroflow.demo';
+      const demoPassword = 'demo';
+
+      if (!email || !pwd){
+        alert('لطفاً نام کاربری و رمز عبور را وارد کنید.');
+        return;
+      }
+
+      // ساده‌سازی: پذیرش فقط با رمز دمو یا ایمیل دمو — برای نمونهٔ واقعی باید به سرور استعلام کنید.
+      if ((email === demoEmail && pwd === demoPassword) || pwd === demoPassword){
+        closeModal();
+        // بارگذاری داشبورد داخل iframe
+        showAppWithContent(getSampleDashboardHTML(email));
+      } else {
+        // خطای سادهٔ سمت کلاینت
+        alert('نام کاربری یا رمز عبور اشتباه است (برای دمو از demo/demo استفاده کنید).');
+      }
+    });
+
+    // ============ Small UI behaviors ============
+    // navbar shadow on scroll (از فایل شما بود)
+    window.addEventListener('scroll', () => {
+      // اگر عنصر navbar وجود نداشت این بخش امن است
+      const nav = document.getElementById('navbar');
+      if (nav) nav.style.boxShadow = window.scrollY > 10 ? '0 4px 20px rgba(0,0,0,.12)' : 'none';
+    });
+
+    // open demo section (از دکمهٔ درخواست دمو)
+    qs('#openDemoBtn')?.addEventListener('click', () => {
+      qs('#demoSection')?.scrollIntoView({behavior:'smooth',block:'center'});
+      qs('#demoName')?.focus();
+    });
+
+    // defensive: close app when user presses Escape while iframe open
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && appWrap.classList.contains('show')) hideApp();
+    });
   </script>
 </body>
 </html>
