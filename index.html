@@ -43,24 +43,35 @@
 
 <section id="register">
   <h2>فرم ثبت‌نام</h2>
-  <form onsubmit="send(event)">
+  <form id="regForm" action="https://formspree.io/f/mbgjybrg" method="POST">
     <label>نام و نام خانوادگی</label>
-    <input required>
+    <input type="text" name="نام" required>
     <label>شماره تماس</label>
-    <input required>
+    <input type="tel" name="تلفن" required>
     <label>شرکت / نوع همکاری</label>
-    <input>
+    <input type="text" name="شرکت">
     <label>توضیحات</label>
-    <textarea rows="4"></textarea>
-    <button class="btn">ارسال</button>
-    <p id="ok" style="display:none;color:#7CFC00;text-align:center;margin-top:12px;">✅ با تشکر! اطلاعات شما ثبت شد.</p>
+    <textarea name="توضیحات" rows="4"></textarea>
+    <button class="btn" type="submit">ارسال</button>
+    <p id="ok" style="display:none;color:#7CFC00;text-align:center;margin-top:12px;">✅ با تشکر! اطلاعات شما با موفقیت ارسال شد.</p>
+    <p id="err" style="display:none;color:#ff6b6b;text-align:center;margin-top:12px;">❌ خطا! اتصال اینترنت را بررسی و دوباره تلاش کنید.</p>
   </form>
 </section>
 
 <footer>© ۲۰۲۶ پترو پویا</footer>
 
 <script>
-function send(e){e.preventDefault();document.getElementById('ok').style.display='block';e.target.reset();}
+document.getElementById('regForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const form = e.target, btn = form.querySelector('button');
+  btn.disabled = true; btn.textContent = 'در حال ارسال...';
+  try {
+    const res = await fetch(form.action, { method:'POST', body:new FormData(form), headers:{'Accept':'application/json'} });
+    if(res.ok){ document.getElementById('ok').style.display='block'; form.reset(); }
+    else { document.getElementById('err').style.display='block'; }
+  } catch(err){ document.getElementById('err').style.display='block'; }
+  btn.disabled = false; btn.textContent = 'ارسال';
+});
 </script>
 </body>
 </html>
