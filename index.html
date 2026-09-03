@@ -1,77 +1,350 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>پترو پویا | خدمات نفت و انرژی</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>پترو پویا | سامانه هوشمند مدیریت پیرولیز</title>
+  <meta name="description" content="سامانه یکپارچه مدیریت پیرولیز: پایش آنلاین، OCR اسناد، داشبورد سهامداران و گزارش‌گیری." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛢</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f6f8fb; --card:#fff; --muted:#6b7280;
+      --accent:#2bd9a8; --accent-hover:#22c296;
+      --danger:#e5484d; --text:#0f1724;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Vazirmatn',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    .container{max-width:1100px;margin:30px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+    h1{font-size:22px;margin:0}
+    .hero{display:flex;gap:24px;align-items:stretch;flex-wrap:wrap}
+    .hero-left{flex:1;min-width:260px}
+    .hero-right{flex:1.3;min-width:320px;height:380px;background:linear-gradient(180deg,#fff,#f3f6f9);border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(15,23,45,.06);display:flex;align-items:center;justify-content:center}
+    .hstat{display:flex;align-items:baseline;gap:8px;margin-top:8px}
+    .hnum{font-size:28px;font-weight:700}
+    .hlabel{color:var(--muted);font-size:13px}
+    .muted{color:var(--muted);font-size:13px}
+    .btn{display:inline-block;padding:9px 14px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-family:inherit;font-weight:700;transition:background .2s}
+    .btn:hover{background:var(--accent-hover)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
+    .btn.secondary{background:#e6eef3;color:var(--text)}
+    .btn.ghost{background:transparent;border:1px solid #dde5ec;color:var(--text)}
+    .modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:60;background:rgba(12,18,26,.45);visibility:hidden;opacity:0;transition:opacity .18s,visibility .18s}
+    .modal-overlay.show{visibility:visible;opacity:1}
+    .modal{background:var(--card);border-radius:10px;padding:18px;min-width:320px;max-width:460px;box-shadow:0 10px 30px rgba(2,6,23,.2);position:relative}
+    .modal h3{margin:0 0 8px;font-size:18px}
+    .modal label{display:block;margin-top:10px;font-size:13px;color:var(--muted)}
+    .modal input{width:100%;padding:10px;margin-top:6px;border:1px solid #e6e9ef;border-radius:8px;font-family:inherit}
+    .modal input.invalid{border-color:var(--danger)}
+    .field-error{color:var(--danger);font-size:12px;margin-top:4px;min-height:16px}
+    .modal .actions{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
+    .modal-close{position:absolute;top:10px;left:10px;background:transparent;border:0;font-size:18px;cursor:pointer}
+    #contactSection{margin-top:24px;background:var(--card);border-radius:10px;padding:18px;box-shadow:0 4px 14px rgba(15,23,45,.04);max-width:520px}
+    #contactSection h2{margin:0 0 12px;font-size:17px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:560px){.form-row{grid-template-columns:1fr}}
+    .toast-wrap{position:fixed;bottom:18px;right:18px;z-index:100;display:flex;flex-direction:column;gap:8px}
+    .toast{background:#0f1724;color:#fff;padding:11px 16px;border-radius:8px;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.25);border-inline-start:4px solid var(--accent);opacity:0;transform:translateY(10px);transition:all .25s}
+    .toast.error{border-color:var(--danger)}
+    .toast.show{opacity:1;transform:none}
+    .app-frame-wrap{position:fixed;inset:0;background:#fff;z-index:80;display:none;flex-direction:column}
+    .app-frame-wrap.show{display:flex}
+    .app-top{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#0f1724;color:#fff}
+    .app-frame{flex:1;border:0}
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:18px}
+    .feature-card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(15,23,45,.03)}
+    .feature-card h3{margin:6px 0;font-size:15px}
+    .feature-card p{margin:0;font-size:13px;color:var(--muted)}
+    .feat-ico{font-size:22px}
+    #architecture{margin-top:22px}
+    .arch-diagram{height:160px;background:linear-gradient(90deg,#f8fafc,#fff);border-radius:8px;padding:12px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+    footer{margin-top:30px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:720px){.hero{flex-direction:column}.hero-right{height:260px}}
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{transition:none!important;animation:none!important}
+      .toast{opacity:1;transform:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>پترو پویا</h1>
+      <!-- ✏️ تغییر ۱: دکمه صفحه خدمات -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="services.html" class="btn secondary" style="text-decoration:none">خدمات و عملکرد</a>
+        <button id="openLoginBtn" class="btn">ورود به پنل</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="heroTitle">
+        <div class="hero-left">
+          <h2 id="heroTitle">آنالیز جریان و خروجی‌ها</h2>
+          <p class="muted">پایش لحظه‌ای خط تولید، گزارش‌گیری خودکار و شفافیت کامل برای سهامداران.</p>
+
+          <div class="hstat" aria-live="polite">
+            <span class="hnum" data-count="100">100</span>
+            <span class="hlabel">٪ بهره‌وری</span>
+          </div>
+
+          <div style="margin-top:14px">
+            <button type="button" id="scrollToContact" class="btn secondary">درخواست مشاوره</button>
+            <button type="button" id="openLoginBtn2" class="btn ghost" style="margin-inline-start:8px">ورود به داشبورد</button>
+          </div>
+
+          <div class="features" style="margin-top:16px">
+            <div class="feature-card"><div class="feat-ico">🌐</div><h3>شبکه صنعت</h3><p>تأمین‌کنندگان، تعمیرکاران، بازار پیرولیز و مرکز آموزش.</p></div>
+            <div class="feature-card"><div class="feat-ico">🤝</div><h3>سهامداران و شرکا</h3><p>محاسبه خودکار سود، داشبورد سرمایه‌گذار، ROI و بازگشت سرمایه.</p></div>
+            <div class="feature-card"><div class="feat-ico">📸</div><h3>OCR اسناد</h3><p>عکس فیش باسکول یا فرم دست‌نویس ← استخراج و ثبت خودکار.</p></div>
+            <div class="feature-card"><div class="feat-ico">🔐</div><h3>دسترسی و امنیت</h3><p>RBAC، Audit Log و ردپای کامل عملیات کاربران.</p></div>
+          </div>
+        </div>
+
+        <div class="hero-right" role="img" aria-label="نمودار شماتیک خط تولید">
+          <svg viewBox="0 0 460 380" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <defs>
+              <linearGradient id="hTank" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#3a4757"/><stop offset="100%" stop-color="#161e28"/>
+              </linearGradient>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 L3,5 z" fill="#29323d"/>
+              </marker>
+            </defs>
+            <rect x="40" y="60" width="120" height="200" rx="10" fill="url(#hTank)"/>
+            <circle cx="100" cy="40" r="20" fill="#c8d4de" opacity=".6"/>
+            <text x="100" y="150" font-family="Vazirmatn" font-size="13" fill="#c8d4de" text-anchor="middle">مخزن خوراک</text>
+            <path d="M160 160 H320 V268" fill="none" stroke="#29323d" stroke-width="2" marker-end="url(#arrow)"/>
+            <g font-family="Vazirmatn" text-anchor="middle">
+              <circle cx="320" cy="300" r="26" fill="#2bd9a822" stroke="#2bd9a8" stroke-width="1.5"/>
+              <text x="320" y="306" font-size="16">🛢</text>
+              <text x="320" y="345" font-size="11" fill="#9aa4b8">روغن تولیدی</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <section id="contactSection">
+        <h2>درخواست مشاوره</h2>
+        <form id="contactForm" novalidate>
+          <label class="muted" for="cName">نام و نام خانوادگی</label>
+          <input id="cName" name="name" required minlength="3">
+          <div class="field-error" id="eName" aria-live="polite"></div>
+
+          <div class="form-row">
+            <div>
+              <label class="muted" for="cPhone">شماره موبایل</label>
+              <input id="cPhone" name="phone" inputmode="tel" dir="ltr" placeholder="09xxxxxxxxx" required>
+              <div class="field-error" id="ePhone" aria-live="polite"></div>
+            </div>
+            <div>
+              <label class="muted" for="cEmail">ایمیل</label>
+              <input id="cEmail" name="email" type="email" dir="ltr" required>
+              <div class="field-error" id="eEmail" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn" id="contactSubmit">ثبت درخواست</button>
+        </form>
+      </section>
+
+      <section id="architecture">
+        <span class="muted">معماری فنی</span>
+        <h2 style="margin:6px 0">Multi-Tenant · Modular · API Ready</h2>
+        <p class="muted">ساختاری آماده برای رشد، اتصال به IoT/PLC و مقیاس‌پذیری میان چندین کارخانه.</p>
+        <div class="arch-diagram">نمودار معماری سامانه</div>
+      </section>
+    </main>
+
+    <footer>© ۲۰۲۶ پترو پویا — تمامی حقوق محفوظ است.</footer>
+  </div>
+
+  <div id="loginModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="loginTitle">
+    <div class="modal" role="document">
+      <button class="modal-close" aria-label="بستن پنجره">✕</button>
+      <h3 id="loginTitle">ورود به پنل مدیریت</h3>
+      <p class="muted">اطلاعات حساب کاربری خود را وارد کنید.</p>
+      <form id="loginForm" novalidate>
+        <label for="username">ایمیل</label>
+        <input id="username" name="username" type="email" autocomplete="username" dir="ltr" required>
+        <div class="field-error" id="eLoginEmail"></div>
+        <label for="password">رمز عبور</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="6">
+        <div class="field-error" id="eLoginPass"></div>
+        <div class="actions">
+          <button type="button" class="btn secondary" id="cancelLogin">انصراف</button>
+          <button type="submit" class="btn">ورود</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="appFrameWrap" class="app-frame-wrap" aria-hidden="true" role="region" aria-label="پنل مدیریت">
+    <div class="app-top">
+      <strong>پنل مدیریت پترو پویا</strong>
+      <button class="btn ghost" id="closeAppBtn" style="border-color:#3b4a63;color:#fff">✕</button>
+    </div>
+    <iframe id="appFrame" class="app-frame" title="داشبورد"></iframe>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+  <script>
+    const qs  = (s, r=document) => r.querySelector(s);
+    const qsa = (s, r=document) => Array.from(r.querySelectorAll(s));
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const escHTML = s => String(s).replace(/[&<>"']/g, c =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    function toast(msg, type='success'){
+      const el = document.createElement('div');
+      el.className = 'toast' + (type === 'error' ? ' error' : '');
+      el.textContent = msg;
+      qs('#toastWrap').appendChild(el);
+      requestAnimationFrame(() => el.classList.add('show'));
+      setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 3500);
+    }
+
+    function animateCounters(){
+      qsa('.hnum').forEach(el => {
+        const target = parseInt(el.dataset.count, 10) || 0;
+        if (reduceMotion){ el.textContent = target; return; }
+        const t0 = performance.now(), dur = 1000;
+        (function step(ts){
+          const p = Math.min((ts - t0) / dur, 1);
+          el.textContent = Math.floor(p * target);
+          p < 1 ? requestAnimationFrame(step) : el.textContent = target;
+        })(t0);
+      });
+    }
+    setTimeout(animateCounters, 300);
+
+    const loginModal = qs('#loginModal');
+    let lastFocused = null;
+    function openModal(){
+      lastFocused = document.activeElement;
+      loginModal.classList.add('show');
+      loginModal.setAttribute('aria-hidden','false');
+      qs('#username').focus();
+      document.addEventListener('keydown', handleModalKeys, true);
+    }
+    function closeModal(){
+      loginModal.classList.remove('show');
+      loginModal.setAttribute('aria-hidden','true');
+      document.removeEventListener('keydown', handleModalKeys, true);
+      lastFocused?.focus();
+    }
+    function handleModalKeys(e){
+      if (e.key === 'Escape') return closeModal();
+      if (e.key !== 'Tab') return;
+      const f = qsa('button:not([disabled]), input, [tabindex]:not([tabindex="-1"])', loginModal);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      else if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    }
+    qs('#openLoginBtn').addEventListener('click', openModal);
+    qs('#openLoginBtn2').addEventListener('click', openModal);
+    qs('#cancelLogin').addEventListener('click', closeModal);
+    qs('.modal-close').addEventListener('click', closeModal);
+    loginModal.addEventListener('click', e => { if (e.target === loginModal) closeModal(); });
+
+    const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    qs('#loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = qs('#username').value.trim();
+      const pass  = qs('#password').value;
+      const eE = qs('#eLoginEmail'), eP = qs('#eLoginPass');
+      eE.textContent = ''; eP.textContent = '';
+      if (!isEmail(email)){ eE.textContent = 'ایمیل معتبر وارد کنید.'; return; }
+      if (pass.length < 6){ eP.textContent = 'رمز عبور حداقل ۶ کاراکتر است.'; return; }
+      closeModal();
+      openDashboard(email);
+      toast(`خوش آمدید، ${email}`);
+    });
+
+    const isPhone = v => /^(\+98|0098|98|0)?9\d{9}$/.test(v.replace(/[\s-]/g,''));
+
+    /* ✏️ تغییر ۲: فرم مشاوره حالا واقعاً به Formspree وصل است و ایمیل می‌رسد */
+    qs('#contactForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = qs('#cName').value.trim();
+      const phone = qs('#cPhone').value.trim();
+      const email = qs('#cEmail').value.trim();
+      let ok = true;
+      const set = (id, msg) => { qs(id).textContent = msg; if(msg) ok = false; };
+      set('#eName',  name.length < 3 ? 'نام باید حداقل ۳ حرف باشد.' : '');
+      set('#ePhone', !isPhone(phone) ? 'شماره موبایل معتبر نیست (مثال: 09123456789).' : '');
+      set('#eEmail', !isEmail(email) ? 'ایمیل معتبر وارد کنید.' : '');
+      if (!ok) return;
+
+      const btn = qs('#contactSubmit');
+      btn.disabled = true; btn.textContent = 'در حال ارسال…';
+      try {
+        const fd = new FormData();
+        fd.append('نام', name);
+        fd.append('تلفن', phone);
+        fd.append('ایمیل', email);
+        const res = await fetch('https://formspree.io/f/mbgjybrg', {
+          method:'POST', body: fd, headers:{'Accept':'application/json'}
+        });
+        if (res.ok){
+          e.target.reset();
+          toast('درخواست شما ثبت شد. کارشناسان با شما تماس می‌گیرند.');
+        } else {
+          toast('خطا در ارسال! لطفاً دوباره تلاش کنید.', 'error');
+        }
+      } catch(err){
+        toast('خطای اینترنت! لطفاً دوباره تلاش کنید.', 'error');
+      }
+      btn.disabled = false; btn.textContent = 'ثبت درخواست';
+    });
+
+    const appWrap = qs('#appFrameWrap');
+    const appFrame = qs('#appFrame');
+    function openDashboard(email){
+      const safeEmail = escHTML(email);
+      appFrame.srcdoc = `
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>پنل مدیریت | پترو پویا</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:Tahoma, sans-serif; }
-  body { background:#0b1f33; color:#fff; line-height:1.8; }
-  header { background:linear-gradient(135deg,#0b1f33,#123a5c); text-align:center; padding:60px 20px 80px; }
-  header h1 { font-size:2rem; color:#f5b301; margin-bottom:10px; }
-  header p { color:#cfd8e3; font-size:1.05rem; }
-  .btn { display:inline-block; background:#f5b301; color:#0b1f33; font-weight:bold; padding:12px 32px; border-radius:30px; text-decoration:none; margin-top:24px; border:none; font-size:1rem; }
-  section { max-width:800px; margin:auto; padding:50px 20px; }
-  h2 { color:#f5b301; text-align:center; margin-bottom:30px; }
-  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
-  .card { background:#12334f; border-radius:12px; padding:24px; text-align:center; }
-  .card h3 { margin-bottom:8px; font-size:1.1rem; }
-  .card p { color:#b9c6d2; font-size:.9rem; }
-  form { background:#12334f; border-radius:12px; padding:24px; max-width:480px; margin:auto; }
-  label { display:block; margin:12px 0 6px; font-size:.9rem; color:#cfd8e3; }
-  input, textarea { width:100%; padding:12px; border-radius:8px; border:none; background:#0b1f33; color:#fff; font-family:inherit; }
-  form .btn { width:100%; cursor:pointer; }
-  footer { text-align:center; padding:24px; color:#7d8ea0; font-size:.85rem; border-top:1px solid #1d3a55; }
+  body{font-family:Vazirmatn,system-ui;margin:0;background:#0f1724;color:#e6eef3}
+  main{padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .card{background:rgba(255,255,255,.05);padding:16px;border-radius:10px;border:1px solid rgba(255,255,255,.07)}
+  .card h3{margin:0 0 8px;font-size:14px;color:#9aa4b8;font-weight:400}
+  .card .v{font-size:26px;font-weight:700}
+  .ok{color:#2bd9a8}
 </style>
 </head>
 <body>
+  <main>
+    <div class="card"><h3>تولید امروز</h3><div class="v">۱۲٫۴ <small style="font-size:13px">تن</small></div></div>
+    <div class="card"><h3>دمای راکتور</h3><div class="v">۴۲۸ °C</div></div>
+    <div class="card"><h3>وضعیت خط</h3><div class="v ok">فعال ●</div></div>
+    <div class="card"><h3>سود سهامداران (ماه)</h3><div class="v">۴۲٪</div></div>
+  </main>
+</body>
+</html>`;
+      appWrap.classList.add('show');
+      appWrap.setAttribute('aria-hidden','false');
+      appFrame.focus();
+    }
+    function closeDashboard(){
+      appWrap.classList.remove('show');
+      appWrap.setAttribute('aria-hidden','true');
+      appFrame.srcdoc = '';
+    }
+    qs('#closeAppBtn').addEventListener('click', closeDashboard);
 
-<header>
-  <h1>پترو پویا</h1>
-  <p>تأمین و توزیع محصولات نفت، گاز و انرژی</p>
-  <a class="btn" href="#register">ثبت‌نام / درخواست همکاری</a>
-</header>
-
-<section>
-  <h2>خدمات ما</h2>
-  <div class="cards">
-    <div class="card"><h3>⛽ تأمین فرآورده‌های نفتی</h3><p>عرضه گازوئیل، بنزین و نفت کوره با کیفیت استاندارد</p></div>
-    <div class="card"><h3>🚚 حمل و نقل</h3><p>ارسال سریع و مطمئن بار به سراسر کشور</p></div>
-    <div class="card"><h3>🤝 همکاری تجاری</h3><p>همکاری با شرکت‌ها و پیمانکاران حوزه انرژی</p></div>
-  </div>
-</section>
-
-<section id="register">
-  <h2>فرم ثبت‌نام</h2>
-  <form id="regForm" action="https://formspree.io/f/mbgjybrg" method="POST">
-    <label>نام و نام خانوادگی</label>
-    <input type="text" name="نام" required>
-    <label>شماره تماس</label>
-    <input type="tel" name="تلفن" required>
-    <label>شرکت / نوع همکاری</label>
-    <input type="text" name="شرکت">
-    <label>توضیحات</label>
-    <textarea name="توضیحات" rows="4"></textarea>
-    <button class="btn" type="submit">ارسال</button>
-    <p id="ok" style="display:none;color:#7CFC00;text-align:center;margin-top:12px;">✅ با تشکر! اطلاعات شما با موفقیت ارسال شد.</p>
-    <p id="err" style="display:none;color:#ff6b6b;text-align:center;margin-top:12px;">❌ خطا! اتصال اینترنت را بررسی و دوباره تلاش کنید.</p>
-  </form>
-</section>
-
-<footer>© ۲۰۲۶ پترو پویا</footer>
-
-<script>
-document.getElementById('regForm').addEventListener('submit', async function(e){
-  e.preventDefault();
-  const form = e.target, btn = form.querySelector('button');
-  btn.disabled = true; btn.textContent = 'در حال ارسال...';
-  try {
-    const res = await fetch(form.action, { method:'POST', body:new FormData(form), headers:{'Accept':'application/json'} });
-    if(res.ok){ document.getElementById('ok').style.display='block'; form.reset(); }
-    else { document.getElementById('err').style.display='block'; }
-  } catch(err){ document.getElementById('err').style.display='block'; }
-  btn.disabled = false; btn.textContent = 'ارسال';
-});
-</script>
+    qs('#scrollToContact').addEventListener('click', () => {
+      qs('#contactSection').scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'center'});
+      qs('#cName').focus();
+    });
+  </script>
 </body>
 </html>
