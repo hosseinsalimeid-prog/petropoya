@@ -4,208 +4,268 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>پترو پارسیان — اکسیر جوانی</title>
+<script src="https://js.puter.com/v2/"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Vazirmatn,Tahoma,-apple-system,sans-serif;background:#0a1424;color:#e8eefc;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+body{font-family:Vazirmatn,Tahoma,-apple-system,sans-serif;background:#0a1424;color:#e8eefc}
 .hidden{display:none!important}
-.card{background:#0f1e3d;border:1px solid #24406e;border-radius:18px;padding:28px 22px;width:100%;max-width:480px;box-shadow:0 10px 40px rgba(0,0,0,.45)}
-.logo{font-size:62px;text-align:center}
-.card h1{color:#d4a437;font-size:24px;margin:10px 0 6px;text-align:center}
-.sub{color:#8fa8cc;font-size:13.5px;margin-bottom:22px;text-align:center}
-.tabs{display:flex;gap:10px;margin-bottom:22px}
-.tab{flex:1;padding:12px;border-radius:12px;border:1px solid #2c4c80;background:#0c1a33;color:#a9c2e8;font-size:15px;font-family:inherit;cursor:pointer}
-.tab.active{background:#d4a437;border-color:#d4a437;color:#1a1206;font-weight:700}
-.fld{text-align:right;margin-bottom:12px}
-.fld label{display:block;font-size:12.5px;color:#8fa8cc;margin-bottom:6px}
-.fld input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid #2c4c80;background:#f7f7d8;color:#111;font-size:15px;font-family:inherit}
-.fld input:focus{outline:2px solid #d4a437;border-color:#d4a437}
-.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:6px}
+#shell{display:flex;flex-direction:column;min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#0d1a33;border-bottom:1px solid #24406e;padding:12px 16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.brand b{color:#d4a437;font-size:16px}
+.brand small{display:block;color:#8fa8cc;font-size:11px}
+.uinfo{display:flex;align-items:center;gap:10px;font-size:13.5px}
+#row{display:flex;flex:1;align-items:stretch}
+#nav{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;background:#0c1830;border-bottom:1px solid #1c3560}
+.chip{white-space:nowrap;padding:9px 14px;border-radius:99px;border:1px solid #2c4c80;background:#0f1e3d;color:#a9c2e8;cursor:pointer;font-size:13.5px;font-family:inherit}
+.chip.on{background:#d4a437;border-color:#d4a437;color:#1a1206;font-weight:700}
+main{flex:1;padding:16px;width:100%;max-width:1150px;margin:0 auto}
+.sect{color:#d4a437;font-size:19px;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.kpi{border-radius:14px;padding:14px;font-weight:800;font-size:19px}
+.kpi small{display:block;font-size:11.5px;font-weight:400;opacity:.9;margin-bottom:4px}
+.kpi.g{background:#159a52}.kpi.b{background:#1565c0}.kpi.p{background:#7c3aed}.kpi.o{background:#d97706}.kpi.r{background:#dc2626}
+.panel{background:#0f1e3d;border:1px solid #24406e;border-radius:16px;padding:16px;margin-bottom:16px;overflow-x:auto}
+.panel h3{color:#d4a437;font-size:15px;margin-bottom:10px}
+.frm{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;margin-bottom:12px}
+.fld label{display:block;font-size:12px;color:#8fa8cc;margin-bottom:5px}
+.fld input,.fld select{width:100%;padding:11px;border-radius:10px;border:1px solid #2c4c80;background:#f7f7d8;color:#111;font-size:14px;font-family:inherit}
+.btn{padding:12px 18px;border:none;border-radius:10px;font-size:14.5px;font-weight:700;font-family:inherit;cursor:pointer}
 .btn-go{background:linear-gradient(90deg,#159a52,#22c55e);color:#fff}
 .btn-out{background:#24406e;color:#cfe0ff}
-.note{color:#8fa8cc;font-size:12.5px;text-align:center;margin-top:16px;line-height:2}
-.note b{color:#d4a437}
+.btnw{display:flex;gap:8px;flex-wrap:wrap}
+.row{display:flex;justify-content:space-between;gap:8px;padding:9px 4px;border-bottom:1px solid #1c3560;font-size:13.5px;align-items:center}
+.row small{color:#8fa8cc}
+.pill{border:none;border-radius:8px;padding:7px 12px;font-family:inherit;font-weight:700;cursor:pointer;font-size:12.5px;text-decoration:none;display:inline-block}
+.pill.ok{background:#22c55e;color:#fff}.pill.no{background:#3a1414;color:#ffc4c4;border:1px solid #7c2d2d}.pill.gy{background:#24406e;color:#cfe0ff}
+.del{background:none;border:none;color:#ff9b9b;cursor:pointer;font-size:16px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:8px 5px;border-bottom:1px solid #1c3560;text-align:right;color:#cfe0ff;white-space:nowrap}
+th{color:#8fa8cc;font-weight:400;font-size:11.5px}
+.zp{color:#fff;font-size:11px;border-radius:99px;padding:3px 9px;white-space:nowrap}
+.flow{display:flex;gap:4px;overflow-x:auto;padding:4px 0}
+.st{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:#8fa8cc;min-width:58px;text-align:center}
+.st b{font-size:22px}
+.lock{background:#3a1414;color:#ffc4c4;border:1px solid #7c2d2d;border-radius:12px;padding:11px;text-align:center;margin-top:10px;font-size:13px}
+.unl{background:#12331f;color:#b9ffd7;border:1px solid #1f5c39;border-radius:12px;padding:11px;text-align:center;margin-top:10px;font-size:13px}
+.empty{color:#8fa8cc;font-size:13px;text-align:center;padding:8px}
+.ai-out{background:#0c1830;border:1px dashed #2c4c80;border-radius:12px;padding:12px;font-size:13.5px;line-height:2;white-space:pre-wrap;margin-top:10px}
+.badge{display:inline-block;background:#d4a437;color:#1a1206;font-weight:700;font-size:12px;border-radius:99px;padding:4px 12px}
+.badge.v{background:#2c4c80;color:#cfe0ff}
 #tw{position:fixed;bottom:14px;left:14px;right:14px;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;z-index:99}
 .toast{background:#12331f;color:#b9ffd7;border:1px solid #1f5c39;padding:12px 18px;border-radius:12px;font-size:14px;opacity:0;transform:translateY(10px);transition:.25s;max-width:420px}
 .toast.show{opacity:1;transform:none}
-.toast.error{background:#3a1414;color:#ffc4c4;border-color:#7c2d2d}
-.badge{display:inline-block;background:#d4a437;color:#1a1206;font-weight:700;font-size:12.5px;border-radius:99px;padding:4px 14px}
-.badge.v{background:#2c4c80;color:#cfe0ff}
-.hi{font-size:27px;font-weight:800;text-align:center;margin-bottom:10px}
-.sect{color:#d4a437;font-size:17px;font-weight:700;text-align:center;margin:24px 0 14px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fcard{background:#0c1a33;border:1px solid #24406e;border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;transition:.15s}
-.fcard:active{transform:scale(.96);border-color:#d4a437}
-.fe{font-size:40px}
-.fn{font-weight:700;margin:8px 0 4px;font-size:15px}
-.fc{font-size:12px;color:#8fa8cc}
-.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-.bar{height:10px;background:#0c1a33;border:1px solid #24406e;border-radius:99px;overflow:hidden;margin:8px 0}
-.bar i{display:block;height:100%;background:linear-gradient(90deg,#d4a437,#f0c75e)}
-.crow{display:flex;justify-content:space-between;font-size:12.5px;color:#8fa8cc}
-.rec{display:flex;align-items:center;gap:8px;padding:9px 2px;border-bottom:1px solid #1c3560;font-size:13px}
-.rec .d{color:#8fa8cc;font-size:12px;min-width:72px}
-.rec .a{font-weight:700;color:#b9ffd7}
-.rec .n{color:#8fa8cc;font-size:12px;flex:1}
-.del{background:none;border:none;color:#ff9b9b;cursor:pointer;font-size:17px;padding:2px 6px}
-.rq{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px;border-bottom:1px solid #1c3560;font-size:13.5px}
-.pill{border:none;border-radius:9px;padding:8px 14px;font-family:inherit;font-weight:700;cursor:pointer;font-size:13px;margin-inline-start:6px}
-.pill.ok{background:#22c55e;color:#fff}
-.pill.no{background:#3a1414;color:#ffc4c4;border:1px solid #7c2d2d}
-.empty{color:#8fa8cc;font-size:13px;text-align:center;padding:10px}
-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
-td,th{padding:8px 4px;border-bottom:1px solid #1c3560;text-align:right;color:#cfe0ff}
-th{color:#8fa8cc;font-weight:400;font-size:12px}
-select{background:#0c1a33;color:#e8eefc;border:1px solid #2c4c80;border-radius:8px;padding:5px 8px;font-family:inherit}
+.toast.error{background:#3a1424;color:#ffc4c4;border-color:#7c2d2d}
+/* login */
+#gate .card{background:#0f1e3d;border:1px solid #24406e;border-radius:18px;padding:28px 22px;max-width:420px;margin:40px auto;width:calc(100% - 32px)}
+#gate .fld{margin-bottom:12px}
+.tabs{display:flex;gap:10px;margin:18px 0}
+.tab{flex:1;padding:12px;border-radius:12px;border:1px solid #2c4c80;background:#0c1a33;color:#a9c2e8;font-size:15px;font-family:inherit;cursor:pointer}
+.tab.active{background:#d4a437;border-color:#d4a437;color:#1a1206;font-weight:700}
+.logo{font-size:60px;text-align:center}
+h1{color:#d4a437;font-size:23px;text-align:center;margin:8px 0 4px}
+.sub{color:#8fa8cc;font-size:13px;text-align:center}
+.note{color:#8fa8cc;font-size:12.5px;text-align:center;margin-top:16px;line-height:2}
+.note b{color:#d4a437}
+#gate input{background:#f7f7d8}
+@media(min-width:900px){
+ #nav{flex-direction:column;width:230px;flex-shrink:0;border-bottom:none;border-inline-end:1px solid #1c3560;overflow-y:auto}
+ .chip{border-radius:10px;text-align:right}
+ main{max-width:none}
+}
 </style>
 </head>
 <body>
 
-<div id="gate" class="card hidden">
-  <div class="logo">🔥</div>
-  <h1>پترو پارسیان — اکسیر جوانی</h1>
-  <div class="sub">PYROHUB · سامانه جامع مدیریت کارخانه‌های پیرولیز</div>
-  <div class="tabs">
-    <button class="tab active" id="tab-login" onclick="showTab('login')">ورود</button>
-    <button class="tab" id="tab-reg" onclick="showTab('reg')">ثبت‌نام</button>
+<div id="gate">
+  <div class="card">
+    <div class="logo">🔥</div>
+    <h1>پترو پارسیان — اکسیر جوانی</h1>
+    <div class="sub">PYROHUB · سامانه جامع مدیریت کارخانه‌های پیرولیز</div>
+    <div class="tabs">
+      <button class="tab active" id="tab-login" onclick="showTab('login')">ورود</button>
+      <button class="tab" id="tab-reg" onclick="showTab('reg')">ثبت‌نام</button>
+    </div>
+    <div id="f-login">
+      <div class="fld"><label style="color:#8fa8cc;font-size:12px;display:block;margin-bottom:5px">ایمیل</label><input id="l-e" type="email" style="width:100%;padding:12px;border-radius:10px;border:1px solid #2c4c80;font-family:inherit" autocomplete="email"></div>
+      <div class="fld"><label style="color:#8fa8cc;font-size:12px;display:block;margin-bottom:5px">رمز عبور</label><input id="l-p" type="password" style="width:100%;padding:12px;border-radius:10px;border:1px solid #2c4c80;font-family:inherit" autocomplete="current-password"></div>
+      <button class="btn btn-go" style="width:100%" onclick="doLogin()">ورود به سامانه</button>
+    </div>
+    <div id="f-reg" class="hidden">
+      <div class="fld"><label style="color:#8fa8cc;font-size:12px;display:block;margin-bottom:5px">نام و نام خانوادگی</label><input id="r-n" style="width:100%;padding:12px;border-radius:10px;border:1px solid #2c4c80;font-family:inherit"></div>
+      <div class="fld"><label style="color:#8fa8cc;font-size:12px;display:block;margin-bottom:5px">ایمیل</label><input id="r-e" type="email" style="width:100%;padding:12px;border-radius:10px;border:1px solid #2c4c80;font-family:inherit" autocomplete="email"></div>
+      <div class="fld"><label style="color:#8fa8cc;font-size:12px;display:block;margin-bottom:5px">رمز عبور (حداقل ۶)</label><input id="r-p" type="password" style="width:100%;padding:12px;border-radius:10px;border:1px solid #2c4c80;font-family:inherit"></div>
+      <button class="btn btn-go" style="width:100%" onclick="doReg()">ثبت‌نام</button>
+    </div>
+    <div class="note">اولین ثبت‌نام = <b>مدیر کل 👑</b><br>ثبت‌نام‌های بعدی پس از تأیید مدیر فعال می‌شوند.</div>
   </div>
-  <form id="f-login" onsubmit="return doLogin(event)">
-    <div class="fld"><label>ایمیل</label><input id="l-email" type="email" required autocomplete="email"></div>
-    <div class="fld"><label>رمز عبور</label><input id="l-pass" type="password" required autocomplete="current-password"></div>
-    <button class="btn btn-go" type="submit">ورود به سامانه</button>
-  </form>
-  <form id="f-reg" class="hidden" onsubmit="return doReg(event)">
-    <div class="fld"><label>نام و نام خانوادگی</label><input id="r-name" required></div>
-    <div class="fld"><label>ایمیل</label><input id="r-email" type="email" required autocomplete="email"></div>
-    <div class="fld"><label>رمز عبور</label><input id="r-pass" type="password" required minlength="6"></div>
-    <div class="fld"><label>تکرار رمز عبور</label><input id="r-pass2" type="password" required minlength="6"></div>
-    <button class="btn btn-go" type="submit">ثبت‌نام</button>
-  </form>
-  <div class="note">اولین ثبت‌نام = <b>مدیر کل 👑</b><br>ثبت‌نام‌های بعدی پس از تأیید مدیر فعال می‌شوند.</div>
 </div>
 
-<div id="dash" class="card hidden">
-  <div class="hi" id="hello"></div>
-  <div style="text-align:center" id="rbadge"></div>
-  <div class="sect">کارخانه‌ها 🏭</div>
-  <div class="grid" id="fgrid"></div>
-  <div id="adminbox"></div>
-  <button class="btn btn-out" style="margin-top:22px" onclick="logout()">خروج از حساب</button>
+<div id="shell" class="hidden">
+  <header>
+    <div class="brand"><span style="font-size:30px">🔥</span><div><b>پترو پارسیان</b><small>اکسیر جوانی · 09154040240</small></div></div>
+    <div class="uinfo"><span id="uname"></span><span id="ubadge"></span><button class="btn btn-out" style="padding:8px 16px" onclick="logout()">خروج</button></div>
+  </header>
+  <div id="row">
+    <nav id="nav"></nav>
+    <main id="view"></main>
+  </div>
 </div>
-
-<div id="fpage" class="card hidden"></div>
 
 <div id="tw"></div>
 
 <script>
-const UKEY='pyro_users_v2',SKEY='pyro_session_v2',RKEY='pyro_recs_v2';
+/* ===== پایه ===== */
+const UKEY='pyro_users_v2',SKEY='pyro_session_v2';
+const K={chk:'pyro_chk_v3',temp:'pyro_temp_v3',prod:'pyro_prod_v3',inv:'pyro_inv_v3',fin:'pyro_fin_v3',hrm:'pyro_hrm_v3',task:'pyro_task_v3',files:'pyro_files_v3'};
 const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const faNum=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
-const users=()=>{try{return JSON.parse(localStorage.getItem(UKEY))||[]}catch(e){return[]}};
-const saveUsers=u=>localStorage.setItem(UKEY,JSON.stringify(u));
-const recs=()=>{try{return JSON.parse(localStorage.getItem(RKEY))||{}}catch(e){return{}}};
-const saveRecs=r=>localStorage.setItem(RKEY,JSON.stringify(r));
-const F=(id,emoji,name,cap)=>({id,emoji,name,cap});
-const FACTORIES=[F('exir','⚗️','اکسیر جوانی',80),F('palayesh','🛢️','پالایش پارس',65),F('baste','🧴','بسته‌بندی درخشان',42),F('trabar','🚚','ترابری سریع',90)];
-async function hash(t){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('pyro·'+t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let h=0;for(const c of 'pyro·'+t)h=(h*31+c.charCodeAt(0))>>>0;return 'f'+h}}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>(+n||0).toLocaleString('fa-IR');
+const get=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+const set=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return!0}catch(e){toast('فضای ذخیره‌سازی مرورگر پر است!',1);return!1}};
+const users=()=>get(UKEY,[]),saveUsers=u=>set(UKEY,u);
+const me=()=>{const e=localStorage.getItem(SKEY);if(!e)return null;const u=users().find(x=>x.email===e);return(u&&u.status==='active')?u:null};
+const can=()=>{const u=me();return!!u&&u.role==='admin'};
+async function hash(t){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('pyro·'+t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let h=0;for(const c of 'pyro·'+t)h=(h*31+c.charCodeAt(0))>>>0;return'f'+h}}
 function toast(m,err){const t=document.createElement('div');t.className='toast'+(err?' error':'');t.textContent=m;$('tw').appendChild(t);requestAnimationFrame(()=>t.classList.add('show'));setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300)},3200)}
 function showTab(w){$('tab-login').classList.toggle('active',w==='login');$('tab-reg').classList.toggle('active',w==='reg');$('f-login').classList.toggle('hidden',w!=='login');$('f-reg').classList.toggle('hidden',w!=='reg')}
-const me=()=>{const e=localStorage.getItem(SKEY);if(!e)return null;return users().find(u=>u.email===e&&u.status==='active')||null};
-const isAdmin=()=>{const u=me();return u&&u.role==='admin'};
 
-async function doReg(e){
-  e.preventDefault();
-  const name=$('r-name').value.trim(),email=$('r-email').value.trim().toLowerCase(),p1=$('r-pass').value,p2=$('r-pass2').value;
-  if(p1!==p2)return toast('رمزها یکسان نیستند',1);
-  if(p1.length<6)return toast('رمز حداقل ۶ کاراکتر باشد',1);
-  const list=users();
-  if(list.some(u=>u.email===email))return toast('این ایمیل قبلاً ثبت شده',1);
-  if(list.length===0){
-    list.push({name,email,pass:await hash(p1),role:'admin',status:'active'});
-    saveUsers(list);localStorage.setItem(SKEY,email);
-    toast('خوش آمدی مدیر کل 👑');render();
-  }else{
-    list.push({name,email,pass:await hash(p1),role:'viewer',status:'pending'});
-    saveUsers(list);
-    toast('درخواستت ثبت شد؛ منتظر تأیید مدیر 🌱');
-    showTab('login');
-  }
-}
-async function doLogin(e){
-  e.preventDefault();
-  const email=$('l-email').value.trim().toLowerCase(),p=$('l-pass').value;
-  const u=users().find(x=>x.email===email);
-  if(!u||u.pass!==await hash(p))return toast('ایمیل یا رمز اشتباه است',1);
-  if(u.status==='pending')return toast('حسابت هنوز در انتظار تأیید مدیر است ⏳',1);
-  localStorage.setItem(SKEY,email);
-  toast('خوش آمدی '+u.name+' 👋');render();
-}
+/* ===== ورود/ثبت‌نام (همان حساب قبلی کار می‌کند) ===== */
+async function doReg(){const n=$('r-n').value.trim(),e=$('r-e').value.trim().toLowerCase(),p=$('r-p').value;if(!n||!e||!p)return toast('همه فیلدها لازم است',1);if(p.length<6)return toast('رمز حداقل ۶ کاراکتر',1);const l=users();if(l.some(u=>u.email===e))return toast('این ایمیل قبلاً ثبت شده',1);if(l.length===0){l.push({name:n,email:e,pass:await hash(p),role:'admin',status:'active'});saveUsers(l);localStorage.setItem(SKEY,e);toast('خوش آمدی مدیر کل 👑');render()}else{l.push({name:n,email:e,pass:await hash(p),role:'viewer',status:'pending'});saveUsers(l);toast('درخواستت ثبت شد؛ منتظر تأیید مدیر 🌱');showTab('login')}}
+async function doLogin(){const e=$('l-e').value.trim().toLowerCase(),p=$('l-p').value;const u=users().find(x=>x.email===e);if(!u||u.pass!=="await hash(p)".replace && u.pass!==await hash(p))return toast('ایمیل یا رمز اشتباه است',1);if(u.status==='pending')return toast('حسابت در انتظار تأیید مدیر است ⏳',1);localStorage.setItem(SKEY,e);toast('خوش آمدی '+u.name+' 👋');render()}
 function logout(){localStorage.removeItem(SKEY);render();toast('خارج شدی')}
-function decide(email,ok){
-  if(!isAdmin())return;
-  let list=users();const u=list.find(x=>x.email===email);if(!u)return;
-  if(ok){u.status='active';u.role='viewer';toast(u.name+' تأیید شد ✅')}
-  else{list=list.filter(x=>x.email!==email);toast('درخواست رد شد')}
-  saveUsers(list);render();
-}
-function setRole(email,role){
-  if(!isAdmin())return;
-  const list=users();const u=list.find(x=>x.email===email);if(!u)return;
-  const otherAdmin=list.some(x=>x.role==='admin'&&x.status==='active'&&x.email!==email);
-  if(u.role==='admin'&&!otherAdmin&&role!=='admin')return toast('حداقل یک مدیر کل باید بماند',1);
-  u.role=role;saveUsers(list);toast('نقش '+u.name+' تغییر کرد');render();
-}
-function render(){
-  const u=me();
-  $('fpage').classList.add('hidden');
-  if(!u){$('gate').classList.remove('hidden');$('dash').classList.add('hidden');return}
-  $('gate').classList.add('hidden');$('dash').classList.remove('hidden');
-  $('hello').textContent='سلام، '+u.name;
-  $('rbadge').innerHTML=u.role==='admin'?'<span class="badge">مدیر کل 👑</span>':'<span class="badge v">ناظر</span>';
-  $('fgrid').innerHTML=FACTORIES.map(f=>'<div class="fcard" onclick="openFactory(\''+f.id+'\')"><div class="fe">'+f.emoji+'</div><div class="fn">'+f.name+'</div><div class="fc">ظرفیت: ٪'+faNum(f.cap)+' · فعال</div></div>').join('');
-  const box=$('adminbox');
-  if(!isAdmin()){box.innerHTML='';return}
-  box.innerHTML='<div class="sect">مدیریت کاربران 👑</div>'+
-    (function(){const p=users().filter(x=>x.status==='pending');
-      if(!p.length)return '<div class="empty">درخواست تأییدی وجود ندارد</div>';
-      return p.map(x=>'<div class="rq"><div>'+esc(x.name)+'<br><small style="color:#8fa8cc">'+esc(x.email)+'</small></div><div><button class="pill ok" onclick="decide(\''+esc(x.email)+'\',1)">تأیید</button><button class="pill no" onclick="decide(\''+esc(x.email)+'\',0)">رد</button></div></div>').join('');
-    })()+
-    '<table><tr><th>کاربر</th><th>نقش</th></tr>'+
-    users().filter(x=>x.status==='active').map(x=>'<tr><td>'+esc(x.name)+'</td><td><select onchange="setRole(\''+esc(x.email)+'\',this.value)"><option value="admin"'+(x.role==='admin'?' selected':'')+'>مدیر کل 👑</option><option value="viewer"'+(x.role==='viewer'?' selected':'')+'>ناظر</option></select></td></tr>').join('')+'</table>';
-}
-function openFactory(id){
-  const u=me();if(!u)return;
-  const f=FACTORIES.find(x=>x.id===id);if(!f)return;
-  const all=recs();const list=(all[id]||[]).slice().sort((a,b)=>b.t-a.t);
-  const sum=list.reduce((s,r)=>s+r.amt,0);
-  let html='<div class="top"><button class="btn btn-out" style="width:auto;padding:9px 18px;margin:0" onclick="render()">بازگشت</button><div class="fe">'+f.emoji+'</div></div>';
-  html+='<h1 style="font-size:20px">'+f.name+'</h1><div class="sub">ظرفیت فعال: ٪'+faNum(f.cap)+'</div>';
-  html+='<div class="bar"><i style="width:'+f.cap+'%"></i></div>';
-  html+='<div class="crow"><span>مجموع ثبت‌شده: '+faNum(sum)+' تن</span><span>تعداد رکورد: '+faNum(list.length)+'</span></div>';
-  if(u.role==='admin'){
-    html+='<div class="sect">ثبت تولید جدید 📥</div>'+
-      '<div class="fld"><label>مقدار تولید (تن)</label><input id="amt" type="number" min="0" step="0.1"></div>'+
-      '<div class="fld"><label>یادداشت (اختیاری)</label><input id="rnote"></div>'+
-      '<button class="btn btn-go" onclick="addRec(\''+id+'\')">ثبت در سامانه</button>';
-  }else{
-    html+='<div class="empty">دسترسی نمایشی — ثبت تولید فقط با مدیر 👑</div>';
-  }
-  html+='<div class="sect">تاریخچه 📋</div>';
-  html+=list.length?list.map(r=>'<div class="rec"><span class="d">'+esc(r.d)+'</span><span class="a">'+faNum(r.amt)+' تن</span><span class="n">'+esc(r.note||'')+'</span>'+(u.role==='admin'?'<button class="del" onclick="delRec(\''+id+'\','+r.t+')">✖</button>':'')+'</div>').join(''):'<div class="empty">هنوز رکوردی ثبت نشده</div>';
-  $('fpage').innerHTML=html;
-  $('dash').classList.add('hidden');$('fpage').classList.remove('hidden');
-}
-function addRec(id){
-  const u=me();if(!u||u.role!=='admin')return;
-  const v=parseFloat($('amt').value);
-  if(!(v>0))return toast('مقدار تولید را درست وارد کن',1);
-  const all=recs();(all[id]=all[id]||[]).push({t:Date.now(),d:new Date().toLocaleDateString('fa-IR'),amt:v,note:$('rnote').value.trim(),by:u.name});
-  saveRecs(all);toast('تولید ثبت شد ✅');openFactory(id);
-}
-function delRec(id,t){
-  if(!isAdmin())return;
-  const all=recs();all[id]=(all[id]||[]).filter(r=>r.t!==t);saveRecs(all);toast('رکورد حذف شد');openFactory(id);
-}
+function decide(em,ok){if(!can())return;let l=users();const u=l.find(x=>x.email===em);if(!u)return;if(ok){u.status='active';u.role='viewer';toast(u.name+' تأیید شد ✅')}else{l=l.filter(x=>x.email!==em);toast('رد شد')}saveUsers(l);show(cur)}
+function setRole(em,r){if(!can())return;const l=users();const u=l.find(x=>x.email===em);if(!u)return;const o=l.some(x=>x.role==='admin'&&x.email!==em&&x.status==='active');if(u.role==='admin'&&!o&&r!=='admin')return toast('حداقل یک مدیر باید بماند',1);u.role=r;saveUsers(l);toast('نقش تغییر کرد');show(cur)}
+
+/* ===== ثابت‌ها ===== */
+const FA=['اکسیر جوانی','پالایش پارس','بسته‌بندی درخشان','ترابری سریع'];
+const FLOW=[['🛒','خرید'],['🚚','حمل‌ونقل'],['🧰','آماده‌سازی مواد'],['⚗️','ذخیره راکتور'],['📝','چک‌لیست'],['▶️','Start راکتور'],['🌡️','ثبت دما'],['🔥','Cracking'],['💧','روغن‌گیری'],['❄️','Cooling'],['🧪','نمونه‌گیری'],['📋','ثبت خروجی'],['📦','فروش'],['🏭','انبار']];
+const DEF_CHK=[['بجرانی','انجام پروتکل‌های دستورالعمل عملیاتی'],['بجرانی','نشت و آب‌بندی درب راکتور'],['بجرانی','وضعیت شعله و مشعل‌ها'],['غیربجرانی','سنجش کاتالیست راکتور'],['بجرانی','سیستم برق و تابلوبرق'],['غیربجرانی','مسیر خروجی گاز و ضدانفجار'],['غیربجرانی','تجهیزات اطمینان و خاموش‌کننده‌ها'],['بجرانی','صحت مسیرها و ظرفیت‌ها']];
+function chkList(){let c=get(K.chk,null);if(!c||!c.length){c=DEF_CHK.map((x,i)=>({id:i,g:x[0],t:x[1],done:false}));set(K.chk,c)}return c}
+function zst(x){x=+x;const b=x<=220?['#159a52','پایین 🟢']:x<=270?['#b8860b','بازه مجرانی 🟡']:x<=320?['#dc2626','Cracking 🔴']:['#1565c0','خیلی بالا ⚠️'];return'<span class="zp" style="background:'+b[0]+'">'+b[1]+'</span>'}
+function kpi(c,t,v){return'<div class="kpi '+c+'"><small>'+t+'</small>'+fmt(v)+'</div>'}
+function today(){return new Date().toDateString()}
+function finBal(){const f=get(K.fin,[]);return f.filter(r=>r.type==='in').reduce((s,r)=>s+ +r.amt,0)-f.filter(r=>r.type==='out').reduce((s,r)=>s+ +r.amt,0)}
+function delRow(k,t){if(!can())return toast('دسترسی ثبت با مدیر کل است',1);set(k,get(k,[]).filter(r=>r.t!==t));toast('حذف شد');show(cur)}
+
+/* ===== ناوبری ===== */
+const NS=[['dash','🏠','داشبورد'],['prod','⚗️','تولید راکتور'],['inv','📦','انبار موجودی'],['fin','💰','مالی و فروش'],['hrm','👷','پرسنل'],['task','🎓','آموزش و تکالیف'],['files','📎','مرکز فایل‌ها'],['users','👑','کاربران و دسترسی'],['ai','🤖','هوش مصنوعی']];
+let cur='dash';
+$('nav').innerHTML=NS.map(n=>'<button class="chip" data-s="'+n[0]+'" onclick="show(\''+n[0]+'\')">'+n[1]+' '+n[2]+'</button>').join('');
+function show(s){cur=s;document.querySelectorAll('#nav .chip').forEach(c=>c.classList.toggle('on',c.dataset.s===s));VIEWS[s]();window.scrollTo(0,0)}
+
+/* ===== نمای داشبورد ===== */
+function vDash(){
+ const hrm=get(K.hrm,[]),prod=get(K.prod,[]),files=get(K.files,[]),tasks=get(K.task,[]);
+ const tp=prod.filter(r=>new Date(r.t).toDateString()===today()).reduce((s,r)=>s+ (+r.amt),0);
+ const tin=get(K.fin,[]).filter(r=>r.type==='in').reduce((s,r)=>s+ +r.amt,0);
+ let h='<h2 class="sect">🏠 نمای کلی سازمان</h2><div class="kpis">'+
+ kpi('g','🏭 کارخانه‌ها',4)+kpi('b','👷 پرسنل فعال',hrm.length)+kpi('p','⚗️ تولید امروز (تن)',tp)+kpi('o','💵 مجموع فروش (تومان)',tin)+kpi('r','📊 سود خالص (تومان)',finBal())+'</div>';
+ h+='<div class="panel"><h3>⚡ چرخه کامل تولید</h3><div class="flow">'+FLOW.map(x=>'<div class="st"><b>'+x[0]+'</b>'+x[1]+'</div>').join('')+'</div></div>';
+ h+='<div class="panel"><h3>🔔 هشدارهای دستیار هوشمند</h3>'+alerts()+'</div>';
+ h+='<div class="panel"><h3>📌 خلاصه</h3><div class="row"><span>📁 فایل‌های بارگذاری‌شده</span><b>'+fmt(files.length)+'</b></div><div class="row"><span>🎓 تکالیف انجام‌شده</span><b>'+fmt(tasks.filter(t=>t.done).length)+' از '+fmt(tasks.length)+'</b></div><div class="row"><span>⚗️ کل تولید ثبت‌شده (تن)</span><b>'+fmt(prod.reduce((s,r)=>s+ +r.amt,0))+'</b></div></div>';
+ $('view').innerHTML=h}
+function alerts(){const a=[];const p=users().filter(x=>x.status==='pending').length;if(p)a.push('⏳ '+fmt(p)+' درخواست ثبت‌نام در انتظار تأیید');const rem=chkList().filter(x=>!x.done).length;if(rem)a.push('🔒 چک‌لیست قبل از استارت ناقص است ('+fmt(rem)+' مورد مانده)');const hot=get(K.temp,[]).filter(x=>+x.temp>320).length;if(hot)a.push('🔥 '+fmt(hot)+' رکورد دمای بالای ۳۲۰ درجه — ایمنی را بررسی کن');get(K.inv,[]).forEach(i=>{if(+i.qty<10)a.push('⚠️ موجودی «'+i.name+'» کم است ('+fmt(i.qty)+' '+i.unit+')')});if(finBal()<0)a.push('🔴 تراز مالی منفی است');if(!a.length)return'<div class="empty">✅ همه‌چیز مرتب است — دستیار نگرانی نمی‌بیند</div>';return a.map(x=>'<div class="row"><span>'+esc(x)+'</span></div>').join('')}
+
+/* ===== تولید ===== */
+function vProd(){
+ const ch=chkList();const rem=ch.filter(x=>!x.done).length;
+ let h='<h2 class="sect">⚗️ تولید و راه‌اندازی راکتور</h2>';
+ h+='<div class="panel"><h3>✅ چک‌لیست قبل از استارت (Pre-Start)</h3>'+ch.map(c=>'<div class="row"><span>'+esc(c.t)+' <small>— '+esc(c.g)+'</small></span>'+(can()?'<button class="pill '+(c.done?'ok':'no')+'" onclick="toggleChk('+c.id+')">'+(c.done?'✓ انجام شد':'در انتظار')+'</button>':'<span class="zp" style="background:'+(c.done?'#159a52':'#555')+'">'+(c.done?'انجام شد':'مانده')+'</span>')+'</div>').join('');
+ h+=rem===0?'<div class="unl">🟢 START UNLOCKED — همه موارد تأیید شده، آماده شروع!</div>':'<div class="lock">🔴 START LOCKED — '+fmt(rem)+' مورد باقی مانده</div></div>';
+ const temps=get(K.temp,[]).slice().sort((a,b)=>b.t-a.t);
+ h+='<div class="panel"><h3>🌡️ ثبت دمای ساعتی</h3>';
+ if(can())h+='<div class="frm"><div class="fld"><label>ساعت (مثل 06:00)</label><input id="t-h"></div><div class="fld"><label>دمای راکتور °C</label><input id="t-temp" type="number"></div><div class="fld"><label>گاز خروجی °C</label><input id="t-gas" type="number"></div><div class="fld"><label>فشار (Bar)</label><input id="t-press" type="number" step="0.01"></div><div class="btnw"><button class="btn btn-go" onclick="addTemp()">ثبت دما</button></div></div>';
+ h+='<table><tr><th>ساعت</th><th>راکتور</th><th>گاز خروجی</th><th>فشار</th><th>وضعیت هوشمند</th><th></th></tr>'+(temps.length?temps.slice(0,15).map(r=>'<tr><td>'+esc(r.h)+'</td><td>'+fmt(r.temp)+'°</td><td>'+fmt(r.gas)+'°</td><td>'+fmt(r.press)+'</td><td>'+zst(r.temp)+'</td><td>'+(can()?'<button class="del" onclick="delRow(K.temp,'+r.t+')">✖</button>':'')+'</td></tr>').join(''):'<tr><td colspan="6" class="empty">رکوردی نیست</td></tr>')+'</table></div>';
+ const prod=get(K.prod,[]).slice().sort((a,b)=>b.t-a.t);
+ h+='<div class="panel"><h3>🏭 ثبت تولید کارخانه‌ها</h3>';
+ if(can())h+='<div class="frm"><div class="fld"><label>کارخانه</label><select id="p-f">'+FA.map(f=>'<option>'+esc(f)+'</option>').join('')+'</select></div><div class="fld"><label>مقدار (تن)</label><input id="p-amt" type="number" step="0.1"></div><div class="fld"><label>یادداشت</label><input id="p-n"></div><div class="btnw"><button class="btn btn-go" onclick="addProd()">ثبت تولید</button></div></div>';
+ h+='<table><tr><th>تاریخ</th><th>کارخانه</th><th>مقدار</th><th></th></tr>'+(prod.length?prod.slice(0,12).map(r=>'<tr><td>'+new Date(r.t).toLocaleDateString('fa-IR')+'</td><td>'+esc(r.f)+'</td><td>'+fmt(r.amt)+' تن</td><td>'+(can()?'<button class="del" onclick="delRow(K.prod,'+r.t+')">✖</button>':'')+'</td></tr>').join(''):'<tr><td colspan="4" class="empty">—</td></tr>')+'</table></div>';
+ $('view').innerHTML=h}
+function toggleChk(id){if(!can())return toast('فقط مدیر',1);const c=chkList();const it=c.find(x=>x.id==id);it.done=!it.done;set(K.chk,c);show(cur)}
+function addTemp(){if(!can())return;const h=$('t-h').value.trim(),t=+$('t-temp').value;if(!h||!(t>0))return toast('ساعت و دمای راکتور لازم است',1);const l=get(K.temp,[]);l.push({t:Date.now(),h,temp:t,gas:+$('t-gas').value||0,press:+$('t-press').value||0});set(K,l);toast('دمای '+h+' ثبت شد ✅'+((t>320)?' ⚠️ بالای ۳۲۰ درجه!':''));show('prod')}
+function addProd(){if(!can())return;const v=+$('p-amt').value;if(!(v>0))return toast('مقدار را درست وارد کن',1);const l=get(K.prod,[]);l.push({t:Date.now(),f:$('p-f').value,amt:v,n:$('p-n').value.trim()});set(K.prod,l);toast('تولید ثبت شد ✅');show('prod')}
+
+/* ===== انبار ===== */
+function vInv(){const inv=get(K.inv,[]).slice().sort((a,b)=>b.t-a.t);
+ let h='<h2 class="sect">📦 انبار و موجودی</h2>';
+ if(can())h+='<div class="panel"><h3>➕ قرار دادن کالا در انبار</h3><div class="frm"><div class="fld"><label>نام کالا</label><input id="i-n"></div><div class="fld"><label>مقدار</label><input id="i-q" type="number" step="0.1"></div><div class="fld"><label>واحد</label><select id="i-u"><option>کیلوگرم</option><option>تعداد</option><option>لیتر</option><option>بشکه</option></select></div><div class="fld"><label>دسته</label><select id="i-c"><option>ماده اولیه</option><option>محصول</option><option>قطعه</option><option>مصرفی</option></select></div><div class="btnw"><button class="btn btn-go" onclick="addInv()">ثبت</button></div></div></div>';
+ h+='<div class="panel"><h3>📋 موجودی فعلی</h3><table><tr><th>کالا</th><th>مقدار</th><th>دسته</th><th></th></tr>'+(inv.length?inv.map(i=>'<tr><td>'+esc(i.name)+'</td><td>'+fmt(i.qty)+' '+esc(i.unit)+'</td><td>'+esc(i.cat)+'</td><td>'+(can()?'<button class="del" onclick="delRow(K.inv,'+i.t+')">✖</button>':'')+'</td></tr>').join(''):'<tr><td colspan="4" class="empty">کالایی ثبت نشده</td></tr>')+'</table></div>';
+ $('view').innerHTML=h}
+function addInv(){if(!can())return;const n=$('i-n').value.trim();if(!n||!($($('i-q').id).value>0))return toast('نام و مقدار لازم است',1);const l=get(K.inv,[]);l.push({t:Date.now(),name:n,qty:+$('i-q').value,unit:$('i-u').value,cat:$('i-c').value});if(set(K.inv,l)){toast('به انبار اضافه شد ✅');show('inv')}}
+
+/* ===== مالی ===== */
+function vFin(){const fin=get(K.fin,[]).slice().sort((a,b)=>b.t-a.t);const tin=fin.filter(r=>r.type==='in').reduce((s,r)=>s+ +r.amt,0),tout=fin.filter(r=>r.type==='out').reduce((s,r)=>s+ +r.amt,0);
+ let h='<h2 class="sect">💰 مالی و فروش</h2><div class="kpis">'+kpi('g','درآمد (تومان)',tin)+kpi('r','هزینه (تومان)',tout)+kpi('b','سود خالص (تومان)',tin-tout)+'</div>';
+ if(can())h+='<div class="panel"><h3>➕ ثبت تراکنش / فاکتور</h3><div class="frm"><div class="fld"><label>نوع</label><select id="m-t"><option value="in">درآمد / فروش</option><option value="out">هزینه / خرید</option></select></div><div class="fld"><label>عنوان</label><input id="m-n"></div><div class="fld"><label>مبلغ (تومان)</label><input id="m-a" type="number"></div><div class="btnw"><button class="btn btn-go" onclick="addFin()">ثبت</button></div></div></div>';
+ h+='<div class="panel"><h3>📋 دفتر روزنامه</h3><table><tr><th>عنوان</th><th>نوع</th><th>مبلغ</th><th>تاریخ</th><th></th></tr>'+(fin.length?fin.map(r=>'<tr><td>'+esc(r.n)+'</td><td>'+(r.type==='in'?'<span class="zp" style="background:#159a52">درآمد</span>':'<span class="zp" style="background:#dc2626">هزینه</span>')+'</td><td>'+fmt(r.a)+'</td><td>'+new Date(r.t).toLocaleDateString('fa-IR')+'</td><td>'+(can()?'<button class="del" onclick="delRow(K.fin,'+r.t+')">✖</button>':'')+'</td></tr>').join(''):'<tr><td colspan="5" class="empty">تراکنشی نیست</td></tr>')+'</table></div>';
+ $('view').innerHTML=h}
+function addFin(){if(!can())return;const n=$('m-n').value.trim(),a=+$('m-a').value;if(!n||!(a>0))return toast('عنوان و مبلغ لازم است',1);const l=get(K.fin,[]);l.push({t:Date.now(),type:$('m-t').value,n,a});set(K.fin,l);toast('تراکنش ثبت شد ✅');show('fin')}
+
+/* ===== پرسنل ===== */
+function vHrm(){const l=get(K.hrm,[]).slice().sort((a,b)=>b.t-a.t);
+ let h='<h2 class="sect">👷 منابع انسانی</h2>';
+ if(can())h+='<div class="panel"><h3>➕ ثبت پرسنل جدید</h3><div class="frm"><div class="fld"><label>نام و نام خانوادگی</label><input id="h-n"></div><div class="fld"><label>سمت</label><input id="h-r" placeholder="اپراتور راکتور، انباردار..."></div><div class="fld"><label>تلفن</label><input id="h-p" type="tel"></div><div class="btnw"><button class="btn btn-go" onclick="addHrm()">ثبت</button></div></div></div>';
+ h+='<div class="panel"><h3>📋 پرسنل سازمان ('+fmt(l.length)+')</h3>'+(l.length?l.map(x=>'<div class="row"><span>👤 <b>'+esc(x.n)+'</b><br><small>'+esc(x.r)+(x.p?' · '+esc(x.p):'')+'</small></span>'+(can()?'<button class="del" onclick="delRow(K.hrm,'+x.t+')">✖</button>':'')+'</div>').join(''):'<div class="empty">پرسنلی ثبت نشده</div>')+'</div>';
+ $('view').innerHTML=h}
+function addHrm(){if(!can())return;const n=$('h-n').value.trim();if(!n)return toast('نام لازم است',1);const l=get(K.hrm,[]);l.push({t:Date.now(),n,r:$('h-r').value.trim(),p:$('h-p').value.trim()});set(K.hrm,l);toast('پرسنل ثبت شد ✅');show('hrm')}
+
+/* ===== آموزش ===== */
+function vTask(){const l=get(K.task,[]).slice().sort((a,b)=>b.t-a.t);
+ let h='<h2 class="sect">🎓 آموزش و تکالیف</h2>';
+ if(can())h+='<div class="panel"><h3>➕ اضافه کردن تکلیف / آموزش SOP</h3><div class="frm" style="grid-template-columns:1fr auto"><div class="fld"><label>عنوان تکلیف</label><input id="k-n"></div><div class="btnw"><button class="btn btn-go" onclick="addTask()">ثبت</button></div></div></div>';
+ h+='<div class="panel"><h3>📋 فهرست تکالیف</h3>'+(l.length?l.map(x=>'<div class="row"><span>'+(x.done?'✅ ':'⬜ ')+esc(x.t)+'</span>'+(can()?'<button class="pill '+(x.done?'gy':'ok')+'" onclick="toggleTask('+x.t+')">'+(x.done?'برگشت':'انجام شد')+'</button> <button class="del" onclick="delRow(K.task,'+x.t+')">✖</button>':'')+'</div>').join(''):'<div class="empty">تکلیفی نیست</div>')+'</div>';
+ $('view').innerHTML=h}
+function addTask(){if(!can())return;const t=$('k-n').value.trim();if(!t)return toast('عنوان لازم است',1);const l=get(K.task,[]);l.push({t:Date.now(),title:t,done:false});set(K.task,l);toast('تکلیف اضافه شد ✅');show('task')}
+function toggleTask(t){if(!can())return;const l=get(K.task,[]);const x=l.find(y=>y.t==t);if(x){x.done=!x.done;set(K.task,l);show('task')}}
+
+/* ===== فایل‌ها ===== */
+function vFiles(){const l=get(K.files,[]).slice().sort((a,b)=>b.t-a.t);const tot=l.reduce((s,f)=>s+f.size,0);
+ let h='<h2 class="sect">📎 مرکز فایل‌ها</h2><div class="panel"><h3>📤 بارگزاری فایل (داکیومنت، عکس، دیتاشیت...)</h3>';
+ if(can()){h+='<input type="file" id="f-in" multiple style="display:none" onchange="upFiles(this)"><div class="btnw"><button class="btn btn-go" onclick="$(\'f-in\').click()">📤 انتخاب فایل برای بارگزاری</button></div><p style="color:#8fa8cc;font-size:12px;margin-top:8px">هر فایل تا ۱.۵ مگابایت · مجموع فعلی: '+fmtKB(tot)+' از ~۴ مگابایت</p>'}
+ else h+='<div class="empty">👁 بارگزاری فقط با مدیر کل</div></div>';
+ h+='<div class="panel"><h3>📋 فایل‌های سامانه ('+fmt(l.length)+')</h3>'+(l.length?l.map(f=>'<div class="row"><span>'+(f.type&&f.type.startsWith('image')?'🖼️':'📄')+' <b>'+esc(f.name)+'</b> <small>'+fmtKB(f.size)+'</small></span><span><a class="pill ok" href="'+f.data+'" download="'+esc(f.name)+'">دانلود</a> '+(can()?'<button class="del" onclick="delFile('+f.t+')">✖</button>':'')+'</span></div>').join(''):'<div class="empty">فایلی بارگذاری نشده</div>')+'</div>';
+ $('view').innerHTML=h}
+function fmtKB(s){return s>=1048576?fmt(s/1048576)+' MB':fmt(Math.max(1,Math.round(s/1024)))+' KB'}
+function upFiles(inp){if(!can())return;const fs=[...inp.files];if(!fs.length)return;let done=0,n=0;fs.forEach(f=>{if(f.size>1572864){done++;toast('«'+f.name+'» بزرگ‌تر از ۱.۵ مگاست',1);if(done===fs.length)show('files');return}const r=new FileReader();r.onload=()=>{const l=get(K.files,[]);l.push({t:Date.now()+Math.floor(Math.random()*1000),name:f.name,size:f.size,type:f.type||'',data:r.result});if(set(K.files,l))n++;done++;if(done===fs.length){toast(n+' فایل بارگذاری شد ✅');show('files')}};r.readAsDataURL(f)})}
+function delFile(t){if(!can())return set(K.files,get(K.files,[]).filter(f=>f.t!==t))||toast('حذف شد')||show('files')}
+
+/* ===== کاربران ===== */
+function vUsers(){if(!can()){vMain2();return}
+ const pend=users().filter(x=>x.status==='pending');
+ let h='<h2 class="sect">👑 مدیریت کاربران</h2><div class="panel"><h3>⏳ درخواست‌های در انتظار تأیید</h3>';
+ h+=pend.length?pend.map(x=>'<div class="row"><span><b>'+esc(x.name)+'</b><br><small>'+esc(x.email)+'</small></span><span><button class="pill ok" onclick="decide(\''+esc(x.email)+'\',1)">تأیید</button> <button class="pill no" onclick="decide(\''+esc(x.email)+'\',0)">رد</button></span></div>').join(''):'<div class="empty">درخواستی وجود ندارد</div></div>';
+ h+='<div class="panel"><h3>📋 کاربران فعال و نقش‌ها</h3><table><tr><th>نام</th><th>ایمیل</th><th>نقش</th></tr>'+users().filter(x=>x.status==='active').map(x=>'<tr><td>'+esc(x.name)+'</td><td>'+esc(x.email)+'</td><td><select onchange="setRole(\''+esc(x.email)+'\',this.value)"><option value="admin"'+(x.role==='admin'?' selected':'')+'>مدیر کل 👑</option><option value="viewer"'+(x.role==='viewer'?' selected':'')+'>ناظر 👁</option></select></td></tr>').join('')+'</table></div>';
+ $('view').innerHTML=h}
+function vMain2(){$('view').innerHTML='<h2 class="sect">👑 کاربران و دسترسی</h2><div class="panel"><div class="empty">🔒 این بخش فقط برای مدیر کل است</div></div>'}
+
+/* ===== هوش مصنوعی ===== */
+function vAI(){let h='<h2 class="sect">🤖 دستیار هوشمند سازمان</h2>';
+ h+='<div class="panel"><h3>⚡ اقدامات خودکار (بدون اینترنت هم کار می‌کند)</h3><div class="btnw"><button class="btn btn-go" onclick="agentScan()">🧹 اسکن کامل + مرتب‌سازی خودکار</button><button class="btn btn-out" onclick="aiReport()">📊 گزارش مدیریتی فوری</button></div></div>';
+ h+='<div class="panel"><h3>💬 گفتگو با هوش مصنوعی</h3><div class="frm" style="grid-template-columns:1fr auto"><div class="fld"><label>سؤال یا دستور (مثلاً: وضعیت ایمنی را تحلیل کن)</label><input id="ai-q" onkeydown="aiKey(event)"></div><div class="btnw"><button class="btn btn-go" onclick="aiAsk()">ارسال 🚀</button></div></div>';
+ h+='<div class="ai-out" id="ai-out">👉 از دکمه‌های بالا شروع کن، یا سؤال بنویس و «ارسال» بزن.\n- اسکن و گزارش: آفلاین و آنی اجرا می‌شوند.\n- چت زبانی: به سرویس مدل زبانی وصل می‌شود (بار اول ممکن است پنجره ورود Pusher باز شود).</div></div>';
+ $('view').innerHTML=h}
+function aiKey(e){if(e.key==='Enter')aiAsk()}
+function snapshot(){const s={user:me()?me().name:'-',checklist:chkList(),temps:get(K.temp,[]).slice(-10),production:get(K.prod,[]).slice(-10),inventory:get(K.inv,[]),finance:get(K.fin,[]).slice(-15),staff:get(K.hrm,[]),tasks:get(K.task,[]),files:get(K.files,[]).map(f=>f.name),balance:finBal()};try{const j=JSON.stringify(s);return j.slice(0,3500)}catch(e){return'{}'}}
+function agentScan(){const rep=[];let fx=0;
+ let inv=get(K.inv,[]);const m=new Map();inv.forEach(i=>{const kk=(i.name+'|'+i.unit+'|'+i.cat);if(m.has(kk)){m.get(kk).qty+= +i.qty;fx++}else m.set(kk,{...i,qty:+i.qty})});if(fx){inv=[...m.values()];set(K.inv,inv);rep.push('🧹 '+fmt(fx)+' کالای تکراری انبار ادغام و مرتب شد')}
+ const pend=users().filter(x=>x.status==='pending').length;if(pend)rep.push('⏳ '+fmt(pend)+' درخواست ثبت‌نام منتظر تأیید توست (بخش کاربران)');
+ const rem=chkList().filter(x=>!x.done).length;rep.push(rem?'🔒 چک‌لیست استارت ناقص است: '+fmt(rem)+' مورد مانده':'✅ چک‌لیست استارت کامل است — START آزاد است');
+ const temps=get(K.temp,[]);const hot=temps.filter(x=>+x.temp>320).length;rep.push(hot?'🔥 '+fmt(hot)+' رکورد دمای بالای ۳۲۰ درجه ثبت شده — ایمنی را چک کن':'🌡️ دمای راکتور در محدوده مجاز است');
+ get(K.inv,[]).forEach(i=>{if(+i.qty<10)rep.push('⚠️ موجودی «'+i.name+'» کم است ('+fmt(i.qty)+' '+i.unit+')')});
+ rep.push(finBal()>=0?'💰 تراز مالی مثبت: '+fmt(finBal())+' تومان':'🔴 تراز مالی منفی: '+fmt(finBal())+' تومان');
+ const tt=get(K.task,[]);rep.push('🎓 تکالیف: '+fmt(tt.filter(x=>x.done).length)+' از '+fmt(tt.length)+' انجام شده · 📁 فایل: '+fmt(get(K.files,[]).length)+' · 👷 پرسنل: '+fmt(get(K.hrm,[]).length));
+ $('ai-out').textContent='🤖 گزارش اسکن کامل:\n\n'+rep.map(x=>'• '+x).join('\n')+(fx?'\n\n✨ تغییرات ذخیره شد — بخش انبار را ببین.':'\n\n✨ هیچ داده‌ای نیاز به اصلاح خودکار نداشت.');
+ toast('اسکن کامل شد 🤖')}
+function aiReport(){const u=me();const prod=get(K.prod,[]);const t0=today();
+ $('ai-out').textContent='📊 گزارش مدیریتی — پترو پارسیان\n\n• مدیر: '+u.name+'\n• تولید امروز: '+fmt(prod.filter(r=>new Date(r.t).toDateString()===t0).reduce((s,r)=>s+ +r.amt,0))+' تن (مجموع کل: '+fmt(prod.reduce((s,r)=>s+ +r.amt,0))+' تن)\n• درآمد/هزینه: '+fmt(get(K.fin,[]).filter(r=>r.type==='in').reduce((s,r)=>s+ +r.amt,0))+' / '+fmt(get(K.fin,[]).filter(r=>r.type==='out').reduce((s,r)=>s+ +r.amt,0))+' تومان\n• سود خالص: '+fmt(finBal())+' تومان\n• کالاهای انبار: '+fmt(get(K.inv,[]).length)+' قلم · پرسنل: '+fmt(get(K.hrm,[]).length)+' نفر\n• آخرین دمای راکتور: '+(get(K.temp,[]).slice(-1)[0]?zst(get(K.temp,[]).slice(-1)[0].temp).replace(/<[^>]*>/g,''):'ثبت نشده')+'\n\n🔔 تمرکز پیشنهادی:\n'+((alerts().replace(/<[^>]*>/g,'').trim()||'• همه‌چیز مرتب است').split('\n').filter(Boolean).join('\n'))+'\n\n🤖 پیشنهاد: ابتدا چک‌لیست استارت را کامل کنید، سپس داده‌های دمایی امروز را تکمیل و موجودی‌های کم را سفارش دهید.'}
+async function aiAsk(){const q=($('ai-q').value.trim())||'وضعیت کلی کارخانه را تحلیل کن و سه اقدام فوری پیشنهاد بده';const out=$('ai-out');
+ if(typeof puter==='undefined'){out.textContent='⚠️ اتصال به سرویس مدل زبانی برقرار نشد (اینترنت؟). «اسکن کامل» و «گزارش مدیریتی» آفلاین کار می‌کنند.';return}
+ out.textContent='⏳ در حال تحلیل داده‌های سامانه...';try{const r=await puter.ai.chat('تو دستیار ارشد مدیریت کارخانه پیرولیز «پترو پارسیان» هستی. فارسی، کوتاه، دقیق و کاربردی جواب بده و در صورت نیاز اقدام فوری پیشنهاد بده.\n\nداده‌های فعلی سامانه:\n'+snapshot()+'\n\nدرخواست: '+q);const txt=typeof r==='string'?r:(r&&r.message&&r.message.content)||r.text||'—';out.textContent=txt}catch(e){out.textContent='⚠️ خطا: '+(e.message||e)}}
+
+/* ===== نقشه نماها + اجرا ===== */
+const VIEWS={dash:vDash,prod:vProd,inv:vInv,fin:vFin,hrm:vHrm,task:vTask,files:vFiles,users:vUsers,ai:vAI};
+function render(){const u=me();if(!u){$('gate').classList.remove('hidden');$('shell').classList.add('hidden');return}$('gate').classList.add('hidden');$('shell').classList.remove('hidden');$('uname').textContent=u.name;$('ubadge').innerHTML=u.role==='admin'?'<span class="badge">مدیر کل 👑</span>':'<span class="badge v">ناظر 👁</span>';show(cur)}
 render();
 </script>
 </body>
