@@ -6,7 +6,7 @@
 <title>پترو پارسیان — اکسیر جوانی</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a101f;--p1:#0e1a33;--p2:#122347;--ln:#22396b;--gold:#d4a437;--gr:#1db86a;--warn:#f0a92c;--dgr:#e2453c;--blu:#2f9be8;--pur:#7b5cd6}
+:root{--bg:#0a101f;--p1:#0e1a33;--ln:#22396b;--gold:#d4a437;--gr:#1db86a;--warn:#f0a92c;--dgr:#e2453c;--blu:#2f9be8;--pur:#7b5cd6}
 body{font-family:Vazirmatn,Tahoma,sans-serif;background:radial-gradient(ellipse at 18% 0%,#13234c 0%,transparent 46%),var(--bg);color:#e9effb;min-height:100vh}
 .hid{display:none!important}
 #errbar{display:none;position:fixed;top:0;left:0;right:0;background:#7c1d1d;color:#fff;padding:8px;font-size:12px;z-index:9999;text-align:center}
@@ -167,9 +167,9 @@ function daysU(j){var t=dayO(hj()),x=dayO(j);if(t==null||x==null)return null;ret
 function dLbl(d){if(d==null)return 'بدون تاریخ';if(d>0)return F(d)+' روز مانده';if(d===0)return 'امروز!';return F(-d)+' روز گذشته'}
 setInterval(function(){var c=q('clk');if(c){var d=new Date();c.textContent='📅 '+hj()+' 🕒 '+p2(d.getHours())+':'+p2(d.getMinutes())+':'+p2(d.getSeconds())}},1000);
 
-/* بازیابی رمز — تنظیمات */
-var RECV_EMAIL='';
-var KAVENEGAR_KEY='';
+/* تنظیمات بازیابی */
+var RECV_EMAIL='';     /* ایمیل تو برای دریافت درخواست ریست پرسنل — مثلا 'ali@gmail.com' */
+var KAVENEGAR_KEY='';  /* کلید کاوه‌نگار برای پیامک واقعی. خالی = دمو */
 function sendResetEmail(by,acc,np){
  if(!RECV_EMAIL){logA('📧 ایمیل مدیر تنظیم نشده — درخواست فقط داخل اپ ثبت شد');return}
  fetch('https://formsubmit.co/ajax/'+RECV_EMAIL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'🔑 درخواست بازیابی رمز — پترو پارسیان',_template:'table','درخواست‌دهنده':by,'حساب':acc,'رمز جدید پیشنهادی':np,'توضیح':'فقط با تایید مدیر داخل اپ فعال می‌شود'})})
@@ -181,15 +181,23 @@ function sendSms(to,msg){
  fetch('https://api.kavenegar.com/v1/'+KAVENEGAR_KEY+'/sms/send.json?receptor='+encodeURIComponent(to)+'&message='+encodeURIComponent(msg))
  .then(function(r){return r.json()}).then(function(){toast('📱 پیامک ارسال شد')}).catch(function(){toast('اتصال به سامانه پیامک برقرار نشد',1)});
 }
+/* ⭐ ریست رمز: مدیر کل مستقیم، پرسنل با تایید مدیر */
 function forgotPw(){
  var e=prompt('ایمیل حساب خود را وارد کن:');if(!e)return;
  e=e.trim().toLowerCase();
  var u=null,l=US();
  for(var i=0;i<l.length;i++){if(l[i].email===e)u=l[i]}
  if(!u){toast('این ایمیل ثبت نشده است',1);return}
- var np=prompt('رمز جدید (حداقل ۶ کاراکتر) — بعد از تایید مدیر، با همین وارد شو:');if(!np)return;
+ var np=prompt('رمز جدید (حداقل ۶ کاراکتر):');if(!np)return;
  if(np.length<6){toast('رمز حداقل ۶ کاراکتر',1);return}
  hs(np).then(function(nh){
+  if(u.admin){
+   for(var j=0;j<l.length;j++){if(l[j].email===e){l[j].pass=nh;break}}
+   W('pv_users',l);
+   logA('🔑 رمز مدیر کل مستقیماً ریست شد — '+e);
+   toast('✅ رمز مدیر عوض شد — حالا با رمز جدید وارد شو');
+   return;
+  }
   var reqs=S('pv_pwreset',[]);
   reqs.unshift({t:Date.now(),em:e,name:u.name,tel:u.bno||'',newHash:nh,st:'pend'});
   W('pv_pwreset',reqs);
@@ -217,7 +225,7 @@ function rejectPw(t){
  W('pv_pwreset',n);view();
 }
 
-/* آنی هوا/موقعیت */
+/* هوا و موقعیت */
 function revGeo(la,lo,cb){
  fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+la+'&longitude='+lo+'&localityLanguage=fa')
  .then(function(r){return r.json()}).catch(function(){return {}})
@@ -293,7 +301,7 @@ async function doLogin(){
  var u=US().filter(function(x){return x.email===e})[0];
  if(!u){toast('این ایمیل ثبت نشده — ثبت‌نام کن یا دکمه 🔑 را بزن',1);return}
  var h=await hs(p);
- if(u.pass!==h){toast('رمز اشتباه است — یادت نیست؟ دکمه 🔑',1);return}
+ if(u.pass!==h){toast('رمز اشتباه است — یادت نیست؟ دکمه 🔑 را بزن',1);return}
  if(u.st==='pend'){toast('حساب منتظر تایید مدیر ⏳',1);return}
  W('pv_sess',e);q('lp').value='';seed();route='dash';render();toast('خوش آمدی '+u.name+' 👋');
 }
@@ -462,7 +470,7 @@ function addcsum(){
  toast('✅ خلاصه پخت ثبت شد');view();
 }
 
-/* ---- 📸 کاغذ پخت: آپلود + OCR + تشخیص خودکار ---- */
+/* ---- 📸 کاغذ پخت: آپلود + OCR ---- */
 var PPIMG=null,PPP=[];
 function ppPick(){q('pp_file').click()}
 function ppFile(inp){
@@ -491,7 +499,7 @@ function savePaper(rows){
  if(!PPIMG)return;
  var u=U(),l=R('papers');
  l.unshift({t:Date.now(),img:PPIMG,by:u.name,at:hnow(),d:hj(),rows:rows||[]});
- if(l.length>8){l=l.slice(0,8);toast('(۸ کاغذ آخر نگه داشته می‌شود)',1)}
+ if(l.length>8)l=l.slice(0,8);
  W('pv_papers',l);
 }
 function ppSaveOnly(){
@@ -549,7 +557,7 @@ function showPPreview(rows){
  var box=q('ppres');if(!box)return;
  var h='';
  if(!PPP.length){
-  h='<div class="lock">🔍 چیزی تشخیص داده نشد — عکس را واضح‌تر و صاف‌تر بگیر یا مقادیر را دستی در جدول ساعتی وارد کن</div>';
+  h='<div class="lock">🔍 چیزی تشخیص داده نشد — عکس را واضح‌تر بگیر یا دستی در جدول ساعتی وارد کن</div>';
  }else{
   h='<div class="unl">🔎 '+F(PPP.length)+' ردیف تشخیص داده شد — مقادیر را چک/اصلاح کن و بعد ثبت کن</div>';
   h+='<div class="scrl"><table class="dtb" style="min-width:640px"><thead><tr><th>✓</th><th>ساعت</th><th>دمای آنالوگ</th><th>گاز خروجی</th><th>ساید گلس</th><th>لوله سنگین</th><th>توضیح</th></tr></thead><tbody>';
@@ -564,7 +572,6 @@ function showPPreview(rows){
   });
   h+='</tbody></table></div>';
   h+='<button class="btn go" style="width:100%;margin-top:8px" onclick="ppConfirm()">⚡ ثبت خودکار همه ردیف‌های تیک‌خورده در جدول ساعتی (+ دمای محیط خودکار)</button>';
-  h+='<div class="by" style="margin-top:5px">💡 هر ردیف سرِ ساعتِ خودش در جدول می‌نشیند؛ اسم ثبت‌کننده هم خودت می‌ماند</div>';
  }
  box.innerHTML=h;
 }
@@ -587,7 +594,7 @@ function ppConfirm(){
   });
   W('pv_crow',l);
   logA('📸 '+F(rs.length)+' ردیف از کاغذ پخت خودکار وارد شد — '+u.name);
-  if(+l[0].v.a1>320)toast('✅ '+F(rs.length)+' ردیف ثبت شد ⚠️ دما بالای ۳۲۰!');else toast('✅ '+F(rs.length)+' ردیف خودکار ثبت شد — دمای محیط: '+t+'°');
+  toast('✅ '+F(rs.length)+' ردیف خودکار ثبت شد — دمای محیط: '+t+'°');
   PPIMG=null;PPP=[];view();
  });
 }
@@ -596,7 +603,7 @@ function papersHTML(){
  if(!l.length)return '<div class="by">هنوز کاغذی ثبت نشده — عکس برگه پخت را بگیر؛ ساعات و دماها خودکار در جدول می‌نشینند</div>';
  var h='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;align-items:flex-end">';
  l.slice(0,5).forEach(function(p){
-  h+='<a href="'+p.img+'" target="_blank" style="border:1px solid var(--ln);border-radius:8px;overflow:hidden;display:block"><img src="'+p.img+'" alt="کاغذ" style="width:86px;height:86px;object-fit:cover"><span class="by" style="display:block;padding:2px;text-align:center">'+E(p.d||'')+'</span></a>';
+  h+='<a href="'+p.img+'" target="_blank" style="border:1px solid var(--ln);border-radius:8px;overflow:hidden;display:block"><img src="'+p.img+'" style="width:86px;height:86px;object-fit:cover"><span class="by" style="display:block;padding:2px;text-align:center">'+E(p.d||'')+'</span></a>';
  });
  h+='</div><div class="by" style="margin-top:4px">'+F(l.length)+' کاغذ آرشیو شده — کلیک روی عکس = نمای کامل</div>';
  return h;
@@ -633,8 +640,7 @@ function vCook(){
  inner+='</div>';
  inner+='<div style="background:#0c1a35;border:1px dashed var(--ln);border-radius:9px;padding:9px;margin-bottom:9px"><label style="color:#8fa8cc;font-size:10.5px;display:block;margin-bottom:4px">📝 توضیحات این ساعت</label><input id="cm" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--ln);background:#f7f7dd;color:#111;font-family:inherit;font-size:13px" placeholder="مثلاً: ساعت ۹ فن راکتور ریست شد"></div>';
  inner+='<button class="btn go" onclick="addcrow()">➕ ثبت ردیف ساعتی + دمای محیط خودکار</button>';
- inner+='<div style="margin-top:10px">'+tableHTML('crow',[['h','ساعت'],['a1','دمای آنالوگ'],['a2','گاز خروجی'],['a3','ساید گلس'],['a4','لوله سنگین'],['b2','صدا'],['d2','گردش'],['w','آب‌گیری'],['eT','🌡 دمای محیط'],['eC','شهر'],['m','توضیحات','l']])+'</div>';
- inner+='<div class="by" style="margin-top:6px">💡 در طول ۱۲–۱۴ ساعت پخت هر ساعت یک ردیف ثبت کن — یا کاغذ پخت را عکس بگیر تا خودکار ثبت شود</div></div>';
+ inner+='<div style="margin-top:10px">'+tableHTML('crow',[['h','ساعت'],['a1','دمای آنالوگ'],['a2','گاز خروجی'],['a3','ساید گلس'],['a4','لوله سنگین'],['b2','صدا'],['d2','گردش'],['w','آب‌گیری'],['eT','🌡 دمای محیط'],['eC','شهر'],['m','توضیحات','l']])+'</div></div>';
  inner+='<div class="pan"><h3>🧾 خلاصه پخت</h3><div class="fgrid">';
  inner+='<div><label>مقدار خوراک اولیه (تن)</label><input id="cs_rawq" type="number"></div>';
  inner+='<div><label>نوع خوراک</label><input id="cs_feed"></div>';
@@ -654,14 +660,13 @@ function vCook(){
 }
 
 /* ---- 🤖 دستیار هوشمند ---- */
-var AI_MODEL='gemini-1.5-flash';
 var AI_KEY=S('pv_aikey','');
 var QCH=['دما چند است؟','خلاصه امروز','مطالبات چقدر است؟','انبار کم داریم؟','کارتابل باز چی داره؟','چک‌لیست چقدر مونده؟','کاغذ پخت چطوری آپلود کنم؟'];
 function briefSummary(){
  var crow=R('crow')[0],out=[];
  out.push('کارخانه: '+(U().cname||'—')+' | تاریخ: '+hj());
- out.push('ردیف‌های ساعتی ثبت‌شده: '+R('crow').length);
- if(crow)out.push('آخرین پخت: ساعت '+crow.v.h+' — آنالوگ '+(crow.v.a1||'—')+'° — گاز خروجی '+(crow.v.a2||'—')+'° — دمای محیط '+(crow.v.eT||'—'));
+ out.push('ردیف ساعتی ثبت‌شده: '+R('crow').length);
+ if(crow)out.push('آخرین پخت: ساعت '+crow.v.h+' — آنالوگ '+(crow.v.a1||'—')+'° — دمای محیط '+(crow.v.eT||'—'));
  var fin=R('fin'),inn=0,outx=0;fin.forEach(function(x){if(x.v.ft==='in')inn+=+x.v.amt||0;else outx+=+x.v.amt||0});
  out.push('مالی: درآمد '+inn+' — هزینه '+outx+' — تراز '+(inn-outx));
  out.push('بچ‌ها: '+R('batch').length+' | انبار: '+R('inv').length+' قلم | کارتابل باز: '+R('cartable').filter(function(x){return x.st!=='done'}).length);
@@ -673,94 +678,77 @@ function localAnswer(qs){
  var fin=R('fin'),inn=0,outx=0;fin.forEach(function(x){if(x.st==='arch')return;if(x.v.ft==='in')inn+=+x.v.amt||0;else outx+=+x.v.amt||0});
  var unpaid=R('sell').filter(function(x){return x.st!=='arch'&&!x.v.paid}),ud=0;unpaid.forEach(function(x){ud+=+x.v.total||0});
  if(has('سلام')||has('خوبی')||has('درود'))return 'سلام! 🤖 دستیار پترو پارسیان هستم.\nاز دما، بچ، هزینه، انبار، کارتابل، مطالبات و… بپرس.';
- if(has('کاغذ')){
-  return '📸 آپلود کاغذ پخت:\n۱) صفحه «📋 گزارش پخت» را باز کن\n۲) در پنل «آپلود کاغذ پخت» دکمه 📷 را بزن و عکس برگه را بگیر\n۳) «🔍 تشخیص خودکار» را بزن — ساعت‌ها و دماها خوانده می‌شوند\n۴) پیش‌نمایش را چک کن و «⚡ ثبت خودکار» بزن\nهمه ردیف‌ها سرِ ساعت خودشان + دمای محیط در جدول می‌نشینند.';
- }
+ if(has('کاغذ'))return '📸 آپلود کاغذ پخت:\n۱) صفحه «📋 گزارش پخت» را باز کن\n۲) در پنل «آپلود کاغذ پخت» دکمه 📷 را بزن\n۳) «🔍 تشخیص خودکار» را بزن — ساعت‌ها و دماها خوانده می‌شوند\n۴) پیش‌نمایش را چک کن و «⚡ ثبت خودکار» بزن';
  if(has('محیط')||has('هوا')){
-  var e=R('env')[0];
+  var e0=R('env')[0];
   if(crow&&crow.v.eT&&crow.v.eT!=='—')return '🌡 آخرین دمای محیط ثبت‌شده در پخت: '+crow.v.eT+'°'+(crow.v.eC?' — '+crow.v.eC:'');
-  if(e)return '🌍 آخرین دمای محیط: '+e.temp+'°C — '+e.city;
-  return 'دمای محیطی ثبت نشده — در گزارش پخت ردیف ساعتی بزن یا دکمه 🌍 Conditions را بزن.';
+  if(e0)return '🌍 آخرین دمای محیط: '+e0.temp+'°C — '+e0.city;
+  return 'دمای محیطی ثبت نشده — در گزارش پخت ردیف ساعتی بزن یا دکمه 🌍 را بزن.';
  }
- if(has('دما')||has('دمای راکتور')||has('آنالوگ')){
+ if(has('دما')||has('آنالوگ')){
   if(crow&&crow.v.a1){
-   var a=+crow.v.a1,s='🔥 دمای آنالوگ آخرین ثبت (ساعت '+crow.v.h+'): '+F(a)+'</s>';
-   if(a>320)return '🔥 دمای آنالوگ: '+F(a)+'° ⚠️ بالای ۳۲۰! خنک‌کاری/بررسی فوری کن.';
+   var a=+crow.v.a1;
+   if(a>320)return '🔥 دمای آنالوگ: '+F(a)+'° ⚠️ بالای ۳۲۰! بررسی فوری کن.';
    if(a>270)return '🔥 دمای آنالوگ: '+F(a)+'° — داخل زون بحرانی (۲۷۰–۳۲۰).';
-   return '🔥 دمای آنالوگ: '+F(a)+'° — نرمال.';
+   return '🔥 دمای آنالوگ: '+F(a)+'° — نرمال. (ساعت '+crow.v.h+')';
   }
-  return 'هنوز دمایی ثبت نشده — در گزارش پخت ردیف ساعتی اول را ثبت کن یا از کاغذ پخت استفاده کن.';
+  return 'هنوز دمایی ثبت نشده — در گزارش پخت ردیف ساعتی ثبت کن یا از کاغذ پخت استفاده کن.';
  }
- if(has('خلاصه')||has('امروز'))
-  return '📌 خلاصه کارخانه:\n• گزارش پخت: '+F(R('csum').length)+' · ردیف ساعتی: '+F(R('crow').length)+'\n• بچ: '+F(R('batch').length)+'\n• کارتابل باز: '+F(R('cartable').filter(function(x){return x.st!=='done'}).length)+'\n• تراز: '+F(inn-outx)+' تومان\n• مطالبات وصول‌نشده: '+F(ud)+' تومان';
+ if(has('خلاصه')||has('امروز'))return '📌 خلاصه کارخانه:\n• گزارش پخت: '+F(R('csum').length)+' · ردیف ساعتی: '+F(R('crow').length)+'\n• بچ: '+F(R('batch').length)+'\n• کارتابل باز: '+F(R('cartable').filter(function(x){return x.st!=='done'}).length)+'\n• تراز: '+F(inn-outx)+' تومان\n• مطالبات: '+F(ud)+' تومان';
  if(has('مطلب')||has('وصول')||has('بدهی')||has('فاکتور')){
   if(!unpaid.length)return '✅ هیچ مطالبات وصول‌نشده‌ای نداری.';
   var s2='🧾 مطالبات: '+F(ud)+' تومان ('+F(unpaid.length)+' فاکتور):\n';
-  unpaid.slice(0,4).forEach(function(x){s2+='• '+x.v.item+' — '+x.v.cust+' — '+F(x.v.total)+'\n'});
+  unpaid.slice(0,4).forEach(function(x){s2+='• '+x.v.item+' — '+(x.v.cust||'—')+' — '+F(x.v.total)+'\n'});
   return s2;
  }
- if(has('تراز')||has('درآمد')||has('هزینه')||has('مالی'))
-  return '💰 مالی:\n• درآمد: '+F(inn)+' تومان\n• هزینه: '+F(outx)+' تومان\n• تراز: '+F(inn-outx)+' تومان';
+ if(has('تراز')||has('درآمد')||has('هزینه')||has('مالی'))return '💰 مالی:\n• درآمد: '+F(inn)+' تومان\n• هزینه: '+F(outx)+' تومان\n• تراز: '+F(inn-outx)+' تومان';
  if(has('انبار')||has('قطعه')||has('موجودی')){
   var inv=R('inv'),low=[];
-  inv.forEach(function(x){if(!x.st||x.st!=='arch'){if(+x.v.qty<=10)low.push(x.v.item+' ('+x.v.qty+')')}});
-  var s3='🏭 انبار: '+F(inv.length)+' قلم.'+(low.length?'\n⚠️ کم‌موجودی: '+low.join('، '):'');
-  return s3;
+  inv.forEach(function(x){if(+x.v.qty<=10)low.push(x.v.item+' ('+x.v.qty+')')});
+  return '🏭 انبار: '+F(inv.length)+' قلم.'+(low.length?'\n⚠️ کم‌موجودی: '+low.join('، '):'');
  }
  if(has('کارتابل')||has('تعمیر')||has('خراب')){
   var op=R('cartable').filter(function(x){return x.st!=='done'});
   if(!op.length)return '🔧 هیچ کاری باز نیست — کارتابل خالی است ✅';
   var s4='🔧 '+F(op.length)+' کار باز:\n';
-  op.slice(0,4).forEach(function(x){s4+='• '+x.v.title+' — '+x.v.tech+' — مهلت '+x.v.due+' ('+dLbl(daysU(x.v.due))+')\n'});
+  op.slice(0,4).forEach(function(x){s4+='• '+x.v.title+' — '+(x.v.tech||'—')+' — مهلت '+(x.v.due||'—')+'\n'});
   return s4;
  }
- if(has('چک')||has('چک‌لیست')||has('چک لیست')){
+ if(has('چک')){
   var c=ckGet(),dn=0;CKL.forEach(function(tt,i){var cc=c[String(i)];if(cc&&cc.d)dn++});
-  return '☑️ چک‌لیست تجهیزات: '+F(dn)+' از '+F(CKL.length)+' تایید شده.\n'+(dn<CKL.length?'قیمت مانده‌ها را در گزارش پخت تیک بزن تا «مجاز به استارت» شوی.':'هر ۱۳ مورد تایید شده — مجاز به استارت 🟢');
+  return '☑️ چک‌لیست تجهیزات: '+F(dn)+' از '+F(CKL.length)+' تایید شده.\n'+(dn<CKL.length?'بقیه را در گزارش پخت تیک بزن تا «مجاز به استارت» شوی.':'هر ۱۳ مورد تایید شده — مجاز به استارت 🟢');
  }
  if(has('بچ')){
   var b=R('batch')[0];
-  var wr=briefSummary();
   if(!b)return 'بچی ثبت نشده — از «📦 بچ و هزینه» اضافه کن.';
   var cst=0;R('bcost').forEach(function(x){if(x.v.b===b.v.id)cst+=+x.v.amt||0});
-  return '📦 آخرین بچ: '+b.v.id+' — '+F(b.v.raw)+' تن '+b.v.feed+'\n• هزینه‌های ثبت‌شده: '+F(cst)+' تومان\n• برق، گازوئیل و دستمزد در «بچ و هزینه» تفکیک می‌شوند.';
+  return '📦 آخرین بچ: '+b.v.id+' — '+F(b.v.raw)+' تن '+b.v.feed+'\n• هزینه‌های ثبت‌شده: '+F(cst)+' تومان';
  }
- if(has('پم ')||has('PM')||has('سرویس دوره')){
-  var pm=R('pm').filter(function(x){return x.st!=='arch'})[0];
-  if(!pm)return '🛠️ PM ثبت نشده.';
-  return '🛠️ نزدیک‌ترین PM: '+pm.v.eq+' — '+pm.v.job+'\nموعد: '+pm.v.next+' ('+dLbl(daysU(pm.v.next))+')';
- }
- if(has('کارخانه')||has('عضو'))
-  return '🏭 '+F(S('pv_firms',[]).length)+' کارخانه عضو شبکه است — در صفحه اول کارت‌هایشان با آدرس و نقشه هست.';
+ if(has('کارخانه')||has('عضو'))return '🏭 '+F(S('pv_firms',[]).length)+' کارخانه عضو شبکه است — در صفحه اول کارت‌هایشان هست.';
  if(has('پرسنل')||has('شیفت')){
   var L=R('hrm').map(function(x){return x.v.n});
   return '👥 پرسنل ثبت‌شده: '+(L.length?L.join('، '):'—');
  }
- if(has('چطوری')||has('راهنما')||has('آموزش'))
-  return '📚 راهنمای سریع:\n• ثبت هر ساعت: گزارش پخت → ردیف ساعتی (دمای محیط خودکار)\n• برگه کاغذی: پنل 📸 آپلود کاغذ پخت\n• هزینه هر بچ: بچ و هزینه → افزودن هزینه\n• خرابی: درخواست با ایجنت یا تعمیرات\n• دسترسی پرسنل: مدیریت → ✅/⛔';
- return '🤖 دقیق متوجه نشدم. نمونه سوال: «دما چند است؟»، «خلاصه امروز»، «مطالبات»، «انبار»، «کارتابل باز».\nبرای هوش حرفه‌ای، در همین صفحه کلید رایگان Gemini را ذخیره کن.';
+ return '🤖 دقیق متوجه نشدم. نمونه: «دما چند است؟»، «خلاصه امروز»، «مطالبات»، «انبار»، «کارتابل باز».\nبرای هوش حرفه‌ای، کلید رایگان Gemini را در پایین همین صفحه ذخیره کن.';
 }
 async function geminiAsk(qt){
  try{
-  var prompt='تو دستیار کارخانه پیرولیز «پترو پارسیان» هستی. داده‌های فعلی سامانه:\n'+briefSummary()+'\n\nسوال کاربر: '+qt+'\n\nفارسی، کوتاه، کاربردی و دقیق جواب بده. اگر عدد لازم است از همان داده‌ها استفاده کن.';
-  var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+AI_MODEL+':generateContent?key='+encodeURIComponent(AI_KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+  var prompt='تو دستیار کارخانه پیرولیز «پترو پارسیان» هستی. داده‌های فعلی سامانه:\n'+briefSummary()+'\n\nسوال کاربر: '+qt+'\n\nفارسی، کوتاه، کاربردی و دقیق جواب بده.';
+  var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+encodeURIComponent(AI_KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
   var j=await r.json();
-  if(j&&j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts&&j.candidates[0].content.parts.length)return j.candidates[0].content.parts.map(function(p){return p.text||''}).join('');
-  if(j&&j.error&&j.error.message)logA('🤖 خطای AI: '+j.error.message.slice(0,80));
+  if(j&&j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts)return j.candidates[0].content.parts.map(function(p){return p.text||''}).join('');
  }catch(e){}
  return '';
 }
 function saveAIKey(){
  AI_KEY=q('ai_key').value.trim();W('pv_aikey',AI_KEY);
- toast(AI_KEY?'✅ کلید ذخیره شد — از این به بعد هوش حرفه‌ای جواب می‌دهد':'کلید پاک شد — موتور محلی فعال است');view();
+ toast(AI_KEY?'✅ کلید ذخیره شد — هوش حرفه‌ای فعال شد':'کلید پاک شد — موتور محلی فعال است');view();
 }
 function renderAIList(){
  var box=q('aibox');if(!box)return;
  var H=S('pv_aihist',[]);
  if(!H.length){box.innerHTML='<div class="empty">سلام! سوالت را بنویس یا از پیشنهادها کلیک کن 🤖</div>';return}
- box.innerHTML=H.map(function(m){
-  return '<div class="aib '+m.who+'">'+E(m.txt)+'</div>';
- }).join('');
+ box.innerHTML=H.map(function(m){return '<div class="aib '+m.who+'">'+E(m.txt)+'</div>'}).join('');
  box.scrollTop=box.scrollHeight;
 }
 async function aiSend(preset){
@@ -772,7 +760,7 @@ async function aiSend(preset){
  H.push({who:'u',txt:txt.slice(0,400),t:Date.now()});
  W('pv_aihist',H.slice(-40));renderAIList();
  var ans='';
- if(AI_KEY){toast('🤖 در حال فکر کردن با هوش مصنوعی…');ans=await geminiAsk(txt)}
+ if(AI_KEY){toast('🤖 در حال فکر کردن…');ans=await geminiAsk(txt)}
  if(!ans)ans=localAnswer(txt);
  H.push({who:'a',txt:ans,t:Date.now()});
  W('pv_aihist',H.slice(-40));renderAIList();
@@ -782,12 +770,12 @@ function vAI(){
  var inner='<div class="pan"><h3>🤖 دستیار هوشمند پترو پارسیان</h3>';
  inner+='<div class="sug">'+QCH.map(function(c,i){return '<button class="tb" onclick="aiChip('+i+')">'+E(c)+'</button>'}).join('')+'</div>';
  inner+='<div id="aibox"></div>';
- inner+='<input id="ai_in" class="lg" style="margin-bottom:7px" placeholder="سوالت را بنویس… مثلاً: هزینه آخرین بچ چقدر شد؟" onkeydown="if(event.key===\'Enter\')aiSend()">';
+ inner+='<input id="ai_in" class="lg" style="margin-bottom:7px" placeholder="سوالت را بنویس…" onkeydown="if(event.key===\'Enter\')aiSend()">';
  inner+='<button class="btn go" style="width:100%" onclick="aiSend()">🚀 بپرس</button></div>';
  if(ADM()){
   inner+='<div class="pan"><h3>🔑 اتصال هوش مصنوعی حرفه‌ای (اختیاری)</h3>';
-  inner+='<div class="fgrid"><div><label>کلید Gemini — رایگان از aistudio.google.com/apikey</label><input id="ai_key" value="'+E(AI_KEY)+'" placeholder="خالی = موتور محلی (آفلاین)"></div></div>';
-  inner+='<button class="btn go sm" onclick="saveAIKey()">💾 ذخیره کلید</button><div class="by" style="margin-top:6px">موتور محلی بدون کلید هم کار می‌کند و از داده‌های واقعی همین سامانه جواب می‌دهد؛ با کلید Gemini، متن آزاد هم می‌فهمد</div></div>';
+  inner+='<div class="fgrid"><div><label>کلید Gemini — رایگان از aistudio.google.com/apikey</label><input id="ai_key" value="'+E(AI_KEY)+'" placeholder="خالی = موتور محلی"></div></div>';
+  inner+='<button class="btn go sm" onclick="saveAIKey()">💾 ذخیره کلید</button></div>';
  }
  q('view').innerHTML=page('🤖 دستیار هوشمند',inner);renderAIList();
 }
@@ -1220,7 +1208,7 @@ function firmCard(f){
 }
 function vHome(){
  var firms=S('pv_firms',[]);
- var h='<div class="view"><div class="hero"><div class="fl">🔥</div><h1>پترو پارسیان — اکسیر جوانی</h1><p>سامانه جامع مدیریت کارخانه‌های پیرولیز: ثبت ساعتی دما با دمای محیطِ خودکار، آپلود کاغذ پخت با تشخیص خودکار ساعات و پارامترها (OCR)، دستیار هوشمند پرسش و پاسخ، هزینه دقیق هر بچ، تعمیرات و کارتابل، ایجنت هوشمند و شبکه تعامل کارخانه‌ها با عضویت.</p></div>';
+ var h='<div class="view"><div class="hero"><div class="fl">🔥</div><h1>پترو پارسیان — اکسیر جوانی</h1><p>سامانه جامع مدیریت کارخانه‌های پیرولیز: ثبت ساعتی دما با دمای محیطِ خودکار، آپلود کاغذ پخت با تشخیص خودکار ساعات و پارامترها، دستیار هوشمند پرسش و پاسخ، هزینه دقیق هر بچ، تعمیرات و کارتابل و شبکه تعامل کارخانه‌ها.</p></div>';
  h+='<div class="pan"><h3>🏭 کارخانه‌های عضو شبکه ('+F(firms.length)+')</h3><div class="firms">';
  if(firms.length){firms.forEach(function(f){h+=firmCard(f)})}
  else{h+='<div class="empty">هنوز کارخانه‌ای تایید نشده — اولین باش</div>'}
@@ -1230,7 +1218,7 @@ function vHome(){
  h+='</div>';
  h+='<div class="row2">';
  h+='<div class="pan"><div class="tabs"><button class="tab on" id="lt0" onclick="ltab(0)">ورود</button><button class="tab" id="lt1" onclick="ltab(1)">ثبت‌نام</button></div>';
- h+='<div id="lf0"><input id="le" class="lg" type="email" placeholder="ایمیل"><input id="lp" class="lg" type="password" placeholder="رمز عبور"><button class="btn go" style="width:100%" onclick="doLogin()">ورود به سامانه</button><button class="btn out sm" style="width:100%" onclick="forgotPw()">🔑 رمزم را فراموش کردم — درخواست ریست (ایمیل/پیامک به مدیر)</button></div>';
+ h+='<div id="lf0"><input id="le" class="lg" type="email" placeholder="ایمیل"><input id="lp" class="lg" type="password" placeholder="رمز عبور"><button class="btn go" style="width:100%" onclick="doLogin()">ورود به سامانه</button><button class="btn out sm" style="width:100%" onclick="forgotPw()">🔑 رمزم را فراموش کردم — ریست (مدیر مستقیم / پرسنل با تایید)</button></div>';
  h+='<div id="lf1" class="hid">';
  h+='<input id="rn" class="lg" placeholder="نام و نام‌خانوادگی مسئول">';
  h+='<input id="rc" class="lg" placeholder="🏭 نام شرکت / کارخانه">';
