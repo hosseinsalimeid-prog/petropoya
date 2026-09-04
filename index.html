@@ -751,7 +751,19 @@ function showDashboard(){
   document.getElementById('appFrameWrap').classList.remove('hidden');
   window.scrollTo(0,0);
   if(!appFrameLoaded){
-    document.getElementById('appFrame').srcdoc = b64DecodeUnicode(PYROFLOW_APP_B64);
+    var html = b64DecodeUnicode(PYROFLOW_APP_B64);
+    var shim = '<'+'script>'+
+      '(function(){if(window.storage)return;'+
+      'var KEY="pyroflow-kv";'+
+      'function all(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}'+
+      'window.storage={'+
+      'get:function(k){var o=all();return (o[k]!==undefined)?Promise.resolve({value:o[k]}):Promise.resolve(null)},'+
+      'set:function(k,v){var o=all();o[k]=v;try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}return Promise.resolve(true)}'+
+      '};})();'+
+    '<'+'/script>';
+    if(html.indexOf('</head>') > -1){ html = html.replace('</head>', shim + '</head>'); }
+    else { html = html + shim; }
+    document.getElementById('appFrame').srcdoc = html;
     appFrameLoaded = true;
   }
 }
