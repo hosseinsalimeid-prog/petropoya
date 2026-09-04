@@ -6,159 +6,207 @@
 <title>پترو پارسیان — اکسیر جوانی</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Vazirmatn,Tahoma,-apple-system,sans-serif;background:#0a1428;color:#eaf1ff;min-height:100vh;display:flex;justify-content:center;padding:24px 14px}
-#gate{width:100%;max-width:420px}
-.card{background:#0f1e3d;border:1px solid #24406e;border-radius:18px;padding:28px 22px;box-shadow:0 12px 40px rgba(0,0,0,.45)}
-.logo{font-size:58px;text-align:center}
-.card h1{color:#d4a437;font-size:23px;text-align:center;margin:6px 0 4px}
-.sub{color:#8fa8cc;font-size:13px;text-align:center;margin-bottom:20px}
-.tabs{display:flex;gap:10px;margin-bottom:18px}
-.tabs button{flex:1;padding:11px;border-radius:12px;border:1px solid #24406e;background:#0c1830;color:#cfe0ff;font-size:15px;font-weight:700;cursor:pointer}
-.tabs button.on{background:#d4a437;border-color:#d4a437;color:#14213d}
-.fld{margin-bottom:12px}
-.fld label{display:block;font-size:12.5px;color:#9db8e0;margin-bottom:5px}
-.fld input{width:100%;padding:11px 12px;border-radius:11px;border:1px solid #2c4a7c;background:#fff;color:#111;font-size:15px}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#2fbf71,#1f9d55);color:#fff;font-size:16px;font-weight:800;cursor:pointer;margin-top:4px}
-.note{font-size:12px;color:#8fa8cc;text-align:center;margin-top:14px;line-height:1.9}
+body{font-family:Vazirmatn,Tahoma,-apple-system,sans-serif;background:#0a1424;color:#e8eefc;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
 .hidden{display:none!important}
-#tw{position:fixed;bottom:14px;left:14px;right:14px;display:flex;flex-direction:column;gap:8px;pointer-events:none;z-index:99}
-.toast{opacity:0;transform:translateY(8px);transition:.25s;background:#12331f;color:#b9ffd7;border:1px solid #1f5c37;padding:11px 14px;border-radius:12px;font-size:14px}
+.card{background:#0f1e3d;border:1px solid #24406e;border-radius:18px;padding:28px 22px;width:100%;max-width:480px;box-shadow:0 10px 40px rgba(0,0,0,.45)}
+.logo{font-size:62px;text-align:center}
+.card h1{color:#d4a437;font-size:24px;margin:10px 0 6px;text-align:center}
+.sub{color:#8fa8cc;font-size:13.5px;margin-bottom:22px;text-align:center}
+.tabs{display:flex;gap:10px;margin-bottom:22px}
+.tab{flex:1;padding:12px;border-radius:12px;border:1px solid #2c4c80;background:#0c1a33;color:#a9c2e8;font-size:15px;font-family:inherit;cursor:pointer}
+.tab.active{background:#d4a437;border-color:#d4a437;color:#1a1206;font-weight:700}
+.fld{text-align:right;margin-bottom:12px}
+.fld label{display:block;font-size:12.5px;color:#8fa8cc;margin-bottom:6px}
+.fld input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid #2c4c80;background:#f7f7d8;color:#111;font-size:15px;font-family:inherit}
+.fld input:focus{outline:2px solid #d4a437;border-color:#d4a437}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:6px}
+.btn-go{background:linear-gradient(90deg,#159a52,#22c55e);color:#fff}
+.btn-out{background:#24406e;color:#cfe0ff}
+.note{color:#8fa8cc;font-size:12.5px;text-align:center;margin-top:16px;line-height:2}
+.note b{color:#d4a437}
+#tw{position:fixed;bottom:14px;left:14px;right:14px;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;z-index:99}
+.toast{background:#12331f;color:#b9ffd7;border:1px solid #1f5c39;padding:12px 18px;border-radius:12px;font-size:14px;opacity:0;transform:translateY(10px);transition:.25s;max-width:420px}
 .toast.show{opacity:1;transform:none}
-.toast.error{background:#3a1414;color:#ffc4c4;border-color:#6e2424}
-.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
-.b-admin{background:#d4a437;color:#14213d}
-.b-viewer{background:#3b5a8f;color:#e5efff}
-.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px;border:1px solid #24406e;border-radius:12px;margin-bottom:8px;font-size:14px}
-.mini{padding:6px 10px;border-radius:9px;border:none;font-weight:700;cursor:pointer;font-size:12.5px}
-.ok{background:#2fbf71;color:#fff}
-.no{background:#c0392b;color:#fff}
-.out{background:none;border:1px solid #2c4a7c;color:#9db8e0;border-radius:10px;padding:8px 14px;cursor:pointer;margin-top:14px;width:100%}
-.factories{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.fac{background:#0c1830;border:1px solid #24406e;border-radius:14px;padding:14px;text-align:center}
-.fac .em{font-size:30px}
-.fac p{font-size:12.5px;color:#9db8e0;margin-top:6px}
-h2{font-size:16px;color:#d4a437;margin:18px 0 10px;text-align:center}
+.toast.error{background:#3a1414;color:#ffc4c4;border-color:#7c2d2d}
+.badge{display:inline-block;background:#d4a437;color:#1a1206;font-weight:700;font-size:12.5px;border-radius:99px;padding:4px 14px}
+.badge.v{background:#2c4c80;color:#cfe0ff}
+.hi{font-size:27px;font-weight:800;text-align:center;margin-bottom:10px}
+.sect{color:#d4a437;font-size:17px;font-weight:700;text-align:center;margin:24px 0 14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fcard{background:#0c1a33;border:1px solid #24406e;border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;transition:.15s}
+.fcard:active{transform:scale(.96);border-color:#d4a437}
+.fe{font-size:40px}
+.fn{font-weight:700;margin:8px 0 4px;font-size:15px}
+.fc{font-size:12px;color:#8fa8cc}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.bar{height:10px;background:#0c1a33;border:1px solid #24406e;border-radius:99px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#d4a437,#f0c75e)}
+.crow{display:flex;justify-content:space-between;font-size:12.5px;color:#8fa8cc}
+.rec{display:flex;align-items:center;gap:8px;padding:9px 2px;border-bottom:1px solid #1c3560;font-size:13px}
+.rec .d{color:#8fa8cc;font-size:12px;min-width:72px}
+.rec .a{font-weight:700;color:#b9ffd7}
+.rec .n{color:#8fa8cc;font-size:12px;flex:1}
+.del{background:none;border:none;color:#ff9b9b;cursor:pointer;font-size:17px;padding:2px 6px}
+.rq{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px;border-bottom:1px solid #1c3560;font-size:13.5px}
+.pill{border:none;border-radius:9px;padding:8px 14px;font-family:inherit;font-weight:700;cursor:pointer;font-size:13px;margin-inline-start:6px}
+.pill.ok{background:#22c55e;color:#fff}
+.pill.no{background:#3a1414;color:#ffc4c4;border:1px solid #7c2d2d}
+.empty{color:#8fa8cc;font-size:13px;text-align:center;padding:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+td,th{padding:8px 4px;border-bottom:1px solid #1c3560;text-align:right;color:#cfe0ff}
+th{color:#8fa8cc;font-weight:400;font-size:12px}
+select{background:#0c1a33;color:#e8eefc;border:1px solid #2c4c80;border-radius:8px;padding:5px 8px;font-family:inherit}
 </style>
 </head>
 <body>
-<div id="gate">
-  <div class="card" id="authCard">
-    <div class="logo">🔥</div>
-    <h1>پترو پارسیان — اکسیر جوانی</h1>
-    <div class="sub">PYROHUB · سامانه جامع مدیریت کارخانه‌های پیپولینز</div>
-    <div class="tabs">
-      <button id="tabLogin" class="on" onclick="showTab('login')">ورود</button>
-      <button id="tabSignup" onclick="showTab('signup')">ثبت‌نام</button>
-    </div>
-    <form id="loginForm" onsubmit="return doLogin(event)">
-      <div class="fld"><label>ایمیل</label><input id="li_email" type="email" required></div>
-      <div class="fld"><label>رمز عبور</label><input id="li_pass" type="password" required></div>
-      <button class="btn" type="submit">ورود به سامانه</button>
-    </form>
-    <form id="signupForm" class="hidden" onsubmit="return doSignup(event)">
-      <div class="fld"><label>نام و نام خانوادگی</label><input id="su_name" required></div>
-      <div class="fld"><label>ایمیل</label><input id="su_email" type="email" required></div>
-      <div class="fld"><label>رمز عبور</label><input id="su_pass" type="password" minlength="4" required></div>
-      <div class="fld"><label>تکرار رمز عبور</label><input id="su_pass2" type="password" required></div>
-      <button class="btn" type="submit">ایجاد حساب</button>
-    </form>
-    <div class="note">اولین ثبت‌نام = <b style="color:#d4a437">مدیر کل 👑</b><br>ثبت‌نام‌های بعدی «ناظر» هستند تا مدیر تأیید کند.</div>
-  </div>
 
-  <div class="card hidden" id="dashCard">
-    <div style="text-align:center">
-      <div class="logo">🔥</div>
-      <h1 id="dashHello"></h1>
-      <div id="dashRole"></div>
-    </div>
-    <h2>🏭 کارخانه‌ها</h2>
-    <div class="factories">
-      <div class="fac"><div class="em">⚗️</div><b>اکسیر جوانی</b><p>ظرفیت: ۸۰٪ · فعال</p></div>
-      <div class="fac"><div class="em">🛢️</div><b>پالایش پارس</b><p>ظرفیت: ۶۵٪ · فعال</p></div>
-      <div class="fac"><div class="em">🧴</div><b>بسته‌بندی درخشان</b><p>ظرفیت: ۴۲٪ · فعال</p></div>
-      <div class="fac"><div class="em">🚚</div><b>ترابری سریع</b><p>ظرفیت: ۹۰٪ · فعال</p></div>
-    </div>
-    <div id="adminArea"></div>
-    <button class="out" onclick="logout()">خروج از حساب</button>
+<div id="gate" class="card hidden">
+  <div class="logo">🔥</div>
+  <h1>پترو پارسیان — اکسیر جوانی</h1>
+  <div class="sub">PYROHUB · سامانه جامع مدیریت کارخانه‌های پیرولیز</div>
+  <div class="tabs">
+    <button class="tab active" id="tab-login" onclick="showTab('login')">ورود</button>
+    <button class="tab" id="tab-reg" onclick="showTab('reg')">ثبت‌نام</button>
   </div>
+  <form id="f-login" onsubmit="return doLogin(event)">
+    <div class="fld"><label>ایمیل</label><input id="l-email" type="email" required autocomplete="email"></div>
+    <div class="fld"><label>رمز عبور</label><input id="l-pass" type="password" required autocomplete="current-password"></div>
+    <button class="btn btn-go" type="submit">ورود به سامانه</button>
+  </form>
+  <form id="f-reg" class="hidden" onsubmit="return doReg(event)">
+    <div class="fld"><label>نام و نام خانوادگی</label><input id="r-name" required></div>
+    <div class="fld"><label>ایمیل</label><input id="r-email" type="email" required autocomplete="email"></div>
+    <div class="fld"><label>رمز عبور</label><input id="r-pass" type="password" required minlength="6"></div>
+    <div class="fld"><label>تکرار رمز عبور</label><input id="r-pass2" type="password" required minlength="6"></div>
+    <button class="btn btn-go" type="submit">ثبت‌نام</button>
+  </form>
+  <div class="note">اولین ثبت‌نام = <b>مدیر کل 👑</b><br>ثبت‌نام‌های بعدی پس از تأیید مدیر فعال می‌شوند.</div>
 </div>
+
+<div id="dash" class="card hidden">
+  <div class="hi" id="hello"></div>
+  <div style="text-align:center" id="rbadge"></div>
+  <div class="sect">کارخانه‌ها 🏭</div>
+  <div class="grid" id="fgrid"></div>
+  <div id="adminbox"></div>
+  <button class="btn btn-out" style="margin-top:22px" onclick="logout()">خروج از حساب</button>
+</div>
+
+<div id="fpage" class="card hidden"></div>
+
 <div id="tw"></div>
 
 <script>
-var LS='pyro_users',SS='pyro_session';
-function getUsers(){try{return JSON.parse(localStorage.getItem(LS))||[]}catch(e){return[]}}
-function saveUsers(u){localStorage.setItem(LS,JSON.stringify(u))}
-function hash(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0}return 'h'+h}
-function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-function SU(id){return document.getElementById(id).value}
-function toast(msg,err){var t=document.createElement('div');t.className='toast'+(err?' error':'');t.textContent=msg;document.getElementById('tw').appendChild(t);setTimeout(function(){t.classList.add('show')},10);setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove()},300)},3200)}
-function showTab(w){
-  document.getElementById('tabLogin').classList.toggle('on',w==='login');
-  document.getElementById('tabSignup').classList.toggle('on',w==='signup');
-  document.getElementById('loginForm').classList.toggle('hidden',w!=='login');
-  document.getElementById('signupForm').classList.toggle('hidden',w!=='signup');
-}
-function doSignup(e){
+const UKEY='pyro_users_v2',SKEY='pyro_session_v2',RKEY='pyro_recs_v2';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const faNum=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const users=()=>{try{return JSON.parse(localStorage.getItem(UKEY))||[]}catch(e){return[]}};
+const saveUsers=u=>localStorage.setItem(UKEY,JSON.stringify(u));
+const recs=()=>{try{return JSON.parse(localStorage.getItem(RKEY))||{}}catch(e){return{}}};
+const saveRecs=r=>localStorage.setItem(RKEY,JSON.stringify(r));
+const F=(id,emoji,name,cap)=>({id,emoji,name,cap});
+const FACTORIES=[F('exir','⚗️','اکسیر جوانی',80),F('palayesh','🛢️','پالایش پارس',65),F('baste','🧴','بسته‌بندی درخشان',42),F('trabar','🚚','ترابری سریع',90)];
+async function hash(t){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('pyro·'+t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let h=0;for(const c of 'pyro·'+t)h=(h*31+c.charCodeAt(0))>>>0;return 'f'+h}}
+function toast(m,err){const t=document.createElement('div');t.className='toast'+(err?' error':'');t.textContent=m;$('tw').appendChild(t);requestAnimationFrame(()=>t.classList.add('show'));setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300)},3200)}
+function showTab(w){$('tab-login').classList.toggle('active',w==='login');$('tab-reg').classList.toggle('active',w==='reg');$('f-login').classList.toggle('hidden',w!=='login');$('f-reg').classList.toggle('hidden',w!=='reg')}
+const me=()=>{const e=localStorage.getItem(SKEY);if(!e)return null;return users().find(u=>u.email===e&&u.status==='active')||null};
+const isAdmin=()=>{const u=me();return u&&u.role==='admin'};
+
+async function doReg(e){
   e.preventDefault();
-  var n=SU('su_name'),m=SU('su_email').trim().toLowerCase(),p=SU('su_pass'),p2=SU('su_pass2');
-  if(p!==p2){toast('رمزها یکسان نیستند',1);return false}
-  var u=getUsers();
-  for(var i=0;i<u.length;i++){if(u[i].email===m){toast('این ایمیل قبلاً ثبت شده است',1);return false}}
-  var first=(u.length===0);
-  u.push({name:n,email:m,pass:hash(p),role:first?'admin':'viewer',status:first?'active':'pending'});
-  saveUsers(u);
-  toast(first?'🎉 خوش آمدی مدیر کل! حساب ایجاد شد':'حساب ساخته شد؛ در انتظار تأیید مدیر');
-  e.target.reset();
-  if(first){localStorage.setItem(SS,m);renderDash()}
-  return false;
-}
-function doLogin(e){
-  e.preventDefault();
-  var m=SU('li_email').trim().toLowerCase(),p=hash(SU('li_pass'));
-  var u=getUsers();
-  for(var i=0;i<u.length;i++){
-    if(u[i].email===m&&u[i].pass===p){
-      if(u[i].status!=='active'){toast('حساب شما در انتظار تأیید مدیر است',1);return false}
-      localStorage.setItem(SS,m);renderDash();return false;
-    }
+  const name=$('r-name').value.trim(),email=$('r-email').value.trim().toLowerCase(),p1=$('r-pass').value,p2=$('r-pass2').value;
+  if(p1!==p2)return toast('رمزها یکسان نیستند',1);
+  if(p1.length<6)return toast('رمز حداقل ۶ کاراکتر باشد',1);
+  const list=users();
+  if(list.some(u=>u.email===email))return toast('این ایمیل قبلاً ثبت شده',1);
+  if(list.length===0){
+    list.push({name,email,pass:await hash(p1),role:'admin',status:'active'});
+    saveUsers(list);localStorage.setItem(SKEY,email);
+    toast('خوش آمدی مدیر کل 👑');render();
+  }else{
+    list.push({name,email,pass:await hash(p1),role:'viewer',status:'pending'});
+    saveUsers(list);
+    toast('درخواستت ثبت شد؛ منتظر تأیید مدیر 🌱');
+    showTab('login');
   }
-  toast('ایمیل یا رمز اشتباه است',1);return false;
 }
-function roleBadge(r){
-  if(r==='admin')return '<span class="badge b-admin">مدیر کل 👑</span>';
-  return '<span class="badge b-viewer">ناظر 👀</span>';
+async function doLogin(e){
+  e.preventDefault();
+  const email=$('l-email').value.trim().toLowerCase(),p=$('l-pass').value;
+  const u=users().find(x=>x.email===email);
+  if(!u||u.pass!==await hash(p))return toast('ایمیل یا رمز اشتباه است',1);
+  if(u.status==='pending')return toast('حسابت هنوز در انتظار تأیید مدیر است ⏳',1);
+  localStorage.setItem(SKEY,email);
+  toast('خوش آمدی '+u.name+' 👋');render();
 }
-function logout(){localStorage.removeItem(SS);document.getElementById('dashCard').classList.add('hidden');document.getElementById('authCard').classList.remove('hidden');toast('از حساب خارج شدی')}
-function renderDash(){
-  var email=localStorage.getItem(SS);if(!email)return;
-  var u=getUsers(),me=null;
-  for(var i=0;i<u.length;i++){if(u[i].email===email)me=u[i]}
-  if(!me){logout();return}
-  document.getElementById('authCard').classList.add('hidden');
-  document.getElementById('dashCard').classList.remove('hidden');
-  document.getElementById('dashHello').textContent='سلام، '+me.name;
-  document.getElementById('dashRole').innerHTML=roleBadge(me.role);
-  var a=document.getElementById('adminArea');
-  if(me.role==='admin'){
-    var html='<h2>👑 مدیریت کاربران</h2>',any=false;
-    for(var j=0;j<u.length;j++){
-      if(u[j].status==='pending'){any=true;
-        html+='<div class="row"><div><b>'+esc(u[j].name)+'</b><br><span style="font-size:11.5px;color:#9db8e0">'+esc(u[j].email)+'</span></div><div><button class="mini ok" onclick="approve(\''+u[j].email+'\',1)">تأیید</button> <button class="mini no" onclick="approve(\''+u[j].email+'\',0)">رد</button></div></div>';
-      }
-    }
-    if(!any)html+='<div class="row" style="justify-content:center;color:#8fa8cc">درخواست تأییدی وجود ندارد</div>';
-    a.innerHTML=html;
-  }else{a.innerHTML=''}
+function logout(){localStorage.removeItem(SKEY);render();toast('خارج شدی')}
+function decide(email,ok){
+  if(!isAdmin())return;
+  let list=users();const u=list.find(x=>x.email===email);if(!u)return;
+  if(ok){u.status='active';u.role='viewer';toast(u.name+' تأیید شد ✅')}
+  else{list=list.filter(x=>x.email!==email);toast('درخواست رد شد')}
+  saveUsers(list);render();
 }
-function approve(email,ok){
-  var u=getUsers();
-  for(var i=0;i<u.length;i++){if(u[i].email===email){u[i].status=ok?'active':'rejected'}}
-  saveUsers(u);renderDash();toast(ok?'کاربر تأیید شد ✅':'درخواست رد شد');
+function setRole(email,role){
+  if(!isAdmin())return;
+  const list=users();const u=list.find(x=>x.email===email);if(!u)return;
+  const otherAdmin=list.some(x=>x.role==='admin'&&x.status==='active'&&x.email!==email);
+  if(u.role==='admin'&&!otherAdmin&&role!=='admin')return toast('حداقل یک مدیر کل باید بماند',1);
+  u.role=role;saveUsers(list);toast('نقش '+u.name+' تغییر کرد');render();
 }
-(function(){
-  if(getUsers().length===0){showTab('signup')}
-  renderDash();
-})();
+function render(){
+  const u=me();
+  $('fpage').classList.add('hidden');
+  if(!u){$('gate').classList.remove('hidden');$('dash').classList.add('hidden');return}
+  $('gate').classList.add('hidden');$('dash').classList.remove('hidden');
+  $('hello').textContent='سلام، '+u.name;
+  $('rbadge').innerHTML=u.role==='admin'?'<span class="badge">مدیر کل 👑</span>':'<span class="badge v">ناظر</span>';
+  $('fgrid').innerHTML=FACTORIES.map(f=>'<div class="fcard" onclick="openFactory(\''+f.id+'\')"><div class="fe">'+f.emoji+'</div><div class="fn">'+f.name+'</div><div class="fc">ظرفیت: ٪'+faNum(f.cap)+' · فعال</div></div>').join('');
+  const box=$('adminbox');
+  if(!isAdmin()){box.innerHTML='';return}
+  box.innerHTML='<div class="sect">مدیریت کاربران 👑</div>'+
+    (function(){const p=users().filter(x=>x.status==='pending');
+      if(!p.length)return '<div class="empty">درخواست تأییدی وجود ندارد</div>';
+      return p.map(x=>'<div class="rq"><div>'+esc(x.name)+'<br><small style="color:#8fa8cc">'+esc(x.email)+'</small></div><div><button class="pill ok" onclick="decide(\''+esc(x.email)+'\',1)">تأیید</button><button class="pill no" onclick="decide(\''+esc(x.email)+'\',0)">رد</button></div></div>').join('');
+    })()+
+    '<table><tr><th>کاربر</th><th>نقش</th></tr>'+
+    users().filter(x=>x.status==='active').map(x=>'<tr><td>'+esc(x.name)+'</td><td><select onchange="setRole(\''+esc(x.email)+'\',this.value)"><option value="admin"'+(x.role==='admin'?' selected':'')+'>مدیر کل 👑</option><option value="viewer"'+(x.role==='viewer'?' selected':'')+'>ناظر</option></select></td></tr>').join('')+'</table>';
+}
+function openFactory(id){
+  const u=me();if(!u)return;
+  const f=FACTORIES.find(x=>x.id===id);if(!f)return;
+  const all=recs();const list=(all[id]||[]).slice().sort((a,b)=>b.t-a.t);
+  const sum=list.reduce((s,r)=>s+r.amt,0);
+  let html='<div class="top"><button class="btn btn-out" style="width:auto;padding:9px 18px;margin:0" onclick="render()">بازگشت</button><div class="fe">'+f.emoji+'</div></div>';
+  html+='<h1 style="font-size:20px">'+f.name+'</h1><div class="sub">ظرفیت فعال: ٪'+faNum(f.cap)+'</div>';
+  html+='<div class="bar"><i style="width:'+f.cap+'%"></i></div>';
+  html+='<div class="crow"><span>مجموع ثبت‌شده: '+faNum(sum)+' تن</span><span>تعداد رکورد: '+faNum(list.length)+'</span></div>';
+  if(u.role==='admin'){
+    html+='<div class="sect">ثبت تولید جدید 📥</div>'+
+      '<div class="fld"><label>مقدار تولید (تن)</label><input id="amt" type="number" min="0" step="0.1"></div>'+
+      '<div class="fld"><label>یادداشت (اختیاری)</label><input id="rnote"></div>'+
+      '<button class="btn btn-go" onclick="addRec(\''+id+'\')">ثبت در سامانه</button>';
+  }else{
+    html+='<div class="empty">دسترسی نمایشی — ثبت تولید فقط با مدیر 👑</div>';
+  }
+  html+='<div class="sect">تاریخچه 📋</div>';
+  html+=list.length?list.map(r=>'<div class="rec"><span class="d">'+esc(r.d)+'</span><span class="a">'+faNum(r.amt)+' تن</span><span class="n">'+esc(r.note||'')+'</span>'+(u.role==='admin'?'<button class="del" onclick="delRec(\''+id+'\','+r.t+')">✖</button>':'')+'</div>').join(''):'<div class="empty">هنوز رکوردی ثبت نشده</div>';
+  $('fpage').innerHTML=html;
+  $('dash').classList.add('hidden');$('fpage').classList.remove('hidden');
+}
+function addRec(id){
+  const u=me();if(!u||u.role!=='admin')return;
+  const v=parseFloat($('amt').value);
+  if(!(v>0))return toast('مقدار تولید را درست وارد کن',1);
+  const all=recs();(all[id]=all[id]||[]).push({t:Date.now(),d:new Date().toLocaleDateString('fa-IR'),amt:v,note:$('rnote').value.trim(),by:u.name});
+  saveRecs(all);toast('تولید ثبت شد ✅');openFactory(id);
+}
+function delRec(id,t){
+  if(!isAdmin())return;
+  const all=recs();all[id]=(all[id]||[]).filter(r=>r.t!==t);saveRecs(all);toast('رکورد حذف شد');openFactory(id);
+}
+render();
 </script>
 </body>
 </html>
