@@ -2,142 +2,163 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>پترو پارسیان — اکسیر جوانی</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Vazirmatn,Tahoma,-apple-system,'Segoe UI',sans-serif;background:radial-gradient(900px 500px at 50% -150px,#152a52,#0a1428 65%);min-height:100vh;color:#e8eef7}
+body{font-family:Vazirmatn,Tahoma,-apple-system,sans-serif;background:#0a1428;color:#eaf1ff;min-height:100vh;display:flex;justify-content:center;padding:24px 14px}
+#gate{width:100%;max-width:420px}
+.card{background:#0f1e3d;border:1px solid #24406e;border-radius:18px;padding:28px 22px;box-shadow:0 12px 40px rgba(0,0,0,.45)}
+.logo{font-size:58px;text-align:center}
+.card h1{color:#d4a437;font-size:23px;text-align:center;margin:6px 0 4px}
+.sub{color:#8fa8cc;font-size:13px;text-align:center;margin-bottom:20px}
+.tabs{display:flex;gap:10px;margin-bottom:18px}
+.tabs button{flex:1;padding:11px;border-radius:12px;border:1px solid #24406e;background:#0c1830;color:#cfe0ff;font-size:15px;font-weight:700;cursor:pointer}
+.tabs button.on{background:#d4a437;border-color:#d4a437;color:#14213d}
+.fld{margin-bottom:12px}
+.fld label{display:block;font-size:12.5px;color:#9db8e0;margin-bottom:5px}
+.fld input{width:100%;padding:11px 12px;border-radius:11px;border:1px solid #2c4a7c;background:#fff;color:#111;font-size:15px}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#2fbf71,#1f9d55);color:#fff;font-size:16px;font-weight:800;cursor:pointer;margin-top:4px}
+.note{font-size:12px;color:#8fa8cc;text-align:center;margin-top:14px;line-height:1.9}
 .hidden{display:none!important}
-#tw{position:fixed;bottom:14px;left:14px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
-.toast{background:#12331f;color:#b9ffd7;border:1px solid #2e9e6b;padding:10px 18px;border-radius:12px;opacity:0;transform:translateY(12px);transition:.3s;max-width:92%;font-size:14px}
+#tw{position:fixed;bottom:14px;left:14px;right:14px;display:flex;flex-direction:column;gap:8px;pointer-events:none;z-index:99}
+.toast{opacity:0;transform:translateY(8px);transition:.25s;background:#12331f;color:#b9ffd7;border:1px solid #1f5c37;padding:11px 14px;border-radius:12px;font-size:14px}
 .toast.show{opacity:1;transform:none}
-.toast.error{background:#3a1414;color:#ffc4c4;border-color:#e05252}
-#gate{display:flex;justify-content:center;padding:26px 12px}
-.card{background:#0f1e3d;border:1px solid #24406f;border-radius:22px;max-width:430px;width:100%;padding:34px 22px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35)}
-.logo{font-size:62px}
-.card h1{color:#d4a437;font-size:24px;margin:10px 0 6px}
-.sub{color:#8fa8cc;font-size:13.5px;margin-bottom:22px}
-.tabs{display:flex;gap:10px;margin-bottom:14px}
-.tabs button{flex:1;padding:12px;border-radius:12px;border:1px solid #2a4270;background:transparent;color:#cfe0f5;font-size:15px;cursor:pointer}
-.tabs button.on{background:linear-gradient(135deg,#e6b84c,#c8942c);color:#221703;font-weight:800;border-color:transparent}
-.fld{text-align:right;margin-bottom:12px}
-.fld label{display:block;font-size:13px;color:#a8bdda;margin-bottom:6px}
-input,select,button,textarea{font-family:inherit}
-.inp{width:100%;padding:13px 14px;border-radius:12px;border:1px solid #2a4270;background:#0b1830;color:#eef3fa;font-size:15px;outline:none}
-.inp:focus{border-color:#d4a437}
-.err{color:#ff8f8f;font-size:12px;min-height:16px;text-align:right;margin-top:4px}
-.fbtn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#37bd7c,#248a58);color:#fff;font-size:16px;font-weight:800;cursor:pointer;margin-top:6px}
-.fbtn.warn{background:linear-gradient(135deg,#e0703c,#b04417)}
-.fbtn:active{transform:scale(.98)}
-.hint{color:#7d92b5;font-size:12.5px;line-height:2;margin-top:16px}
-.gold{color:#e6b84c;font-weight:700}
-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:rgba(13,25,50,.92);border-bottom:1px solid #24406f;position:sticky;top:0;z-index:50}
-.hbrand{font-size:15px}
-.hbrand b{color:#ffd97a}
-.hsub{color:#8fa8cc;font-size:12px;margin-right:6px}
-.huser{display:flex;align-items:center;gap:10px}
-.uchip{text-align:left}
-.uchip b{font-size:13px;display:block}
-.uchip small{font-size:11px;color:#e6b84c}
-#outBtn{background:#33141d;color:#ff9aa8;border:1px solid #6b2437;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:13px}
-.wrap{display:flex;align-items:flex-start}
-#aside{width:235px;flex-shrink:0;background:#0d1a36;border-left:1px solid #24406f;padding:14px 10px;min-height:calc(100vh - 58px)}
-.grp{margin-bottom:16px}
-.grp h4{color:#e6b84c;font-size:12px;margin:0 6px 8px}
-.sitem{display:block;width:100%;text-align:right;padding:11px 12px;border-radius:10px;background:transparent;border:none;color:#cfe0f5;font-size:13.5px;cursor:pointer;margin-bottom:3px}
-.sitem.on{background:#1b3158;color:#ffd97a;font-weight:700}
-#main{flex:1;padding:16px 14px;max-width:880px}
-.vhead h2{color:#ffd97a;font-size:19px}
-.vhead p{color:#8fa8cc;font-size:12.5px;margin:4px 0 14px}
-.panel{background:#0f1e3d;border:1px solid #24406f;border-radius:16px;padding:15px;margin-bottom:15px}
-.panel h3{color:#dce8f8;font-size:14.5px;margin-bottom:12px}
-.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:10px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:15px}
-.kpi{border-radius:16px;padding:14px;display:flex;gap:12px;align-items:center}
-.kpi i{font-style:normal;font-size:26px}
-.kpi h5{font-size:11.5px;color:rgba(255,255,255,.75);font-weight:400;margin-bottom:3px}
-.kpi .v{font-size:17px;font-weight:800}
-.k-blue{background:#16335f}.k-green{background:#14432c}.k-org{background:#4b2d12}.k-red{background:#4a1414}.k-pur{background:#2e1f55}
-.tbw{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12.5px;white-space:nowrap}
-th{color:#8fa8cc;font-size:11.5px;font-weight:400}
-th,td{padding:9px 8px;border-bottom:1px solid #1d3260;text-align:center}
-.badc{background:#4a1414;color:#ff9c9c;padding:2px 9px;border-radius:8px;display:inline-block}
-.warnc{background:#4b2d12;color:#ffce8a;padding:2px 9px;border-radius:8px;display:inline-block}
-.okc{background:#14432c;color:#9ce8bd;padding:2px 9px;border-radius:8px;display:inline-block}
-.stbox{padding:13px;border-radius:12px;text-align:center;font-weight:800;margin:12px 0 6px}
-.st-lock{background:#3d0f0f;color:#ff9c9c;border:1px solid #7a2020}
-.st-open{background:#0f3d24;color:#9ce8bd;border:1px solid #1f6640}
-.seg{display:flex;gap:8px;margin-bottom:14px}
-.seg button{flex:1;padding:10px;border-radius:10px;border:1px solid #2a4270;background:transparent;color:#cfe0f5;font-size:12.5px;cursor:pointer}
-.seg button.on{background:#1b3158;color:#ffd97a;border-color:#c8942c}
-.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:8px 0}
-.fs{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:#a8bdda;width:64px}
-.fi{width:44px;height:44px;border-radius:50%;background:#1b3158;border:1px solid #2f4d85;display:flex;align-items:center;justify-content:center;font-size:20px;animation:pop .5s both}
-.far{color:#3a5a8f;font-size:13px}
-@keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
-.muted2{color:#7d92b5;font-size:12.5px;margin-top:8px;line-height:2}
-.rolesel{background:#0b1830;color:#eef3fa;border:1px solid #2a4270;border-radius:8px;padding:6px;font-size:12.5px}
-@media(max-width:720px){
-.wrap{flex-direction:column}
-#aside{width:100%;display:flex;overflow-x:auto;min-height:0;border-left:none;border-bottom:1px solid #24406f;padding:10px}
-.grp{margin:0 6px;display:flex;gap:6px;align-items:flex-end;padding-top:30px;position:relative}
-.grp h4{position:absolute;top:6px;right:2px}
-.sitem{white-space:nowrap;margin:0;border:1px solid #2a4270}
-}
+.toast.error{background:#3a1414;color:#ffc4c4;border-color:#6e2424}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.b-admin{background:#d4a437;color:#14213d}
+.b-viewer{background:#3b5a8f;color:#e5efff}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px;border:1px solid #24406e;border-radius:12px;margin-bottom:8px;font-size:14px}
+.mini{padding:6px 10px;border-radius:9px;border:none;font-weight:700;cursor:pointer;font-size:12.5px}
+.ok{background:#2fbf71;color:#fff}
+.no{background:#c0392b;color:#fff}
+.out{background:none;border:1px solid #2c4a7c;color:#9db8e0;border-radius:10px;padding:8px 14px;cursor:pointer;margin-top:14px;width:100%}
+.factories{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.fac{background:#0c1830;border:1px solid #24406e;border-radius:14px;padding:14px;text-align:center}
+.fac .em{font-size:30px}
+.fac p{font-size:12.5px;color:#9db8e0;margin-top:6px}
+h2{font-size:16px;color:#d4a437;margin:18px 0 10px;text-align:center}
 </style>
 </head>
 <body>
+<div id="gate">
+  <div class="card" id="authCard">
+    <div class="logo">🔥</div>
+    <h1>پترو پارسیان — اکسیر جوانی</h1>
+    <div class="sub">PYROHUB · سامانه جامع مدیریت کارخانه‌های پیپولینز</div>
+    <div class="tabs">
+      <button id="tabLogin" class="on" onclick="showTab('login')">ورود</button>
+      <button id="tabSignup" onclick="showTab('signup')">ثبت‌نام</button>
+    </div>
+    <form id="loginForm" onsubmit="return doLogin(event)">
+      <div class="fld"><label>ایمیل</label><input id="li_email" type="email" required></div>
+      <div class="fld"><label>رمز عبور</label><input id="li_pass" type="password" required></div>
+      <button class="btn" type="submit">ورود به سامانه</button>
+    </form>
+    <form id="signupForm" class="hidden" onsubmit="return doSignup(event)">
+      <div class="fld"><label>نام و نام خانوادگی</label><input id="su_name" required></div>
+      <div class="fld"><label>ایمیل</label><input id="su_email" type="email" required></div>
+      <div class="fld"><label>رمز عبور</label><input id="su_pass" type="password" minlength="4" required></div>
+      <div class="fld"><label>تکرار رمز عبور</label><input id="su_pass2" type="password" required></div>
+      <button class="btn" type="submit">ایجاد حساب</button>
+    </form>
+    <div class="note">اولین ثبت‌نام = <b style="color:#d4a437">مدیر کل 👑</b><br>ثبت‌نام‌های بعدی «ناظر» هستند تا مدیر تأیید کند.</div>
+  </div>
+
+  <div class="card hidden" id="dashCard">
+    <div style="text-align:center">
+      <div class="logo">🔥</div>
+      <h1 id="dashHello"></h1>
+      <div id="dashRole"></div>
+    </div>
+    <h2>🏭 کارخانه‌ها</h2>
+    <div class="factories">
+      <div class="fac"><div class="em">⚗️</div><b>اکسیر جوانی</b><p>ظرفیت: ۸۰٪ · فعال</p></div>
+      <div class="fac"><div class="em">🛢️</div><b>پالایش پارس</b><p>ظرفیت: ۶۵٪ · فعال</p></div>
+      <div class="fac"><div class="em">🧴</div><b>بسته‌بندی درخشان</b><p>ظرفیت: ۴۲٪ · فعال</p></div>
+      <div class="fac"><div class="em">🚚</div><b>ترابری سریع</b><p>ظرفیت: ۹۰٪ · فعال</p></div>
+    </div>
+    <div id="adminArea"></div>
+    <button class="out" onclick="logout()">خروج از حساب</button>
+  </div>
+</div>
 <div id="tw"></div>
 
-<div id="gate">
- <div class="card">
-  <div class="logo">🔥</div>
-  <h1>پترو پارسیان — اکسیر جوانی</h1>
-  <div class="sub">PYROHUB · سامانه جامع مدیریت کارخانه‌های پیرولیز</div>
-  <div class="tabs">
-   <button id="tLogin" class="on" type="button">ورود</button>
-   <button id="tReg" type="button">ثبت‌نام</button>
-  </div>
-  <div class="err" id="eTop"></div>
-  <div class="fld hidden" id="gName">
-   <label>نام و نام خانوادگی</label>
-   <input class="inp" id="qName" placeholder="مثلاً: حسین سالیمی">
-  </div>
-  <div class="fld">
-   <label>ایمیل</label>
-   <input class="inp" id="qEmail" type="email" dir="ltr">
-   <div class="err" id="eE"></div>
-  </div>
-  <div class="fld">
-   <label>رمز عبور</label>
-   <input class="inp" id="qPass" type="password" placeholder="حداقل ۶ کاراکتر" dir="ltr">
-   <div class="err" id="eP"></div>
-  </div>
-  <div class="fld hidden" id="gPass2">
-   <label>تکرار رمز عبور</label>
-   <input class="inp" id="qPass2" type="password" dir="ltr">
-   <div class="err" id="eP2"></div>
-  </div>
-  <button class="fbtn" id="goBtn" type="button">ورود به سامانه</button>
-  <div class="hint">اولین ثبت‌نام = <span class="gold">مدیر کل 👑</span><br>ثبت‌نام‌های بعدی «ناظر» می‌شوند تا مدیر نقش‌شان را تعیین کند.</div>
- </div>
-</div>
-
-<div id="app" class="hidden">
- <header>
-  <div class="hbrand">🔥 <b>پترو پارسیان</b><span class="hsub">اکسیر جوانی</span></div>
-  <div class="huser">
-   <div class="uchip"><b id="uName"></b><small id="uRole"></small></div>
-   <button id="outBtn" type="button">خروج</button>
-  </div>
- </header>
- <div class="wrap">
-  <aside id="aside"></aside>
-  <main id="main"></main>
- </div>
-</div>
-<script src="app.js"></script>
+<script>
+var LS='pyro_users',SS='pyro_session';
+function getUsers(){try{return JSON.parse(localStorage.getItem(LS))||[]}catch(e){return[]}}
+function saveUsers(u){localStorage.setItem(LS,JSON.stringify(u))}
+function hash(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0}return 'h'+h}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function SU(id){return document.getElementById(id).value}
+function toast(msg,err){var t=document.createElement('div');t.className='toast'+(err?' error':'');t.textContent=msg;document.getElementById('tw').appendChild(t);setTimeout(function(){t.classList.add('show')},10);setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove()},300)},3200)}
+function showTab(w){
+  document.getElementById('tabLogin').classList.toggle('on',w==='login');
+  document.getElementById('tabSignup').classList.toggle('on',w==='signup');
+  document.getElementById('loginForm').classList.toggle('hidden',w!=='login');
+  document.getElementById('signupForm').classList.toggle('hidden',w!=='signup');
+}
+function doSignup(e){
+  e.preventDefault();
+  var n=SU('su_name'),m=SU('su_email').trim().toLowerCase(),p=SU('su_pass'),p2=SU('su_pass2');
+  if(p!==p2){toast('رمزها یکسان نیستند',1);return false}
+  var u=getUsers();
+  for(var i=0;i<u.length;i++){if(u[i].email===m){toast('این ایمیل قبلاً ثبت شده است',1);return false}}
+  var first=(u.length===0);
+  u.push({name:n,email:m,pass:hash(p),role:first?'admin':'viewer',status:first?'active':'pending'});
+  saveUsers(u);
+  toast(first?'🎉 خوش آمدی مدیر کل! حساب ایجاد شد':'حساب ساخته شد؛ در انتظار تأیید مدیر');
+  e.target.reset();
+  if(first){localStorage.setItem(SS,m);renderDash()}
+  return false;
+}
+function doLogin(e){
+  e.preventDefault();
+  var m=SU('li_email').trim().toLowerCase(),p=hash(SU('li_pass'));
+  var u=getUsers();
+  for(var i=0;i<u.length;i++){
+    if(u[i].email===m&&u[i].pass===p){
+      if(u[i].status!=='active'){toast('حساب شما در انتظار تأیید مدیر است',1);return false}
+      localStorage.setItem(SS,m);renderDash();return false;
+    }
+  }
+  toast('ایمیل یا رمز اشتباه است',1);return false;
+}
+function roleBadge(r){
+  if(r==='admin')return '<span class="badge b-admin">مدیر کل 👑</span>';
+  return '<span class="badge b-viewer">ناظر 👀</span>';
+}
+function logout(){localStorage.removeItem(SS);document.getElementById('dashCard').classList.add('hidden');document.getElementById('authCard').classList.remove('hidden');toast('از حساب خارج شدی')}
+function renderDash(){
+  var email=localStorage.getItem(SS);if(!email)return;
+  var u=getUsers(),me=null;
+  for(var i=0;i<u.length;i++){if(u[i].email===email)me=u[i]}
+  if(!me){logout();return}
+  document.getElementById('authCard').classList.add('hidden');
+  document.getElementById('dashCard').classList.remove('hidden');
+  document.getElementById('dashHello').textContent='سلام، '+me.name;
+  document.getElementById('dashRole').innerHTML=roleBadge(me.role);
+  var a=document.getElementById('adminArea');
+  if(me.role==='admin'){
+    var html='<h2>👑 مدیریت کاربران</h2>',any=false;
+    for(var j=0;j<u.length;j++){
+      if(u[j].status==='pending'){any=true;
+        html+='<div class="row"><div><b>'+esc(u[j].name)+'</b><br><span style="font-size:11.5px;color:#9db8e0">'+esc(u[j].email)+'</span></div><div><button class="mini ok" onclick="approve(\''+u[j].email+'\',1)">تأیید</button> <button class="mini no" onclick="approve(\''+u[j].email+'\',0)">رد</button></div></div>';
+      }
+    }
+    if(!any)html+='<div class="row" style="justify-content:center;color:#8fa8cc">درخواست تأییدی وجود ندارد</div>';
+    a.innerHTML=html;
+  }else{a.innerHTML=''}
+}
+function approve(email,ok){
+  var u=getUsers();
+  for(var i=0;i<u.length;i++){if(u[i].email===email){u[i].status=ok?'active':'rejected'}}
+  saveUsers(u);renderDash();toast(ok?'کاربر تأیید شد ✅':'درخواست رد شد');
+}
+(function(){
+  if(getUsers().length===0){showTab('signup')}
+  renderDash();
+})();
+</script>
 </body>
 </html>
-<!-- v2 -->
