@@ -54,6 +54,7 @@ td.hot{background:#e2453c33!important;color:#ff9f9f!important;font-weight:800}
 td.mid{background:#b8860b33!important;color:#ffd98c!important;font-weight:800}
 td.env{background:#0e2038!important;color:#8fc4ff!important;font-weight:700}
 td.ok2{color:#7dffbe!important;font-weight:700}
+.dtb input{width:70px;padding:4px;border-radius:6px;border:1px solid var(--ln);background:#f7f7dd;color:#111;font-family:inherit;font-size:12px;text-align:center}
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px;margin-bottom:9px}
 .fgrid label{display:block;font-size:10px;color:#8fa8cc;margin-bottom:3px}
 .fgrid input,.fgrid select{width:100%;padding:8px;border-radius:8px;border:1px solid var(--ln);background:#f7f7dd;color:#111;font-family:inherit;font-size:13px}
@@ -95,7 +96,6 @@ td.ok2{color:#7dffbe!important;font-weight:700}
 .fcard:before{content:'';position:absolute;top:-30px;left:-30px;width:95px;height:95px;background:radial-gradient(circle,rgba(212,164,55,.28),transparent 70%)}
 .fcard h4{color:var(--gold);font-size:14.5px;margin-bottom:6px;position:relative}
 .fcard .fl2{font-size:11.5px;color:#cfe0ff;line-height:2;position:relative}
-.fcard .stok{position:absolute;top:10px;left:12px;position:relative;display:inline-block}
 .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
 .plan{background:#0c1a35;border:1px solid var(--ln);border-radius:14px;padding:16px;text-align:center}
 .plan.gd{border-color:var(--gold)}
@@ -120,6 +120,11 @@ td.ok2{color:#7dffbe!important;font-weight:700}
 .tl{display:flex;flex-direction:column;gap:8px}
 .tl-r{display:flex;gap:9px;align-items:flex-start;font-size:11.6px}
 .tl-d{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0}
+#aibox{max-height:360px;overflow-y:auto;background:#0a1526;border:1px solid var(--ln);border-radius:10px;padding:8px;margin-bottom:9px}
+.aib{max-width:88%;padding:9px 12px;border-radius:13px;font-size:12.5px;line-height:1.9;margin-bottom:7px;white-space:pre-wrap}
+.aib.u{background:#12365c;border:1px solid #2b5e97;margin-inline-start:auto}
+.aib.a{background:#1d1a0e;border:1px solid #6b5518;color:#ffe9b8}
+.sug{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
 @media print{header,nav#side,#tw,.btn,.pill,.chipbar{display:none!important}body{background:#fff;color:#000}}
 </style>
 </head>
@@ -162,7 +167,57 @@ function daysU(j){var t=dayO(hj()),x=dayO(j);if(t==null||x==null)return null;ret
 function dLbl(d){if(d==null)return 'بدون تاریخ';if(d>0)return F(d)+' روز مانده';if(d===0)return 'امروز!';return F(-d)+' روز گذشته'}
 setInterval(function(){var c=q('clk');if(c){var d=new Date();c.textContent='📅 '+hj()+' 🕒 '+p2(d.getHours())+':'+p2(d.getMinutes())+':'+p2(d.getSeconds())}},1000);
 
-/* هواشناسی و موقعیت — خودکار */
+/* بازیابی رمز — تنظیمات */
+var RECV_EMAIL='';
+var KAVENEGAR_KEY='';
+function sendResetEmail(by,acc,np){
+ if(!RECV_EMAIL){logA('📧 ایمیل مدیر تنظیم نشده — درخواست فقط داخل اپ ثبت شد');return}
+ fetch('https://formsubmit.co/ajax/'+RECV_EMAIL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'🔑 درخواست بازیابی رمز — پترو پارسیان',_template:'table','درخواست‌دهنده':by,'حساب':acc,'رمز جدید پیشنهادی':np,'توضیح':'فقط با تایید مدیر داخل اپ فعال می‌شود'})})
+ .then(function(r){return r.json()}).then(function(){logA('📧 ایمیل درخواست ریست ارسال شد — '+acc)}).catch(function(){toast('ایمیل ارسال نشد — اما درخواست داخل اپ ثبت شد',1)});
+}
+function sendSms(to,msg){
+ if(!KAVENEGAR_KEY){logA('📱 پیامک (دمو): '+msg);return}
+ if(!to){logA('📱 شماره گیرنده ثبت نشده');return}
+ fetch('https://api.kavenegar.com/v1/'+KAVENEGAR_KEY+'/sms/send.json?receptor='+encodeURIComponent(to)+'&message='+encodeURIComponent(msg))
+ .then(function(r){return r.json()}).then(function(){toast('📱 پیامک ارسال شد')}).catch(function(){toast('اتصال به سامانه پیامک برقرار نشد',1)});
+}
+function forgotPw(){
+ var e=prompt('ایمیل حساب خود را وارد کن:');if(!e)return;
+ e=e.trim().toLowerCase();
+ var u=null,l=US();
+ for(var i=0;i<l.length;i++){if(l[i].email===e)u=l[i]}
+ if(!u){toast('این ایمیل ثبت نشده است',1);return}
+ var np=prompt('رمز جدید (حداقل ۶ کاراکتر) — بعد از تایید مدیر، با همین وارد شو:');if(!np)return;
+ if(np.length<6){toast('رمز حداقل ۶ کاراکتر',1);return}
+ hs(np).then(function(nh){
+  var reqs=S('pv_pwreset',[]);
+  reqs.unshift({t:Date.now(),em:e,name:u.name,tel:u.bno||'',newHash:nh,st:'pend'});
+  W('pv_pwreset',reqs);
+  logA('🔑 درخواست بازیابی رمز — '+u.name+' ('+e+')');
+  sendResetEmail(u.name,e,np);
+  sendSms(u.bno||'','پترو پارسیان: درخواست ریست رمز برای '+e+' ثبت شد — تایید توسط مدیر');
+  toast('✅ درخواست ثبت شد — مدیر در «مدیریت» تایید می‌کند');
+ });
+}
+function approvePw(t){
+ var reqs=S('pv_pwreset',[]),r=null;
+ for(var i=0;i<reqs.length;i++){if(String(reqs[i].t)===String(t)){r=reqs[i];break}}
+ if(!r)return;
+ var l=US();
+ for(var j=0;j<l.length;j++){if(l[j].email===r.em){l[j].pass=r.newHash;break}}
+ W('pv_users',l);
+ r.st='ok';W('pv_pwreset',reqs);
+ logA('🔑 رمز ریست شد — '+r.em);
+ sendSms(r.tel,'پترو پارسیان: رمز حساب شما ریست شد — وارد شو');
+ toast('✅ رمز عوض شد');render();
+}
+function rejectPw(t){
+ var reqs=S('pv_pwreset',[]),n=[];
+ for(var i=0;i<reqs.length;i++){if(String(reqs[i].t)!==String(t))n.push(reqs[i])}
+ W('pv_pwreset',n);view();
+}
+
+/* آنی هوا/موقعیت */
 function revGeo(la,lo,cb){
  fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+la+'&longitude='+lo+'&localityLanguage=fa')
  .then(function(r){return r.json()}).catch(function(){return {}})
@@ -179,13 +234,10 @@ function getWeather(la,lo,cb){
 function fetchAmbient(u,cb){
  var done=false;
  function fb(){if(!done){done=true;cb('—','—','—')}}
- function wcb(la,lo,city){
-  getWeather(la,lo,function(t,w){if(!done){done=true;cb(t,city||'موقعیت فعلی',w)}});
- }
+ function wcb(la,lo,city){getWeather(la,lo,function(t,w){if(!done){done=true;cb(t,city||'موقعیت فعلی',w)}})}
  if(u&&u.lat&&u.lon){wcb(u.lat,u.lon,u.city||'');setTimeout(fb,7000)}
- else if(navigator.geolocation){
-  navigator.geolocation.getCurrentPosition(function(pos){wcb(pos.coords.latitude,pos.coords.longitude,'')},fb,{timeout:7000});
- }else{fb()}
+ else if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(pos){wcb(pos.coords.latitude,pos.coords.longitude,'')},fb,{timeout:7000})}
+ else{fb()}
 }
 var REGLOC=null;
 function capLoc(){
@@ -211,12 +263,12 @@ function pushFirm(u){
 }
 
 /* احراز + دسترسی */
-var MODS=[['dash','📊 داشبورد'],['cook','📋 گزارش پخت'],['prod','📦 بچ و هزینه'],['maint','🔧 تعمیرات'],['inv','🏭 انبار'],['req','📥 درخواست‌ها'],['people','👥 پرسنل'],['fin','💰 مالی'],['net','🌐 شبکه و بازار'],['settings','⚙️ مدیریت']];
+var MODS=[['dash','📊 داشبورد'],['cook','📋 گزارش پخت'],['prod','📦 بچ و هزینه'],['maint','🔧 تعمیرات'],['inv','🏭 انبار'],['req','📥 درخواست‌ها'],['ai','🤖 دستیار هوشمند'],['people','👥 پرسنل'],['fin','💰 مالی'],['net','🌐 شبکه و بازار'],['settings','⚙️ مدیریت']];
 var PLANS=[{lv:1,n:'برنزی',pr:'۵۰۰٬۰۰۰ تومان/ماه',ft:['قیمت مواد هر شهر','محصولات هر شهر','کاریابی','آموزش']},{lv:2,n:'طلایی',pr:'۱٬۵۰۰٬۰۰۰ تومان/ماه',ft:['همه امکانات برنزی','چت کارخانه‌ها','تامین‌کنندگان قطعات','اولویت پشتیبانی']}];
 function planName(lv){if(lv>=2)return 'طلایی 🟡';if(lv>=1)return 'برنزی 🥉';return 'رایگان'}
 function hasMod(u,m){if(!u)return false;if(u.admin)return true;return (u.perms||[]).indexOf(m)>=0}
 async function hs(t){try{var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('pp·'+t));var a=new Uint8Array(b),o='';for(var i=0;i<a.length;i++)o+=a[i].toString(16).padStart(2,'0');return o}catch(e){var h=0,s='pp·'+t;for(var j=0;j<s.length;j++)h=((h*31)+s.charCodeAt(j))>>>0;return 'f'+h}}
-var DEFP=['dash','cook','req','net'];
+var DEFP=['dash','cook','req','ai','net'];
 async function doReg(){
  var n=q('rn').value.trim(),e=q('re').value.trim().toLowerCase(),p=q('rp').value;
  var cn=q('rc').value.trim(),ad=q('ra').value.trim(),bn=q('rb').value.trim();
@@ -239,9 +291,9 @@ async function doReg(){
 async function doLogin(){
  var e=q('le').value.trim().toLowerCase(),p=q('lp').value;
  var u=US().filter(function(x){return x.email===e})[0];
- if(!u){toast('این ایمیل ثبت نشده — ثبت‌نام کن',1);return}
+ if(!u){toast('این ایمیل ثبت نشده — ثبت‌نام کن یا دکمه 🔑 را بزن',1);return}
  var h=await hs(p);
- if(u.pass!==h){toast('رمز اشتباه است',1);return}
+ if(u.pass!==h){toast('رمز اشتباه است — یادت نیست؟ دکمه 🔑',1);return}
  if(u.st==='pend'){toast('حساب منتظر تایید مدیر ⏳',1);return}
  W('pv_sess',e);q('lp').value='';seed();route='dash';render();toast('خوش آمدی '+u.name+' 👋');
 }
@@ -249,7 +301,7 @@ function logout(){localStorage.removeItem('pv_sess');route='home';render()}
 function usrOk(e){
  var l=US(),u=null;
  for(var i=0;i<l.length;i++){if(l[i].email===e){u=l[i];break}}
- if(u){u.st='ok';W('pv_users',l);pushFirm(u);logA('👑 حساب '+u.name+' تایید شد — کارت کارخانه در صفحه اول');toast('تایید شد — کارت کارخانه در صفحه اول نمایش داده می‌شود')}
+ if(u){u.st='ok';W('pv_users',l);pushFirm(u);logA('👑 حساب '+u.name+' تایید شد');toast('تایید شد')}
  render();
 }
 function usrAdm(e){var l=US(),u=l.filter(function(x){return x.email===e})[0];if(u){u.admin=u.admin?0:1;W('pv_users',l);render()}}
@@ -258,7 +310,7 @@ function permTgl(e,m){var l=US(),u=l.filter(function(y){return y.email===e})[0];
 /* داده اولیه */
 function seed(){
  if(S('pv_seeded'))return;W('pv_seeded',1);
- W('pv_ck',{});W('pv_crow',[]);W('pv_csum',[]);
+ W('pv_ck',{});W('pv_crow',[]);W('pv_csum',[]);W('pv_pwreset',[]);W('pv_papers',[]);W('pv_aihist',[]);
  W('pv_firms',[
   {t:1,em:null,n:'پترو پارسیان — اکسیر جوانی',addr:'مشهد، شهرک صنعتی توس، بلوک ۷',city:'مشهد',bno:'09154040240',lat:36.32,lon:59.55,by:'مدیر کل'},
   {t:2,em:null,n:'کارخانه بازیافت تایر یزد',addr:'یزد، جاده کاشانی، کیلومتر ۴',city:'یزد',bno:'035-3624...',lat:31.89,lon:54.36,by:'نمونه'}
@@ -319,7 +371,7 @@ function addRec(sec){
    var inv=R('inv'),it=null;
    for(var a=0;a<inv.length;a++){var nm=inv[a].v.item;if(nm===v.part||nm.indexOf(v.part)>=0||v.part.indexOf(nm)>=0){it=inv[a];break}}
    if(it&&+it.v.qty>=+v.pqty){it.v.qty=+it.v.qty-(+v.pqty);W('pv_inv',inv);toast('📦 «'+it.v.item+'» از انبار کسر شد')}
-   else{toast('⚠️ «'+v.part+'» در انبار کافی نیست — اول به انبار اضافه کن',1)}
+   else{toast('⚠️ «'+v.part+'» در انبار کافی نیست',1)}
   }
   if(+v.cost>0){var f2=R('fin');f2.unshift({t:Date.now(),v:{ft:'out',title:'تعمیر '+v.eq,amt:+v.cost},st:'ok',by:u.name,at:hnow()});W('pv_fin',f2)}
   if(v.next)logA('⏰ یادآوری بازبینی '+v.eq+' برای '+v.next);
@@ -327,10 +379,10 @@ function addRec(sec){
  if(sec==='sell'){v.total=(+v.qty||0)*(+v.price||0);v.paid=v.due?0:1}
  var l=R(sec);
  l.unshift({t:Date.now(),v:v,st:ADM()?'ok':'pend',by:u.name,at:hnow()});
- if(W('pv_'+sec,l)){logA('📝 «'+s.t+'» ثبت شد — '+u.name);toast('✅ ثبت شد'+(ADM()?'':' — در انتظار تایید'));view()}
+ if(W('pv_'+sec,l)){logA('📝 «'+s.t+'» ثبت شد — '+u.name);toast('✅ ثبت شد');view()}
 }
 function appr(sec,t){var l=R(sec),r=null;for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t)){r=l[i];break}}if(r){r.st='ok';W('pv_'+sec,l);toast('✅ تایید شد');view()}}
-function arch(sec,t){var l=R(sec),r=null;for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t)){r=l[i];break}}if(r){r.st='arch';W('pv_'+sec,l);toast('به آرشیو رفت — تاریخچه محفوظ است');view()}}
+function arch(sec,t){var l=R(sec),r=null;for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t)){r=l[i];break}}if(r){r.st='arch';W('pv_'+sec,l);toast('آرشیو شد');view()}}
 function tableHTML(sec,cols){
  var all=R(sec),rows=[],nA=0;
  all.forEach(function(x){if(x.st==='arch'){nA++}else{rows.push(x)}});
@@ -354,11 +406,11 @@ function tableHTML(sec,cols){
   h+='</td></tr>';
  });
  h+='</tbody></table></div>';
- if(nA>0)h+='<div class="by">'+F(nA)+' مورد آرشیو شده — تاریخچه کامل محفوظ است</div>';
+ if(nA>0)h+='<div class="by">'+F(nA)+' مورد آرشیو شده</div>';
  return h;
 }
 
-/* ---- گزارش پخت یک‌صفحه‌ای با دمای محیط خودکار ---- */
+/* گزارش پخت */
 var CKL=['چپ‌گرد / راست‌گرد موتور','فن راکتور','فن مشعل راکتور','فن مشعل فلر','فن کولینگ تاور','پمپ آب کندانسور','پمپ آب کربن','مکنده دودشور','خالی بودن مخازن هیدرو / کربن','پر بودن مخازن ضدانفجار','باز بودن شیر اتولس','باز بودن شیر فلر','بسته بودن شیرهای مخازن'];
 function ckGet(){return S('pv_ck',{})}
 function togck(i){
@@ -371,20 +423,18 @@ function addcrow(){
  var u=U();if(!u)return;
  function g(id){var e=q(id);return e?e.value.trim():''}
  var v={h:g('ch'),a1:g('ca1'),a2:g('ca2'),a3:g('ca3'),a4:g('ca4'),b2:g('cb2'),d2:g('cd'),w:g('cw'),m:g('cm')};
- if(!v.h)v.h=hhm(); /* ساعت خودکار */
+ if(!v.h)v.h=hhm();
  var l=R('crow');
- toast('🌡 در حال دریافت دمای محیط از موقعیت کارخانه…');
+ toast('🌡 در حال دریافت دمای محیط…');
  fetchAmbient(u,function(t,city,wind){
-  v.eT=(t==='—'?'—':t);
-  v.eC=city;
-  v.eW=wind;
+  v.eT=t;v.eC=city;v.eW=wind;
   l.unshift({t:Date.now(),v:v,st:'ok',by:u.name,at:hnow(),d:hj()});
   W('pv_crow',l);
   logA('🌡 ثبت ساعتی '+v.h+' — دمای محیط '+v.eT+'° ('+u.name+')');
-  var msgs='✅ ردیف ساعتی ثبت شد — دمای محیط: '+v.eT+'°C';
-  if(v.eT==='—'){msgs='⚠️ ثبت شد ولی دمای محیط دریافت نشد — موقعیت کارخانه را در تنظیمات ثبت کن (دکمه 🌍)'}
-  if(+v.a1>320)msgs+=' ⚠️ دمای راکتور بالای ۳۲۰!';
-  toast(msgs,v.eT==='—');
+  var msg='✅ ردیف ساعتی ثبت شد — دمای محیط: '+v.eT+'°C';
+  if(v.eT==='—')msg='⚠️ ثبت شد ولی دمای محیط دریافت نشد — موقعیت کارخانه را ثبت کن';
+  if(+v.a1>320)msg+=' ⚠️ دمای راکتور بالای ۳۲۰!';
+  toast(msg,v.eT==='—');
   view();
  });
 }
@@ -395,7 +445,7 @@ function addEnvNow(){
   var rec={t:Date.now(),d:hj(),at:hnow(),city:city,temp:t,wind:wind,by:u.name};
   var l=R('env');l.unshift(rec);W('pv_env',l);
   logA('🌍 محیط: '+city+' — '+t+'°C — '+u.name);
-  toast(t==='—'?'⚠️ دریافت نشد — موقعیت ثبت‌نشده':'✅ دمای محیط: '+t+'°C — '+city,t==='—');
+  toast(t==='—'?'⚠️ دریافت نشد':'✅ دمای محیط: '+t+'°C — '+city,t==='—');
   view();
  });
 }
@@ -411,10 +461,154 @@ function addcsum(){
  logA('📋 خلاصه پخت '+v.d+' ثبت شد — '+u.name);
  toast('✅ خلاصه پخت ثبت شد');view();
 }
+
+/* ---- 📸 کاغذ پخت: آپلود + OCR + تشخیص خودکار ---- */
+var PPIMG=null,PPP=[];
+function ppPick(){q('pp_file').click()}
+function ppFile(inp){
+ var f=inp.files[0];if(!f)return;
+ if(f.size>8388608){toast('عکس حداکثر ۸ مگابایت',1);inp.value='';return}
+ var r=new FileReader();
+ r.onload=function(){downPP(r.result)};
+ r.readAsDataURL(f);inp.value='';
+}
+function downPP(data){
+ var img=new Image();
+ img.onload=function(){
+  var mw=1400,sc=Math.min(1,mw/img.width);
+  var cv=document.createElement('canvas');cv.width=Math.round(img.width*sc);cv.height=Math.round(img.height*sc);
+  cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+  PPIMG=cv.toDataURL('image/jpeg',0.72);
+  var pv=q('pp_prev');
+  if(pv)pv.innerHTML='<div style="margin:8px 0"><span class="by">پیش‌نمایش — صاف و پرنور؟</span><br><img src="'+PPIMG+'" style="max-width:100%;max-height:300px;border-radius:10px;border:1px solid var(--ln);margin-top:5px"></div>';
+  var b=q('pp_ocr');if(b)b.classList.remove('hid');
+  toast('📷 عکس آماده شد — حالا «تشخیص خودکار» را بزن');
+ };
+ img.onerror=function(){toast('عکس باز نشد',1)};
+ img.src=data;
+}
+function savePaper(rows){
+ if(!PPIMG)return;
+ var u=U(),l=R('papers');
+ l.unshift({t:Date.now(),img:PPIMG,by:u.name,at:hnow(),d:hj(),rows:rows||[]});
+ if(l.length>8){l=l.slice(0,8);toast('(۸ کاغذ آخر نگه داشته می‌شود)',1)}
+ W('pv_papers',l);
+}
+function ppSaveOnly(){
+ if(!PPIMG){toast('اول عکس را انتخاب کن',1);return}
+ savePaper([]);logA('📷 عکس کاغذ پخت ثبت شد — '+U().name);
+ toast('📷 عکس کاغذ پخت ثبت و آرشیو شد');PPIMG=null;view();
+}
+function loadTess(cb){
+ if(window.Tesseract){cb();return}
+ toast('⬇️ بار اول: موتور OCR دانلود می‌شود (کمی صبر…)');
+ var s=document.createElement('script');
+ s.src='https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js';
+ s.onload=cb;s.onerror=function(){toast('دانلود موتور OCR نشد — اینترنت را چک کن',1)};
+ document.head.appendChild(s);
+}
+function ppOCR(){
+ if(!PPIMG){toast('اول عکس را انتخاب کن',1);return}
+ loadTess(function(){
+  var st=q('ocrStat');if(st)st.textContent='⏳ در حال خواندن کاغذ…';
+  Tesseract.recognize(PPIMG,'eng',{logger:function(m){
+   if(m.status==='recognizing text'&&st)st.textContent='⏳ خواندن… '+Math.round(m.progress*100)+'%';
+  }}).then(function(res){
+   var rows=parsePaper(res.data.text||'');
+   var st2=q('ocrStat');if(st2)st2.textContent='';
+   showPPreview(rows);
+  }).catch(function(){toast('OCR ناموفق بود — دستی ثبت کن',1);var s2=q('ocrStat');if(s2)s2.textContent=''});
+ });
+}
+function parsePaper(text){
+ var rows=[];
+ String(text||'').split(/\r?\n/).forEach(function(raw){
+  var line=raw.trim();if(line.length<2)return;
+  var t=line;
+  t=t.replace(/[۰-۹]/g,function(c){return String('۰۱۲۳۴۵۶۷۸۹'.indexOf(c))});
+  t=t.replace(/[\u0660-\u0669]/g,function(c){return String(c.charCodeAt(0)-0x0660)});
+  var tm=t.match(/(\d{1,2})\s*[:.،]\s*(\d{2})/);
+  var h=tm?(p2(Math.min(23,+tm[1]))+':'+tm[2]):'';
+  var seg=tm?t.replace(tm[0],' '):t;
+  var nums=(seg.match(/\d{1,4}/g)||[]).map(Number).filter(function(n){return n>=20&&n<=500});
+  if(!h&&!nums.length)return;
+  if(!h&&nums.length&&nums[0]<=24){h=p2(nums[0])+':00';nums=nums.slice(1)}
+  rows.push({
+   h:h,
+   a1:String(nums[0]!=null?nums[0]:''),
+   a2:String(nums[1]!=null?nums[1]:''),
+   a3:String(nums[2]!=null?nums[2]:''),
+   a4:String(nums[3]!=null?nums[3]:''),
+   m:line.slice(0,60)
+  });
+ });
+ return rows.slice(0,16);
+}
+function showPPreview(rows){
+ PPP=rows||[];
+ var box=q('ppres');if(!box)return;
+ var h='';
+ if(!PPP.length){
+  h='<div class="lock">🔍 چیزی تشخیص داده نشد — عکس را واضح‌تر و صاف‌تر بگیر یا مقادیر را دستی در جدول ساعتی وارد کن</div>';
+ }else{
+  h='<div class="unl">🔎 '+F(PPP.length)+' ردیف تشخیص داده شد — مقادیر را چک/اصلاح کن و بعد ثبت کن</div>';
+  h+='<div class="scrl"><table class="dtb" style="min-width:640px"><thead><tr><th>✓</th><th>ساعت</th><th>دمای آنالوگ</th><th>گاز خروجی</th><th>ساید گلس</th><th>لوله سنگین</th><th>توضیح</th></tr></thead><tbody>';
+  PPP.forEach(function(r,i){
+   h+='<tr><td><input type="checkbox" id="ppc_'+i+'" checked style="width:16px;accent-color:#22c55e"></td>';
+   h+='<td><input id="pph_'+i+'" value="'+E(r.h)+'" style="width:58px"></td>';
+   h+='<td><input id="ppa1_'+i+'" value="'+E(r.a1)+'"></td>';
+   h+='<td><input id="ppa2_'+i+'" value="'+E(r.a2)+'"></td>';
+   h+='<td><input id="ppa3_'+i+'" value="'+E(r.a3)+'"></td>';
+   h+='<td><input id="ppa4_'+i+'" value="'+E(r.a4)+'"></td>';
+   h+='<td><input id="ppm_'+i+'" value="'+E(r.m)+'" style="width:140px;text-align:right"></td></tr>';
+  });
+  h+='</tbody></table></div>';
+  h+='<button class="btn go" style="width:100%;margin-top:8px" onclick="ppConfirm()">⚡ ثبت خودکار همه ردیف‌های تیک‌خورده در جدول ساعتی (+ دمای محیط خودکار)</button>';
+  h+='<div class="by" style="margin-top:5px">💡 هر ردیف سرِ ساعتِ خودش در جدول می‌نشیند؛ اسم ثبت‌کننده هم خودت می‌ماند</div>';
+ }
+ box.innerHTML=h;
+}
+function ppConfirm(){
+ var rs=[],i=0;
+ while(q('pph_'+i)!=null){
+  if(q('ppc_'+i)&&q('ppc_'+i).checked){
+   rs.push({h:q('pph_'+i).value.trim(),a1:q('ppa1_'+i).value.trim(),a2:q('ppa2_'+i).value.trim(),a3:q('ppa3_'+i).value.trim(),a4:q('ppa4_'+i).value.trim(),m:q('ppm_'+i).value.trim()});
+  }
+  i++;
+ }
+ if(!rs.length){toast('هیچ ردیفی تیک نخورده',1);return}
+ savePaper(rs);
+ var u=U();
+ toast('🌡 در حال دریافت دمای محیط…');
+ fetchAmbient(u,function(t,city,wind){
+  var l=R('crow');
+  rs.forEach(function(r,idx){
+   l.unshift({t:Date.now()+idx,v:{h:r.h||hhm(),a1:r.a1,a2:r.a2,a3:r.a3,a4:r.a4,b2:'معمولی',d2:'—',w:'—',m:((r.m||'')+' (از عکس کاغذ)').slice(0,90),eT:t,eC:city,eW:wind},st:'ok',by:u.name,at:hnow(),d:hj(),src:'ocr'});
+  });
+  W('pv_crow',l);
+  logA('📸 '+F(rs.length)+' ردیف از کاغذ پخت خودکار وارد شد — '+u.name);
+  if(+l[0].v.a1>320)toast('✅ '+F(rs.length)+' ردیف ثبت شد ⚠️ دما بالای ۳۲۰!');else toast('✅ '+F(rs.length)+' ردیف خودکار ثبت شد — دمای محیط: '+t+'°');
+  PPIMG=null;PPP=[];view();
+ });
+}
+function papersHTML(){
+ var l=R('papers');
+ if(!l.length)return '<div class="by">هنوز کاغذی ثبت نشده — عکس برگه پخت را بگیر؛ ساعات و دماها خودکار در جدول می‌نشینند</div>';
+ var h='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;align-items:flex-end">';
+ l.slice(0,5).forEach(function(p){
+  h+='<a href="'+p.img+'" target="_blank" style="border:1px solid var(--ln);border-radius:8px;overflow:hidden;display:block"><img src="'+p.img+'" alt="کاغذ" style="width:86px;height:86px;object-fit:cover"><span class="by" style="display:block;padding:2px;text-align:center">'+E(p.d||'')+'</span></a>';
+ });
+ h+='</div><div class="by" style="margin-top:4px">'+F(l.length)+' کاغذ آرشیو شده — کلیک روی عکس = نمای کامل</div>';
+ return h;
+}
 function vCook(){
  var u=U(),ck=ckGet(),done=0;
  CKL.forEach(function(t,i){var c=ck[String(i)];if(c&&c.d)done++});
- var inner='<div class="meta">🗓 تاریخ: <b>'+hj()+'</b> (خودکار) | 🏭 <b>'+E(u.cname||'—')+'</b> | 📍 '+E(u.addr||u.city||'موقعیت ثبت‌نشده')+'<button class="btn out sm" onclick="addEnvNow()" style="margin-inline-start:auto">🌍 ثبت دستی شرایط محیطی</button></div>';
+ var inner='<div class="meta">🗓 تاریخ: <b>'+hj()+'</b> (خودکار) | 🏭 <b>'+E(u.cname||'—')+'</b> | 📍 '+E(u.addr||u.city||'موقعیت ثبت‌نشده')+'<button class="btn out sm" onclick="go(\'ai\')">🤖 دستیار</button><button class="btn out sm" onclick="addEnvNow()">🌍 شرایط محیطی</button></div>';
+ inner+='<div class="pan"><h3>📸 آپلود کاغذ پخت — تشخیص خودکار ساعات و پارامترها</h3>';
+ inner+='<input type="file" id="pp_file" accept="image/*" style="display:none" onchange="ppFile(this)">';
+ inner+='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px"><button class="btn go sm" onclick="ppPick()">📷 گرفتن/انتخاب عکس کاغذ</button><button class="btn out sm hid" id="pp_ocr" onclick="ppOCR()">🔍 تشخیص خودکار (OCR)</button><button class="pill gy" onclick="ppSaveOnly()">فقط ثبت عکس</button><span id="ocrStat" class="by"></span></div>';
+ inner+='<div id="pp_prev"></div><div id="ppres">'+papersHTML()+'</div></div>';
  var envs=R('env').slice(0,3);
  if(envs.length){
   inner+='<div class="pan"><h3>🌍 آخرین دماهای محیط (خودکار)</h3>';
@@ -427,7 +621,7 @@ function vCook(){
   inner+='<label class="ckbox'+(on?' okd':'')+'"><input type="checkbox"'+(on?' checked':'')+' onchange="togck('+i+')"><span>'+t+(c?'<br><span class="by">'+E(c.by)+' · '+E(c.at)+'</span>':'')+'</span></label>';
  });
  inner+='</div>'+(done===CKL.length?'<div class="unl">🟢 همه موارد تایید شده — مجاز به استارت</div>':'<div class="lock">🟡 '+F(CKL.length-done)+' مورد باقی مانده</div>')+'</div>';
- inner+='<div class="pan"><h3>⏱ جدول ساعتی — دمای محیط، ساعت و تاریخ خودکار ثبت می‌شود</h3><div class="fgrid">';
+ inner+='<div class="pan"><h3>⏱ جدول ساعتی — دمای محیط، ساعت و تاریخ خودکار</h3><div class="fgrid">';
  inner+='<div><label>ساعت (خالی = همین لحظه)</label><input id="ch" placeholder="خودکار"></div>';
  inner+='<div><label>دمای آنالوگ °C</label><input id="ca1" type="number"></div>';
  inner+='<div><label>گاز خروجی °C</label><input id="ca2" type="number"></div>';
@@ -437,11 +631,11 @@ function vCook(){
  inner+='<div><label>جهت گردش</label><select id="cd"><option>چپ‌گرد</option><option>راست‌گرد</option></select></div>';
  inner+='<div><label>آب‌گیری</label><input id="cw" placeholder="مثلاً ۲ بار"></div>';
  inner+='</div>';
- inner+='<div style="background:#0c1a35;border:1px dashed var(--ln);border-radius:9px;padding:9px;margin-bottom:9px"><label style="color:#8fa8cc;font-size:10.5px;display:block;margin-bottom:4px">📝 توضیحات این ساعت — هر اتفاقی که افتاد اینجا بنویس (مشکل پمپ، صدا، تعویض قطعه…)</label><input id="cm" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--ln);background:#f7f7dd;color:#111;font-family:inherit;font-size:13px" placeholder="مثلاً: ساعت ۹ فن راکتور ریست شد، دما افت موقت داشت"></div>';
+ inner+='<div style="background:#0c1a35;border:1px dashed var(--ln);border-radius:9px;padding:9px;margin-bottom:9px"><label style="color:#8fa8cc;font-size:10.5px;display:block;margin-bottom:4px">📝 توضیحات این ساعت</label><input id="cm" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--ln);background:#f7f7dd;color:#111;font-family:inherit;font-size:13px" placeholder="مثلاً: ساعت ۹ فن راکتور ریست شد"></div>';
  inner+='<button class="btn go" onclick="addcrow()">➕ ثبت ردیف ساعتی + دمای محیط خودکار</button>';
  inner+='<div style="margin-top:10px">'+tableHTML('crow',[['h','ساعت'],['a1','دمای آنالوگ'],['a2','گاز خروجی'],['a3','ساید گلس'],['a4','لوله سنگین'],['b2','صدا'],['d2','گردش'],['w','آب‌گیری'],['eT','🌡 دمای محیط'],['eC','شهر'],['m','توضیحات','l']])+'</div>';
- inner+='<div class="by" style="margin-top:6px">💡 در طول ۱۲ تا ۱۴ ساعت پخت، هر ساعت یک ردیف ثبت کن — دمای محیط و شهر خودکار از موقعیت کارخانه گرفته می‌شود</div></div>';
- inner+='<div class="pan"><h3>🧾 خلاصه پخت (جدول پایین برگه)</h3><div class="fgrid">';
+ inner+='<div class="by" style="margin-top:6px">💡 در طول ۱۲–۱۴ ساعت پخت هر ساعت یک ردیف ثبت کن — یا کاغذ پخت را عکس بگیر تا خودکار ثبت شود</div></div>';
+ inner+='<div class="pan"><h3>🧾 خلاصه پخت</h3><div class="fgrid">';
  inner+='<div><label>مقدار خوراک اولیه (تن)</label><input id="cs_rawq" type="number"></div>';
  inner+='<div><label>نوع خوراک</label><input id="cs_feed"></div>';
  inner+='<div><label>حجم هیدروکربن سنگین</label><input id="cs_hcH"></div>';
@@ -457,6 +651,145 @@ function vCook(){
  inner+='<div style="margin-top:10px">'+tableHTML('csum',[['d','تاریخ'],['rawq','خوراک (تن)'],['feed','نوع'],['hcH','هیدرو سنگین'],['hcl','هیدرو سبک'],['sim','سیم'],['carb','کربن'],['tck','تایم پخت'],['tcl','خنک‌کاری'],['sup','سرپرست'],['op','اپراتور'],['bid','بچ']])+'</div>';
  inner+='<button class="btn out sm" onclick="window.print()" style="margin-top:8px">🖨️ چاپ فرم</button></div>';
  q('view').innerHTML=page('📋 گزارش پخت یک‌صفحه‌ای',inner);
+}
+
+/* ---- 🤖 دستیار هوشمند ---- */
+var AI_MODEL='gemini-1.5-flash';
+var AI_KEY=S('pv_aikey','');
+var QCH=['دما چند است؟','خلاصه امروز','مطالبات چقدر است؟','انبار کم داریم؟','کارتابل باز چی داره؟','چک‌لیست چقدر مونده؟','کاغذ پخت چطوری آپلود کنم؟'];
+function briefSummary(){
+ var crow=R('crow')[0],out=[];
+ out.push('کارخانه: '+(U().cname||'—')+' | تاریخ: '+hj());
+ out.push('ردیف‌های ساعتی ثبت‌شده: '+R('crow').length);
+ if(crow)out.push('آخرین پخت: ساعت '+crow.v.h+' — آنالوگ '+(crow.v.a1||'—')+'° — گاز خروجی '+(crow.v.a2||'—')+'° — دمای محیط '+(crow.v.eT||'—'));
+ var fin=R('fin'),inn=0,outx=0;fin.forEach(function(x){if(x.v.ft==='in')inn+=+x.v.amt||0;else outx+=+x.v.amt||0});
+ out.push('مالی: درآمد '+inn+' — هزینه '+outx+' — تراز '+(inn-outx));
+ out.push('بچ‌ها: '+R('batch').length+' | انبار: '+R('inv').length+' قلم | کارتابل باز: '+R('cartable').filter(function(x){return x.st!=='done'}).length);
+ return out.join('\n');
+}
+function localAnswer(qs){
+ var t=String(qs||''),has=function(w){return t.indexOf(w)>=0};
+ var crow=R('crow')[0];
+ var fin=R('fin'),inn=0,outx=0;fin.forEach(function(x){if(x.st==='arch')return;if(x.v.ft==='in')inn+=+x.v.amt||0;else outx+=+x.v.amt||0});
+ var unpaid=R('sell').filter(function(x){return x.st!=='arch'&&!x.v.paid}),ud=0;unpaid.forEach(function(x){ud+=+x.v.total||0});
+ if(has('سلام')||has('خوبی')||has('درود'))return 'سلام! 🤖 دستیار پترو پارسیان هستم.\nاز دما، بچ، هزینه، انبار، کارتابل، مطالبات و… بپرس.';
+ if(has('کاغذ')){
+  return '📸 آپلود کاغذ پخت:\n۱) صفحه «📋 گزارش پخت» را باز کن\n۲) در پنل «آپلود کاغذ پخت» دکمه 📷 را بزن و عکس برگه را بگیر\n۳) «🔍 تشخیص خودکار» را بزن — ساعت‌ها و دماها خوانده می‌شوند\n۴) پیش‌نمایش را چک کن و «⚡ ثبت خودکار» بزن\nهمه ردیف‌ها سرِ ساعت خودشان + دمای محیط در جدول می‌نشینند.';
+ }
+ if(has('محیط')||has('هوا')){
+  var e=R('env')[0];
+  if(crow&&crow.v.eT&&crow.v.eT!=='—')return '🌡 آخرین دمای محیط ثبت‌شده در پخت: '+crow.v.eT+'°'+(crow.v.eC?' — '+crow.v.eC:'');
+  if(e)return '🌍 آخرین دمای محیط: '+e.temp+'°C — '+e.city;
+  return 'دمای محیطی ثبت نشده — در گزارش پخت ردیف ساعتی بزن یا دکمه 🌍 Conditions را بزن.';
+ }
+ if(has('دما')||has('دمای راکتور')||has('آنالوگ')){
+  if(crow&&crow.v.a1){
+   var a=+crow.v.a1,s='🔥 دمای آنالوگ آخرین ثبت (ساعت '+crow.v.h+'): '+F(a)+'</s>';
+   if(a>320)return '🔥 دمای آنالوگ: '+F(a)+'° ⚠️ بالای ۳۲۰! خنک‌کاری/بررسی فوری کن.';
+   if(a>270)return '🔥 دمای آنالوگ: '+F(a)+'° — داخل زون بحرانی (۲۷۰–۳۲۰).';
+   return '🔥 دمای آنالوگ: '+F(a)+'° — نرمال.';
+  }
+  return 'هنوز دمایی ثبت نشده — در گزارش پخت ردیف ساعتی اول را ثبت کن یا از کاغذ پخت استفاده کن.';
+ }
+ if(has('خلاصه')||has('امروز'))
+  return '📌 خلاصه کارخانه:\n• گزارش پخت: '+F(R('csum').length)+' · ردیف ساعتی: '+F(R('crow').length)+'\n• بچ: '+F(R('batch').length)+'\n• کارتابل باز: '+F(R('cartable').filter(function(x){return x.st!=='done'}).length)+'\n• تراز: '+F(inn-outx)+' تومان\n• مطالبات وصول‌نشده: '+F(ud)+' تومان';
+ if(has('مطلب')||has('وصول')||has('بدهی')||has('فاکتور')){
+  if(!unpaid.length)return '✅ هیچ مطالبات وصول‌نشده‌ای نداری.';
+  var s2='🧾 مطالبات: '+F(ud)+' تومان ('+F(unpaid.length)+' فاکتور):\n';
+  unpaid.slice(0,4).forEach(function(x){s2+='• '+x.v.item+' — '+x.v.cust+' — '+F(x.v.total)+'\n'});
+  return s2;
+ }
+ if(has('تراز')||has('درآمد')||has('هزینه')||has('مالی'))
+  return '💰 مالی:\n• درآمد: '+F(inn)+' تومان\n• هزینه: '+F(outx)+' تومان\n• تراز: '+F(inn-outx)+' تومان';
+ if(has('انبار')||has('قطعه')||has('موجودی')){
+  var inv=R('inv'),low=[];
+  inv.forEach(function(x){if(!x.st||x.st!=='arch'){if(+x.v.qty<=10)low.push(x.v.item+' ('+x.v.qty+')')}});
+  var s3='🏭 انبار: '+F(inv.length)+' قلم.'+(low.length?'\n⚠️ کم‌موجودی: '+low.join('، '):'');
+  return s3;
+ }
+ if(has('کارتابل')||has('تعمیر')||has('خراب')){
+  var op=R('cartable').filter(function(x){return x.st!=='done'});
+  if(!op.length)return '🔧 هیچ کاری باز نیست — کارتابل خالی است ✅';
+  var s4='🔧 '+F(op.length)+' کار باز:\n';
+  op.slice(0,4).forEach(function(x){s4+='• '+x.v.title+' — '+x.v.tech+' — مهلت '+x.v.due+' ('+dLbl(daysU(x.v.due))+')\n'});
+  return s4;
+ }
+ if(has('چک')||has('چک‌لیست')||has('چک لیست')){
+  var c=ckGet(),dn=0;CKL.forEach(function(tt,i){var cc=c[String(i)];if(cc&&cc.d)dn++});
+  return '☑️ چک‌لیست تجهیزات: '+F(dn)+' از '+F(CKL.length)+' تایید شده.\n'+(dn<CKL.length?'قیمت مانده‌ها را در گزارش پخت تیک بزن تا «مجاز به استارت» شوی.':'هر ۱۳ مورد تایید شده — مجاز به استارت 🟢');
+ }
+ if(has('بچ')){
+  var b=R('batch')[0];
+  var wr=briefSummary();
+  if(!b)return 'بچی ثبت نشده — از «📦 بچ و هزینه» اضافه کن.';
+  var cst=0;R('bcost').forEach(function(x){if(x.v.b===b.v.id)cst+=+x.v.amt||0});
+  return '📦 آخرین بچ: '+b.v.id+' — '+F(b.v.raw)+' تن '+b.v.feed+'\n• هزینه‌های ثبت‌شده: '+F(cst)+' تومان\n• برق، گازوئیل و دستمزد در «بچ و هزینه» تفکیک می‌شوند.';
+ }
+ if(has('پم ')||has('PM')||has('سرویس دوره')){
+  var pm=R('pm').filter(function(x){return x.st!=='arch'})[0];
+  if(!pm)return '🛠️ PM ثبت نشده.';
+  return '🛠️ نزدیک‌ترین PM: '+pm.v.eq+' — '+pm.v.job+'\nموعد: '+pm.v.next+' ('+dLbl(daysU(pm.v.next))+')';
+ }
+ if(has('کارخانه')||has('عضو'))
+  return '🏭 '+F(S('pv_firms',[]).length)+' کارخانه عضو شبکه است — در صفحه اول کارت‌هایشان با آدرس و نقشه هست.';
+ if(has('پرسنل')||has('شیفت')){
+  var L=R('hrm').map(function(x){return x.v.n});
+  return '👥 پرسنل ثبت‌شده: '+(L.length?L.join('، '):'—');
+ }
+ if(has('چطوری')||has('راهنما')||has('آموزش'))
+  return '📚 راهنمای سریع:\n• ثبت هر ساعت: گزارش پخت → ردیف ساعتی (دمای محیط خودکار)\n• برگه کاغذی: پنل 📸 آپلود کاغذ پخت\n• هزینه هر بچ: بچ و هزینه → افزودن هزینه\n• خرابی: درخواست با ایجنت یا تعمیرات\n• دسترسی پرسنل: مدیریت → ✅/⛔';
+ return '🤖 دقیق متوجه نشدم. نمونه سوال: «دما چند است؟»، «خلاصه امروز»، «مطالبات»، «انبار»، «کارتابل باز».\nبرای هوش حرفه‌ای، در همین صفحه کلید رایگان Gemini را ذخیره کن.';
+}
+async function geminiAsk(qt){
+ try{
+  var prompt='تو دستیار کارخانه پیرولیز «پترو پارسیان» هستی. داده‌های فعلی سامانه:\n'+briefSummary()+'\n\nسوال کاربر: '+qt+'\n\nفارسی، کوتاه، کاربردی و دقیق جواب بده. اگر عدد لازم است از همان داده‌ها استفاده کن.';
+  var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+AI_MODEL+':generateContent?key='+encodeURIComponent(AI_KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+  var j=await r.json();
+  if(j&&j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts&&j.candidates[0].content.parts.length)return j.candidates[0].content.parts.map(function(p){return p.text||''}).join('');
+  if(j&&j.error&&j.error.message)logA('🤖 خطای AI: '+j.error.message.slice(0,80));
+ }catch(e){}
+ return '';
+}
+function saveAIKey(){
+ AI_KEY=q('ai_key').value.trim();W('pv_aikey',AI_KEY);
+ toast(AI_KEY?'✅ کلید ذخیره شد — از این به بعد هوش حرفه‌ای جواب می‌دهد':'کلید پاک شد — موتور محلی فعال است');view();
+}
+function renderAIList(){
+ var box=q('aibox');if(!box)return;
+ var H=S('pv_aihist',[]);
+ if(!H.length){box.innerHTML='<div class="empty">سلام! سوالت را بنویس یا از پیشنهادها کلیک کن 🤖</div>';return}
+ box.innerHTML=H.map(function(m){
+  return '<div class="aib '+m.who+'">'+E(m.txt)+'</div>';
+ }).join('');
+ box.scrollTop=box.scrollHeight;
+}
+async function aiSend(preset){
+ var inp=q('ai_in');if(!inp)return;
+ var txt=(preset||inp.value).trim();
+ if(!txt)return;
+ inp.value='';
+ var H=S('pv_aihist',[]);
+ H.push({who:'u',txt:txt.slice(0,400),t:Date.now()});
+ W('pv_aihist',H.slice(-40));renderAIList();
+ var ans='';
+ if(AI_KEY){toast('🤖 در حال فکر کردن با هوش مصنوعی…');ans=await geminiAsk(txt)}
+ if(!ans)ans=localAnswer(txt);
+ H.push({who:'a',txt:ans,t:Date.now()});
+ W('pv_aihist',H.slice(-40));renderAIList();
+}
+function aiChip(i){q('ai_in').value=QCH[i];aiSend()}
+function vAI(){
+ var inner='<div class="pan"><h3>🤖 دستیار هوشمند پترو پارسیان</h3>';
+ inner+='<div class="sug">'+QCH.map(function(c,i){return '<button class="tb" onclick="aiChip('+i+')">'+E(c)+'</button>'}).join('')+'</div>';
+ inner+='<div id="aibox"></div>';
+ inner+='<input id="ai_in" class="lg" style="margin-bottom:7px" placeholder="سوالت را بنویس… مثلاً: هزینه آخرین بچ چقدر شد؟" onkeydown="if(event.key===\'Enter\')aiSend()">';
+ inner+='<button class="btn go" style="width:100%" onclick="aiSend()">🚀 بپرس</button></div>';
+ if(ADM()){
+  inner+='<div class="pan"><h3>🔑 اتصال هوش مصنوعی حرفه‌ای (اختیاری)</h3>';
+  inner+='<div class="fgrid"><div><label>کلید Gemini — رایگان از aistudio.google.com/apikey</label><input id="ai_key" value="'+E(AI_KEY)+'" placeholder="خالی = موتور محلی (آفلاین)"></div></div>';
+  inner+='<button class="btn go sm" onclick="saveAIKey()">💾 ذخیره کلید</button><div class="by" style="margin-top:6px">موتور محلی بدون کلید هم کار می‌کند و از داده‌های واقعی همین سامانه جواب می‌دهد؛ با کلید Gemini، متن آزاد هم می‌فهمد</div></div>';
+ }
+ q('view').innerHTML=page('🤖 دستیار هوشمند',inner);renderAIList();
 }
 
 /* ---- بچ و هزینه ---- */
@@ -738,7 +1071,7 @@ function payok(t){
 function vPay(){
  var u=U();
  var inner='<div class="pan"><h3>💳 عضویت فعلی شما: '+planName(u.plan)+'</h3><div class="plans">';
- inner+='<div class="plan"><b class="t">رایگان</b><div class="pr">۰</div><ul><li>داشبورد و گزارش پخت</li><li>درخواست با ایجنت</li></ul></div>';
+ inner+='<div class="plan"><b class="t">رایگان</b><div class="pr">۰</div><ul><li>داشبورد و گزارش پخت</li><li>دستیار هوشمند</li><li>درخواست با ایجنت</li></ul></div>';
  PLANS.forEach(function(p){inner+='<div class="plan'+(p.lv===2?' gd':'')+'"><b class="t">'+p.n+'</b><div class="pr">'+p.pr+'</div><ul>'+p.ft.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul><button class="btn go sm" onclick="buyPlan('+p.lv+')">💳 درخواست خرید</button></div>'});
  inner+='</div><div class="note">درگاه واقعی (زرین‌پال) در نسخه نهایی وصل می‌شود</div></div>';
  var reqs=S('pv_payreq',[]),pend=reqs.filter(function(r){return r.st==='pend'});
@@ -760,7 +1093,7 @@ function vFin(){
   var d=R('sell').filter(function(x){return x.st!=='arch'&&!x.v.paid}),tot=0;
   d.forEach(function(x){tot+=(+x.v.total||0)});
   inner+='<div class="mat-cards"><div class="mc" style="background:#0e2b1a"><b style="color:#7dffbe">'+F(tot)+'</b><span>کل مطالبات</span></div><div class="mc" style="background:#3a2a10"><b style="color:#ffd98c">'+F(d.length)+'</b><span>سررسید نشده</span></div></div>';
-  d.forEach(function(x){inner+='<div class="pan"><div class="ai-it"><span>🧾</span><span style="flex:1"><b>'+E(x.v.item)+'</b> — '+E(x.v.cust||'—')+' | '+F(x.v.total)+' ریال</span>'+(ADM()?'<button class="pill ok" onclick="payOff('+x.t+')">تسویه شد</button>':'')+'</div></div>'});
+  d.forEach(function(x){inner+='<div class="pan"><div class="ai-it"><span>🧾</span><span style="flex:1"><b>'+E(x.v.item)+'</b> — '+E(x.v.cust||'—')+' | '+F(x.v.total)+' تومان</span>'+(ADM()?'<button class="pill ok" onclick="payOff('+x.t+')">تسویه شد</button>':'')+'</div></div>'});
  }else{
   inner+='<div class="pan"><h3>➕ ثبت مالی</h3>'+formHTML('fin')+'</div><div class="pan"><h3>📋 تراکنش‌ها</h3>'+tableHTML('fin',[['ft','نوع'],['title','عنوان','l'],['amt','مبلغ']])+'</div>';
   var fin=R('fin'),inn=0,out2=0;
@@ -819,14 +1152,14 @@ function vDash(){
  inner+='<button class="kpi k2" onclick="go(\'prod\')"><small>📦 بچ / هزینه</small><b>'+F(R('batch').length)+' / '+F(R('bcost').length)+'</b></button>';
  inner+='<button class="kpi k3" onclick="go(\'req\')"><small>📥 درخواست تازه</small><b>'+F(pend)+'</b></button>';
  inner+='<button class="kpi k4" onclick="go(\'maint\')"><small>🔧 کارتابل باز</small><b>'+F(cs)+'</b></button>';
- inner+='<button class="kpi k5" onclick="go(\'fin\')"><small>🧾 تراز (ریال)</small><b>'+F(net)+'</b></button></div>';
+ inner+='<button class="kpi k5" onclick="go(\'fin\')"><small>🧾 تراز (تومان)</small><b>'+F(net)+'</b></button></div>';
  if(pends.length&&ADM())inner+='<div class="lock">👤 '+F(pends.length)+' ثبت‌نام منتظر تایید شماست (مدیریت)</div>';
- var amb=(lastC&&lastC.v.eT&&lastC.v.eT!=='—')?(E(lastC.v.eT)+'°C — '+E(lastC.v.eC||'')+' (ساعت '+E(lastC.v.h)+')'):'ثبت نشده — از گزارش پخت شروع کن';
- inner+='<div class="meta">🗓 <b>'+hj()+'</b> | 🏭 <b>'+E(u.cname||'—')+'</b> | 🌡 دمای محیط آخرین ساعت: <b>'+amb+'</b></div>';
+ var amb=(lastC&&lastC.v.eT&&lastC.v.eT!=='—')?(E(lastC.v.eT)+'°C — '+E(lastC.v.eC||'')+' (ساعت '+E(lastC.v.h)+')'):'ثبت نشده';
+ inner+='<div class="meta">🗓 <b>'+hj()+'</b> | 🏭 <b>'+E(u.cname||'—')+'</b> | 🌡 دمای محیط: <b>'+amb+'</b><button class="btn out sm" onclick="go(\'ai\')" style="margin-inline-start:auto">🤖 بپرس از دستیار</button></div>';
  var h1=(lastC&&lastC.v&&lastC.v.a1)?+lastC.v.a1:235;
  inner+='<div class="row3">';
  inner+='<div class="pan"><h3>🔥 سیستم پیرولیز</h3>'+reactorSVG(h1)+'</div>';
- inner+='<div class="pan"><h3>⏲️ چرخه بچ (۱۲ تا ۱۴ ساعت)</h3><div class="tl">'+[['#1db86a','06:00','Start راکتور'],['#f0a92c','08:30','ورود به زون بحرانی'],['#f0a92c','11:10','شروع Cracking'],['#2bd9a8','18:45','پایان پخت'],['#2f9be8','19:00','شروع Cooling'],['#7b5cd6','24:10','تخلیه محصول']].map(function(x){return '<div class="tl-r"><span class="tl-d" style="background:'+x[0]+';color:'+x[0]+'"></span><div><span style="font-family:monospace">'+x[1]+'</span><br><span class="by">'+x[2]+'</span></div></div>'}).join('')+'</div></div>';
+ inner+='<div class="pan"><h3>⏲️ چرخه بچ (۱۲ تا ۱۴ ساعت)</h3><div class="tl">'+[['#1db86a','06:00','Start راکتور'],['#f0a92c','08:30','ورود به زون بحرانی'],['#f0a92c','11:10','شروع Cracking'],['#2bd9a8','18:45','پایان پخت'],['#2f9be8','19:00','شروع Cooling'],['#7b5cd6','24:10','تخلیه محصول']].map(function(x){return '<div class="tl-r"><span class="tl-d" style="background:'+x[0]+'"></span><div><span style="font-family:monospace">'+x[1]+'</span><br><span class="by">'+x[2]+'</span></div></div>'}).join('')+'</div></div>';
  inner+='<div class="pan"><h3>📊 گیج‌ها</h3><div class="gwrap">'+gauge(h1,'°C',0,450,'دمای آنالوگ','#ff9d5c')+gauge(0.42,' Bar',0,1,'فشار','#38b6ff')+gauge(1.2,' rpm',0,3,'چرخش','#38e0a0')+'</div></div>';
  inner+='</div>';
  var log=S('pv_agentlog',[]);
@@ -840,10 +1173,19 @@ function vDash(){
 /* ---- مدیریت ---- */
 function vSettings(){
  var u=U();
- var inner='<div class="pan"><h3>👑 کاربران — تایید، نقش، دسترسی</h3>';
+ var inner='<div class="pan"><h3>🔑 درخواست‌های بازیابی رمز</h3>';
+ var pwr=S('pv_pwreset',[]),pwp=pwr.filter(function(r){return r.st==='pend'});
+ if(pwp.length&&ADM()){
+  pwp.forEach(function(r){
+   inner+='<div class="ai-it"><span>🔑</span><div style="flex:1;min-width:170px"><b>'+E(r.name)+'</b> <span class="by">'+E(r.em)+' · ☎️ '+E(r.tel||'—')+'</span></div>';
+   inner+='<button class="pill ok" onclick="approvePw('+r.t+')">✅ تایید ریست</button> <button class="pill wn" onclick="rejectPw('+r.t+')">رد</button></div>';
+  });
+ }else{inner+='<div class="empty">درخواستی نیست</div>'}
+ inner+='</div>';
+ inner+='<div class="pan"><h3>👑 کاربران — تایید، نقش، دسترسی</h3>';
  US().forEach(function(x){
   inner+='<div class="pan" style="margin-bottom:8px;background:#0c1a35"><div class="ai-it"><span>'+(x.admin?'👑':(x.plan>=2?'🟡':(x.plan>=1?'🥉':'👁')))+'</span><div style="flex:1"><b>'+E(x.name)+'</b> <span class="by">'+E(x.email)+'</span> '+planName(x.plan)+(x.cname?'<br><span class="by">🏭 '+E(x.cname)+' · 📍 '+E(x.addr||x.city||'—')+(x.lat?' · <a href="https://maps.google.com/?q='+x.lat+','+x.lon+'" target="_blank" style="color:#8fc4ff">نقشه</a>':'')+'</span>':'')+(x.st==='pend'?' <span class="st-badge sb-pnd">در انتظار</span>':'')+'</div></div>';
-  if(x.st==='pend'&&ADM())inner+='<button class="pill ok" onclick="usrOk(\''+E(x.email)+'\')">✅ تایید (نمایش در صفحه اول)</button> ';
+  if(x.st==='pend'&&ADM())inner+='<button class="pill ok" onclick="usrOk(\''+E(x.email)+'\')">✅ تایید حساب (نمایش در صفحه اول)</button> ';
   if(ADM()&&x.email!==u.email)inner+='<button class="pill gy" onclick="usrAdm(\''+E(x.email)+'\')">'+(x.admin?'ناظر شود':'مدیر شود')+'</button> ';
   inner+='<div style="margin-top:6px">';
   if(ADM()&&!x.admin){
@@ -853,16 +1195,22 @@ function vSettings(){
   inner+='</div></div>';
  });
  inner+='</div>';
+ var preq=S('pv_payreq',[]).filter(function(r){return r.st==='pend'});
+ if(ADM()&&preq.length){
+  inner+='<div class="pan"><h3>💳 درخواست‌های خرید عضویت</h3>';
+  preq.forEach(function(r){inner+='<div class="ai-it"><span>💳</span><span style="flex:1"><b>'+E(r.by)+'</b> — '+E(r.plan)+'</span><button class="pill ok" onclick="payok('+r.t+')">تایید</button></div>'});
+  inner+='</div>';
+ }
  q('view').innerHTML=page('⚙️ مدیریت و دسترسی‌ها',inner);
 }
 
-/* ---- لندینگ با کارت کارخانه‌های عضو ---- */
+/* ---- لندینگ ---- */
 function ltab(w){
  q('lt0').classList.toggle('on',w===0);q('lt1').classList.toggle('on',w===1);
  q('lf0').classList.toggle('hid',w!==0);q('lf1').classList.toggle('hid',w!==1);
 }
 function firmCard(f){
- var h='<div class="fcard"><h4>🏭 '+E(f.n)+' <span class="stok st-badge sb-ok">عضو ✅</span></h4><div class="fl2">';
+ var h='<div class="fcard"><h4>🏭 '+E(f.n)+' <span class="st-badge sb-ok">عضو ✅</span></h4><div class="fl2">';
  if(f.addr)h+='📍 '+E(f.addr)+(f.city?' — '+E(f.city):'')+'<br>';
  else if(f.city)h+='📍 '+E(f.city)+'<br>';
  if(f.bno)h+='☎️ بازرگانی: '+E(f.bno)+'<br>';
@@ -872,30 +1220,29 @@ function firmCard(f){
 }
 function vHome(){
  var firms=S('pv_firms',[]);
- var h='<div class="view"><div class="hero"><div class="fl">🔥</div><h1>پترو پارسیان — اکسیر جوانی</h1><p>سامانه جامع مدیریت کارخانه‌های پیرولیز: ثبت ساعتی دما با دمای محیطِ خودکار از لوکیشن کارخانه، هزینه دقیق هر بچ، تعمیرات و کارتابل، ایجنت هوشمند، تاریخ شمسی قفل و نام ثبت‌کننده روی هر رکورد — و شبکه تعامل کارخانه‌ها با عضویت.</p></div>';
- /* کارت کارخانه‌های عضو */
+ var h='<div class="view"><div class="hero"><div class="fl">🔥</div><h1>پترو پارسیان — اکسیر جوانی</h1><p>سامانه جامع مدیریت کارخانه‌های پیرولیز: ثبت ساعتی دما با دمای محیطِ خودکار، آپلود کاغذ پخت با تشخیص خودکار ساعات و پارامترها (OCR)، دستیار هوشمند پرسش و پاسخ، هزینه دقیق هر بچ، تعمیرات و کارتابل، ایجنت هوشمند و شبکه تعامل کارخانه‌ها با عضویت.</p></div>';
  h+='<div class="pan"><h3>🏭 کارخانه‌های عضو شبکه ('+F(firms.length)+')</h3><div class="firms">';
  if(firms.length){firms.forEach(function(f){h+=firmCard(f)})}
  else{h+='<div class="empty">هنوز کارخانه‌ای تایید نشده — اولین باش</div>'}
  h+='</div></div>';
  h+='<div class="feat">';
- [['📋','فرم پخت یک‌صفحه‌ای','دقیقاً مثل برگه کاغذی + دمای محیط خودکار هر ساعت'],['🔐','دسترسی‌های مدیر','هر نفر با کاربری خودش؛ ثبت به نامش'],['🤖','ایجنت هوشمند','درخواست صوتی/متنی/فایل را دسته‌بندی می‌کند'],['🔧','CMMS کامل','قطعه از انبار، هزینه مالی، یادآوری بازبینی'],['🌍','محیط هوشمند','دمای محیط از هواشناسی بر اساس نقشه کارخانه'],['🌐','شبکه کارخانه‌ها','چت، قیمت مواد هر شهر، کاریابی، تامین قطعات']].forEach(function(x){h+='<div class="ft"><b>'+x[0]+' '+x[1]+'</b>'+E(x[2])+'</div>'});
+ [['📋','فرم پخت یک‌صفحه‌ای','دقیقاً مثل برگه کاغذی + دمای محیط خودکار هر ساعت'],['📸','آپلود کاغذ پخت','عکس برگه را بده؛ ساعات و دماها خودکار در جدول می‌نشینند'],['🤖','دستیار هوشمند','از دما تا مطالبات بپرس — جواب از داده‌های واقعی'],['🔧','CMMS کامل','قطعه از انبار، هزینه مالی، یادآوری بازبینی'],['🔐','دسترسی‌های مدیر','هر نفر با کاربری خودش؛ ثبت به نامش'],['🌐','شبکه کارخانه‌ها','چت، قیمت مواد هر شهر، کاریابی، تامین قطعات']].forEach(function(x){h+='<div class="ft"><b>'+x[0]+' '+x[1]+'</b>'+E(x[2])+'</div>'});
  h+='</div>';
  h+='<div class="row2">';
  h+='<div class="pan"><div class="tabs"><button class="tab on" id="lt0" onclick="ltab(0)">ورود</button><button class="tab" id="lt1" onclick="ltab(1)">ثبت‌نام</button></div>';
- h+='<div id="lf0"><input id="le" class="lg" type="email" placeholder="ایمیل"><input id="lp" class="lg" type="password" placeholder="رمز عبور"><button class="btn go" style="width:100%" onclick="doLogin()">ورود به سامانه</button></div>';
+ h+='<div id="lf0"><input id="le" class="lg" type="email" placeholder="ایمیل"><input id="lp" class="lg" type="password" placeholder="رمز عبور"><button class="btn go" style="width:100%" onclick="doLogin()">ورود به سامانه</button><button class="btn out sm" style="width:100%" onclick="forgotPw()">🔑 رمزم را فراموش کردم — درخواست ریست (ایمیل/پیامک به مدیر)</button></div>';
  h+='<div id="lf1" class="hid">';
  h+='<input id="rn" class="lg" placeholder="نام و نام‌خانوادگی مسئول">';
  h+='<input id="rc" class="lg" placeholder="🏭 نام شرکت / کارخانه">';
  h+='<input id="ra" class="lg" placeholder="📍 آدرس دقیق کارخانه">';
- h+='<input id="rb" class="lg" placeholder="☎️ شماره بازرگانی">';
- h+='<button class="btn out sm" style="width:100%;margin-bottom:8px" onclick="capLoc()">📍 گرفتن موقعیت دقیق کارخانه از نقشه (برای دمای هوای خودکار)</button>';
+ h+='<input id="rb" class="lg" placeholder="☎️ شماره بازرگانی (برای پیامک بازیابی رمز)">';
+ h+='<button class="btn out sm" style="width:100%;margin-bottom:8px" onclick="capLoc()">📍 گرفتن موقعیت دقیق کارخانه از نقشه</button>';
  h+='<div id="locTag" class="by" style="margin-bottom:8px">موقعیتی ثبت نشده</div>';
  h+='<input id="re" class="lg" type="email" placeholder="ایمیل"><input id="rp" class="lg" type="password" placeholder="رمز (حداقل ۶)">';
  h+='<button class="btn go" style="width:100%" onclick="doReg()">ثبت‌نام کارخانه</button></div>';
  h+='<div class="note">اولین ثبت‌نام = مدیر کل 👑 · بعد از <b>تایید مدیر</b>، کارت کارخانه در همین صفحه نمایش داده می‌شود</div></div>';
  h+='<div class="pan"><h3>💳 پلن‌های عضویت</h3><div class="plans">';
- h+='<div class="plan"><b class="t">رایگان</b><div class="pr">۰</div><ul><li>داشبورد و گزارش پخت</li><li>درخواست با ایجنت</li></ul></div>';
+ h+='<div class="plan"><b class="t">رایگان</b><div class="pr">۰</div><ul><li>داشبورد و گزارش پخت</li><li>دستیار هوشمند</li><li>درخواست با ایجنت</li></ul></div>';
  PLANS.forEach(function(p){h+='<div class="plan'+(p.lv===2?' gd':'')+'"><b class="t">'+p.n+'</b><div class="pr">'+p.pr+'</div><ul>'+p.ft.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>'});
  h+='</div></div>';
  h+='</div></div>';
@@ -906,11 +1253,11 @@ function vHome(){
 var NAVG=[
  ['کلی',[['dash','📊','داشبورد'],['cook','📋','گزارش پخت']]],
  ['عملیات',[['prod','📦','بچ و هزینه'],['maint','🔧','تعمیرات'],['inv','🏭','انبار'],['fin','💰','مالی']]],
- ['هوشمند',[['req','📥','درخواست و ایجنت'],['people','👥','پرسنل']]],
+ ['هوشمند',[['req','📥','درخواست و ایجنت'],['ai','🤖','دستیار هوشمند'],['people','👥','پرسنل']]],
  ['شبکه و سیستم',[['net','🌐','بازار و چت'],['pay','💳','عضویت'],['settings','⚙️','مدیریت']]]
 ];
-var VIEWS={home:vHome,dash:vDash,cook:vCook,prod:vProd,maint:vMaint,inv:vInv,req:vReq,people:vPeople,net:vNet,pay:vPay,fin:vFin,settings:vSettings};
-var NEEDMOD={dash:'dash',cook:'cook',prod:'prod',maint:'maint',inv:'inv',req:'req',people:'people',fin:'fin',net:'net',pay:'dash',settings:'settings'};
+var VIEWS={home:vHome,dash:vDash,cook:vCook,prod:vProd,maint:vMaint,inv:vInv,req:vReq,ai:vAI,people:vPeople,net:vNet,pay:vPay,fin:vFin,settings:vSettings};
+var NEEDMOD={dash:'dash',cook:'cook',prod:'prod',maint:'maint',inv:'inv',req:'req',ai:'ai',people:'people',fin:'fin',net:'net',pay:'dash',settings:'settings'};
 function go(p){if(!VIEWS[p])return;route=p;try{location.hash='#/'+p}catch(e){}render()}
 window.addEventListener('hashchange',function(){var p=(location.hash||'').replace('#/','');if(VIEWS[p]&&U()&&p!==route){route=p;render()}});
 var route='home';
@@ -922,7 +1269,7 @@ function render(){
  q('uname').textContent=u.name;
  q('ubadge').textContent=(u.admin?'مدیر کل 👑 ':'')+(u.cname||planName(u.plan));
  q('ubadge').className='bdg'+(u.admin?'':' v');
- q('hics').innerHTML=[['dash','📊 داشبورد'],['cook','📋 پخت'],['net','🌐 شبکه'],['req','📥 درخواست'],['pay','💳 عضویت']].map(function(x){return '<button class="hbtn'+(route===x[0]?' on':'')+'" onclick="go(\''+x[0]+'\')">'+x[1]+'</button>'}).join('');
+ q('hics').innerHTML=[['dash','📊 داشبورد'],['cook','📋 پخت'],['ai','🤖 دستیار'],['net','🌐 شبکه'],['req','📥 درخواست'],['pay','💳 عضویت']].map(function(x){return '<button class="hbtn'+(route===x[0]?' on':'')+'" onclick="go(\''+x[0]+'\')">'+x[1]+'</button>'}).join('');
  var sh='';
  NAVG.forEach(function(g){
   var ok=g[1].filter(function(n){return u.admin||(u.perms||[]).indexOf(n[0])>=0});
