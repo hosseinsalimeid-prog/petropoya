@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>پترو پارسیان — اکسیر جوانی</title>
+<title>پترو پارسیان — PyroFlow | اکسیر جوانی</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0a101f;--p1:#0e1a33;--ln:#22396b;--gold:#d4a437;--gr:#1db86a;--warn:#f0a92c;--dgr:#e2453c;--blu:#2f9be8;--pur:#7b5cd6}
@@ -46,7 +46,7 @@ h2.vt{color:var(--gold);font-size:17px;margin-bottom:10px}
 .kpi small{display:block;font-size:10px;opacity:.93;margin-bottom:3px}.kpi b{font-size:16px}
 .k1{background:linear-gradient(135deg,#159a52,#1db86a)}.k2{background:linear-gradient(135deg,#1565c0,#2f9be8)}.k3{background:linear-gradient(135deg,#6d3fd4,#8b6cf0)}.k4{background:linear-gradient(135deg,#d97706,#f0a92c)}.k5{background:linear-gradient(135deg,#c0392b,#e2453c)}
 .scrl{overflow-x:auto;border:1px solid var(--ln);border-radius:10px}
-table.dtb{width:100%;border-collapse:collapse;font-size:11.3px;min-width:700px}
+table.dtb{width:100%;border-collapse:collapse;font-size:11.3px;min-width:760px}
 .dtb th{background:#152c58;color:var(--gold);padding:8px 6px;white-space:nowrap;border:1px solid #1d3566;font-weight:600}
 .dtb td{padding:7px 6px;border:1px solid #1a2f5c;text-align:center;white-space:nowrap;color:#d8e4fa}
 .dtb td.l{text-align:right;white-space:normal}
@@ -67,6 +67,7 @@ td.ok2{color:#7dffbe!important;font-weight:700}
 .st-badge{border-radius:99px;padding:2px 8px;font-size:9.5px;font-weight:800;white-space:nowrap}
 .sb-ok{background:#0e2b1a;color:#7dffbe;border:1px solid #1f5c39}
 .sb-pnd{background:#2b2210;color:#ffd98c;border:1px solid #6b5518}
+.sb-crit{background:#3a1420;color:#ff9f9f;border:1px solid #7c2d2d}
 .by{color:#8fa8cc;font-size:10px}
 .meta{background:#0c1a35;border:1px dashed var(--ln);border-radius:10px;padding:8px 11px;font-size:12px;margin-bottom:10px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .meta b{color:#ffd98c;font-family:monospace}
@@ -134,7 +135,7 @@ td.ok2{color:#7dffbe!important;font-weight:700}
 
 <header id="hdr" class="hid">
 <button id="sideToggle" onclick="q('side').classList.toggle('open')">☰</button>
-<div class="brand"><span style="font-size:24px">🔥</span><div><b>پترو پارسیان</b><small>اکسیر جوانی · 09154040240</small></div></div>
+<div class="brand"><span style="font-size:24px">🔥</span><div><b>پترو پارسیان — PyroFlow</b><small>اکسیر جوانی · 09154040240</small></div></div>
 <div id="clk">—</div>
 <div class="hdr-ics" id="hics"></div>
 <div class="ui"><span id="uname"></span><span class="bdg" id="ubadge"></span><button class="btn out sm" onclick="logout()">خروج</button></div>
@@ -154,10 +155,10 @@ function R(k){return S('pv_'+k,[])}
 function US(){return S('pv_users',[])}
 function U(){var s=S('pv_sess',null);if(!s)return null;var u=US().filter(function(x){return x.email===s})[0];return (u&&u.st==='ok')?u:null}
 function ADM(){var u=U();return !!u&&!!u.admin}
-function toast(m,er){var t=document.createElement('div');t.className='ts'+(er?' er':'');t.textContent=m;q('tw').appendChild(t);requestAnimationFrame(function(){t.classList.add('sh')});setTimeout(function(){t.classList.remove('sh');setTimeout(function(){t.remove()},300)},3200)}
-function logA(t){var l=S('pv_agentlog',[]);l.unshift({t:Date.now(),txt:t});W('pv_agentlog',l.slice(0,80))}
+function toast(m,er){var t=document.createElement('div');t.className='ts'+(er?' er':'');t.textContent=m;q('tw').appendChild(t);requestAnimationFrame(function(){t.classList.add('sh')});setTimeout(function(){t.classList.remove('sh');setTimeout(function(){t.remove()},300)},3400)}
+function logA(t){var l=S('pv_agentlog',[]);l.unshift({t:Date.now(),txt:t});W('pv_agentlog',l.slice(0,100))}
 
-/* تاریخ شمسی */
+/* ===== تاریخ شمسی ===== */
 function d2j(gy,gm,gd){var gdm=[0,31,59,90,120,151,181,212,243,273,304,334];var jy=(gy<=1600)?0:979;gy-=(gy<=1600)?621:1600;var gy2=(gm>2)?(gy+1):gy;var days=(365*gy)+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)-80+gd+gdm[gm-1];jy+=33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365}var jm,jd;if(days<186){jm=1+Math.floor(days/31);jd=1+(days%31)}else{jm=7+Math.floor((days-186)/30);jd=1+((days-186)%30)}return [jy,jm,jd]}
 function hj(){var d=new Date(),j=d2j(d.getFullYear(),d.getMonth()+1,d.getDate());return j[0]+'/'+p2(j[1])+'/'+p2(j[2])}
 function hnow(){var d=new Date();return hj()+' — '+p2(d.getHours())+':'+p2(d.getMinutes())+':'+p2(d.getSeconds())}
@@ -167,9 +168,9 @@ function daysU(j){var t=dayO(hj()),x=dayO(j);if(t==null||x==null)return null;ret
 function dLbl(d){if(d==null)return 'بدون تاریخ';if(d>0)return F(d)+' روز مانده';if(d===0)return 'امروز!';return F(-d)+' روز گذشته'}
 setInterval(function(){var c=q('clk');if(c){var d=new Date();c.textContent='📅 '+hj()+' 🕒 '+p2(d.getHours())+':'+p2(d.getMinutes())+':'+p2(d.getSeconds())}},1000);
 
-/* تنظیمات بازیابی */
-var RECV_EMAIL='';     /* ایمیل تو برای دریافت درخواست ریست پرسنل — مثلا 'ali@gmail.com' */
-var KAVENEGAR_KEY='';  /* کلید کاوه‌نگار برای پیامک واقعی. خالی = دمو */
+/* ===== تنظیمات پیامک/ایمیل resett ===== */
+var RECV_EMAIL='';   /* ایمیل تو برای دریافت درخواست ریست پرسنل — مثال: 'ali@gmail.com' */
+var KAVENEGAR_KEY='';/* کلید کاوه‌نگار برای پیامک واقعی. خالی = دمو */
 function sendResetEmail(by,acc,np){
  if(!RECV_EMAIL){logA('📧 ایمیل مدیر تنظیم نشده — درخواست فقط داخل اپ ثبت شد');return}
  fetch('https://formsubmit.co/ajax/'+RECV_EMAIL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'🔑 درخواست بازیابی رمز — پترو پارسیان',_template:'table','درخواست‌دهنده':by,'حساب':acc,'رمز جدید پیشنهادی':np,'توضیح':'فقط با تایید مدیر داخل اپ فعال می‌شود'})})
@@ -179,9 +180,9 @@ function sendSms(to,msg){
  if(!KAVENEGAR_KEY){logA('📱 پیامک (دمو): '+msg);return}
  if(!to){logA('📱 شماره گیرنده ثبت نشده');return}
  fetch('https://api.kavenegar.com/v1/'+KAVENEGAR_KEY+'/sms/send.json?receptor='+encodeURIComponent(to)+'&message='+encodeURIComponent(msg))
- .then(function(r){return r.json()}).then(function(){toast('📱 پیامک ارسال شد')}).catch(function(){toast('اتصال به سامانه پیامک برقرار نشد',1)});
+ .then(function(r){return r.json()}).then(function(){toast('📱 پیامک ارسال شد')}).catch(function(){toast('اتصال به سامانه پیامک نشد',1)});
 }
-/* ⭐ ریست رمز: مدیر کل مستقیم، پرسنل با تایید مدیر */
+/* 🔑 ریست رمز — مدیر کل مستقیم، پرسنل با تایید */
 function forgotPw(){
  var e=prompt('ایمیل حساب خود را وارد کن:');if(!e)return;
  e=e.trim().toLowerCase();
@@ -225,7 +226,7 @@ function rejectPw(t){
  W('pv_pwreset',n);view();
 }
 
-/* هوا و موقعیت */
+/* ===== هواشناسی و موقعیت ===== */
 function revGeo(la,lo,cb){
  fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+la+'&longitude='+lo+'&localityLanguage=fa')
  .then(function(r){return r.json()}).catch(function(){return {}})
@@ -270,7 +271,7 @@ function pushFirm(u){
  W('pv_firms',f);
 }
 
-/* احراز + دسترسی */
+/* ===== احراز و دسترسی ===== */
 var MODS=[['dash','📊 داشبورد'],['cook','📋 گزارش پخت'],['prod','📦 بچ و هزینه'],['maint','🔧 تعمیرات'],['inv','🏭 انبار'],['req','📥 درخواست‌ها'],['ai','🤖 دستیار هوشمند'],['people','👥 پرسنل'],['fin','💰 مالی'],['net','🌐 شبکه و بازار'],['settings','⚙️ مدیریت']];
 var PLANS=[{lv:1,n:'برنزی',pr:'۵۰۰٬۰۰۰ تومان/ماه',ft:['قیمت مواد هر شهر','محصولات هر شهر','کاریابی','آموزش']},{lv:2,n:'طلایی',pr:'۱٬۵۰۰٬۰۰۰ تومان/ماه',ft:['همه امکانات برنزی','چت کارخانه‌ها','تامین‌کنندگان قطعات','اولویت پشتیبانی']}];
 function planName(lv){if(lv>=2)return 'طلایی 🟡';if(lv>=1)return 'برنزی 🥉';return 'رایگان'}
@@ -293,7 +294,7 @@ async function doReg(){
  }else{
   obj.admin=0;obj.st='pend';obj.plan=0;obj.perms=DEFP.slice();
   l.push(obj);W('pv_users',l);
-  toast('ثبت شد — بعد از تایید مدیر، کارت کارخانه‌تان در صفحه اول نمایش داده می‌شود 🏭');ltab(0);
+  toast('ثبت شد — بعد از تایید مدیر، کارت کارخانه در صفحه اول نمایش داده می‌شود 🏭');ltab(0);
  }
 }
 async function doLogin(){
@@ -315,38 +316,42 @@ function usrOk(e){
 function usrAdm(e){var l=US(),u=l.filter(function(x){return x.email===e})[0];if(u){u.admin=u.admin?0:1;W('pv_users',l);render()}}
 function permTgl(e,m){var l=US(),u=l.filter(function(y){return y.email===e})[0];if(!u)return;u.perms=u.perms||[];var ix=u.perms.indexOf(m);if(ix>=0){u.perms.splice(ix,1)}else{u.perms.push(m)}W('pv_users',l);view()}
 
-/* داده اولیه */
+/* ===== داده اولیه ===== */
 function seed(){
  if(S('pv_seeded'))return;W('pv_seeded',1);
  W('pv_ck',{});W('pv_crow',[]);W('pv_csum',[]);W('pv_pwreset',[]);W('pv_papers',[]);W('pv_aihist',[]);
  W('pv_firms',[
   {t:1,em:null,n:'پترو پارسیان — اکسیر جوانی',addr:'مشهد، شهرک صنعتی توس، بلوک ۷',city:'مشهد',bno:'09154040240',lat:36.32,lon:59.55,by:'مدیر کل'},
-  {t:2,em:null,n:'کارخانه بازیافت تایر یزد',addr:'یزد، جاده کاشانی، کیلومتر ۴',city:'یزد',bno:'035-3624...',lat:31.89,lon:54.36,by:'نمونه'}
+  {t:2,em:null,n:'کارخانه بازیافت تایر یزد',addr:'یزد، جاده کاشانی، کیلومتر ۴',city:'یزد',bno:'035-3624000',lat:31.89,lon:54.36,by:'نمونه'}
  ]);
- W('pv_batch',[{t:1,v:{id:'B-1405-0523',feed:'لاستیک',raw:3.05,op:'اپراتور نمونه',start:'14:00',end:'22:30',ck:'6:45',cl:'3:10',note:''},st:'ok',by:'مدیر',at:hnow()}]);
- W('pv_bcost',[{t:1,v:{b:'B-1405-0523',cat:'مواد اولیه',amt:185000000,note:''},st:'ok',by:'مدیر',at:hnow()},{t:2,v:{b:'B-1405-0523',cat:'برق',amt:9200000,note:''},st:'ok',by:'مدیر',at:hnow()},{t:3,v:{b:'B-1405-0523',cat:'گازوئیل',amt:12400000,note:''},st:'ok',by:'مدیر',at:hnow()},{t:4,v:{b:'B-1405-0523',cat:'کارگر / دستمزد',amt:18000000,note:''},st:'ok',by:'مدیر',at:hnow()},{t:5,v:{b:'B-1405-0523',cat:'اجاره ملک',amt:120000000,note:''},st:'ok',by:'مدیر',at:hnow()}]);
- W('pv_inv',[{t:1,v:{item:'واشر نسوز',qty:24,unit:'عدد'},st:'ok',by:'مدیر',at:hnow()},{t:2,v:{item:'گسکت درب راکتور',qty:8,unit:'عدد'},st:'ok',by:'مدیر',at:hnow()},{t:3,v:{item:'بوش و شفت پمپ',qty:12,unit:'عدد'},st:'ok',by:'مدیر',at:hnow()}]);
- W('pv_maint',[{t:1,v:{eq:'کندانسور (C-01)',note:'اورحال کامل + تعویض واشر نسوز',part:'واشر نسوز',pqty:2,cost:6400000,tech:'داریوش',next:'1405/07/20'},st:'ok',by:'مدیر',at:hnow()}]);
- W('pv_pm',[{t:1,v:{eq:'راکتور R-01',job:'بررسی گسکت و بلبرینگ',next:'1405/06/12',tech:'داریوش'},st:'ok',by:'مدیر',at:hnow()}]);
+ W('pv_batch',[{t:1,v:{id:'B-1405-0613',feed:'لاستیک',raw:20,op:'اپراتور نمونه',start:'08:00',end:'20:00',ck:'12:00',cl:'3:00',note:'راکتور ۳۸ مترمکعب'},st:'ok',by:'مدیر',at:hnow()}]);
+ W('pv_bcost',[{t:1,v:{b:'B-1405-0613',cat:'مواد اولیه',amt:190000000,note:'۲۰ تن لاستیک'},st:'ok',by:'مدیر',at:hnow()},{t:2,v:{b:'B-1405-0613',cat:'برق',amt:9200000,note:''},st:'ok',by:'مدیر',at:hnow()},{t:3,v:{b:'B-1405-0613',cat:'گازوئیل',amt:12400000,note:''},st:'ok',by:'مدیر',at:hnow()},{t:4,v:{b:'B-1405-0613',cat:'کارگر / دستمزد',amt:18000000,note:''},st:'ok',by:'مدیر',at:hnow()},{t:5,v:{b:'B-1405-0613',cat:'اجاره ملک',amt:120000000,note:''},st:'ok',by:'مدیر',at:hnow()}]);
+ W('pv_inv',[{t:1,v:{item:'واشر نسوز',qty:24,unit:'عدد'},st:'ok',by:'مدیر',at:hnow()},{t:2,v:{item:'گسکت درب راکتور',qty:8,unit:'عدد'},st:'ok',by:'مدیر',at:hnow()},{t:3,v:{item:'بوش و شفت پمپ',qty:12,unit:'عدد'},st:'ok',by:'مدیر',at:hnow()},{t:4,v:{item:'روغن گرمایی',qty:42000,unit:'لیتر'},st:'ok',by:'مدیر',at:hnow()}]);
+ W('pv_maint',[{t:1,v:{eq:'کندانسور (C-01)',note:'اورهال کامل + تعویض واشر نسوز',part:'واشر نسوز',pqty:2,cost:6400000,tech:'داریوش',next:'1405/07/20'},st:'ok',by:'مدیر',at:hnow()}]);
+ W('pv_pm',[{t:1,v:{eq:'راکتور R-01',job:'بررسی گسکت و بلبرینگ',next:'1405/06/20',tech:'داریوش'},st:'ok',by:'مدیر',at:hnow()}]);
  W('pv_cartable',[{t:1,v:{tech:'داریوش',title:'تعویض واشر نسوز کندانسور',due:'1405/06/16',note:''},st:'pend',by:'مدیر',at:hnow()}]);
  W('pv_hrm',[{t:1,v:{n:'داریوش لطیفی',r:'تعمیرکار ارشد',sh:'روتاری'},st:'ok',by:'مدیر',at:hnow()},{t:2,v:{n:'علی رضایی',r:'اپراتور',sh:'صبح'},st:'ok',by:'مدیر',at:hnow()}]);
- W('pv_out',[{t:1,v:{prod:'روغن گرمایی',qty:12450,unit:'لیتر',batch:'B-1405-0523'},st:'ok',by:'مدیر',at:hnow()}]);
- W('pv_fin',[{t:1,v:{ft:'in',title:'فروش روغن',amt:1245000000},st:'ok',by:'مدیر',at:hnow()},{t:2,v:{ft:'out',title:'هزینه‌ها',amt:620000000},st:'ok',by:'مدیر',at:hnow()}]);
- W('pv_sell',[{t:1,v:{item:'روغن گرمایی',qty:8000,price:27000,total:216000000,paid:1,cust:'پتروشیمی البرز',due:''},st:'ok',by:'مدیر',at:hnow()}]);
+ W('pv_out',[{t:1,v:{prod:'روغن گرمایی',qty:9500,unit:'لیتر',batch:'B-1405-0613'},st:'ok',by:'مدیر',at:hnow()},{t:2,v:{prod:'کربن بلک',qty:6500,unit:'کیلوگرم',batch:'B-1405-0613'},st:'ok',by:'مدیر',at:hnow()},{t:3,v:{prod:'سیم فولادی',qty:1800,unit:'کیلوگرم',batch:'B-1405-0613'},st:'ok',by:'مدیر',at:hnow()}]);
+ W('pv_fin',[{t:1,v:{ft:'in',title:'فروش روغن',amt:620000000},st:'ok',by:'مدیر',at:hnow()},{t:2,v:{ft:'out',title:'هزینه‌های بچ',amt:349600000},st:'ok',by:'مدیر',at:hnow()}]);
+ W('pv_sell',[{t:1,v:{item:'روغن گرمایی',qty:8000,price:70000,total:560000000,paid:1,cust:'پتروشیمی البرز',due:''},st:'ok',by:'مدیر',at:hnow()}]);
  W('pv_env',[]);
  W('pv_chat',[{t:Date.now()-7200000,v:{txt:'سلام — ما در یزد کربن بلک مرغوب داریم، نیاز دارید؟'},st:'ok',by:'کارخانه تایر یزد',at:hnow()}]);
  W('pv_prices',[{t:Date.now()-86400000,v:{city:'مشهد',item:'لاستیک ضایعاتی',price:'9500000'},st:'ok',by:'کارخانه الف',at:hnow()},{t:Date.now()-86400000,v:{city:'تهران',item:'لاستیک ضایعاتی',price:'10200000'},st:'ok',by:'کارخانه ب',at:hnow()}]);
- W('pv_pcity',[{t:Date.now(),v:{city:'مشهد',item:'روغن گرمایی',qty:'45600 لیتر',price:'27000'},st:'ok',by:'پترو پارسیان',at:hnow()}]);
- W('pv_jobs',[{t:Date.now(),v:{title:'اپراتور پیرولیز',city:'مشهد',tel:'0915...'},st:'ok',by:'پترو پارسیان',at:hnow()}]);
- W('pv_sup',[{t:Date.now(),v:{name:'فولاد خراسان',city:'مشهد',parts:'بوش، شفت، یاتاقان',tel:'051...'},st:'ok',by:'سیستم',at:hnow()}]);
+ W('pv_pcity',[{t:Date.now(),v:{city:'مشهد',item:'روغن گرمایی',qty:'42000 لیتر',price:'70000'},st:'ok',by:'پترو پارسیان',at:hnow()}]);
+ W('pv_jobs',[{t:Date.now(),v:{title:'اپراتور پیرولیز',city:'مشهد',tel:'09154040240'},st:'ok',by:'پترو پارسیان',at:hnow()}]);
+ W('pv_sup',[{t:Date.now(),v:{name:'فولاد خراسان',city:'مشهد',parts:'بوش، شفت، یاتاقان',tel:'0513###'},st:'ok',by:'سیستم',at:hnow()}]);
  W('pv_train',[{t:Date.now(),v:{title:'SOP استارت راکتور',desc:'چک‌لیست ۱۳ مرحله‌ای + ایمنی'},st:'ok',by:'PyroAcademy',at:hnow()}]);
  W('pv_tix',[]);W('pv_payreq',[]);W('pv_req',[]);
- W('pv_agentlog',[{t:Date.now(),txt:'📥 سامانه آغاز به کار کرد'}]);
+ W('pv_agentlog',[{t:Date.now(),txt:'📥 PyroFlow آغاز به کار کرد'}]);
 }
 
-/* موتور فرم عمومی */
+/* ===== فرم عمومی ===== */
 var SEC={
- batch:{t:'بچ تولید',f:[['id','کد بچ',1],['feed','نوع خوراک'],['raw','مواد ریخته (تن)',2],['op','اپراتور'],['start','شروع'],['end','پایان'],['ck','تایم پخت'],['cl','خنک‌کاری'],['note','توضیح']]},
+ batch:{t:'بچ تولید',f:[['id','کد بچ',1],['feed','نوع خوراک]|[',1,'لاستیک|پلاستیک|لاستیک+پلاستیک|پسماند'],]}
+};
+/* (فرم‌بندی ساده‌تر — تعریف نهایی) */
+SEC={
+ batch:{t:'بچ تولید',f:[['id','کد بچ',1],['feed','نوع خوراک',1],['raw','مواد ریخته (تن)',2],['op','اپراتور'],['start','شروع'],['end','پایان'],['ck','تایم پخت'],['cl','خنک‌کاری'],['note','توضیح']]},
  inv:{t:'انبار',f:[['item','نام کالا/قطعه',1],['qty','موجودی',2],['unit','واحد']]},
  out:{t:'خروجی تولید',f:[['prod','محصول',1],['qty','مقدار',2],['unit','واحد'],['batch','کد بچ']]},
  sell:{t:'فاکتور فروش',f:[['item','محصول',1],['qty','مقدار',2],['price','قیمت واحد',2],['cust','خریدار'],['due','سررسید']]},
@@ -362,7 +367,7 @@ function formHTML(sec){
   var f=s.f[i],inp;
   if(f[2]===3){inp='<select id="if_'+sec+'_'+i+'">';var opts=f[3].split('|');for(var k=0;k<opts.length;k++){var pp=opts[k].split(':');inp+='<option value="'+pp[0]+'">'+pp[1]+'</option>'}inp+='</select>'}
   else{inp='<input id="if_'+sec+'_'+i+'" type="'+(f[2]===2?'number':'text')+'">'}
-  h+='<div><label>'+f[1]+'</label>'+inp+'</div>';
+  h+='<div><label>'+E(f[1])+'</label>'+inp+'</div>';
  }
  return h+'</div><button class="btn go" onclick="addRec(\''+sec+'\')">➕ ثبت (تاریخ و نام خودکار)</button>';
 }
@@ -377,7 +382,7 @@ function addRec(sec){
  if(sec==='maint'){
   if(v.part&&+v.pqty>0){
    var inv=R('inv'),it=null;
-   for(var a=0;a<inv.length;a++){var nm=inv[a].v.item;if(nm===v.part||nm.indexOf(v.part)>=0||v.part.indexOf(nm)>=0){it=inv[a];break}}
+   for(var a=0;a<inv.length;a++){var nm=String(inv[a].v.item||'');if(nm===v.part||nm.indexOf(v.part)>=0||v.part.indexOf(nm)>=0){it=inv[a];break}}
    if(it&&+it.v.qty>=+v.pqty){it.v.qty=+it.v.qty-(+v.pqty);W('pv_inv',inv);toast('📦 «'+it.v.item+'» از انبار کسر شد')}
    else{toast('⚠️ «'+v.part+'» در انبار کافی نیست',1)}
   }
@@ -396,7 +401,7 @@ function tableHTML(sec,cols){
  all.forEach(function(x){if(x.st==='arch'){nA++}else{rows.push(x)}});
  if(!rows.length)return '<div class="empty">رکوردی نیست — از فرم بالا ثبت کن</div>';
  var h='<div class="scrl"><table class="dtb"><thead><tr>';
- cols.forEach(function(c){h+='<th>'+c[1]+'</th>'});
+ cols.forEach(function(c){h+='<th>'+E(c[1])+'</th>'});
  h+='<th>ثبت‌کننده</th><th>تاریخ ثبت</th><th>وضعیت</th><th></th></tr></thead><tbody>';
  rows.forEach(function(r){
   h+='<tr>';
@@ -405,6 +410,7 @@ function tableHTML(sec,cols){
    if(sec==='crow'){
     if(cc[0]==='a1'){var tv=+r.v.a1;if(tv>320)cls+=' hot';else if(tv>270)cls+=' mid';else if(tv>0)cls+=' ok2'}
     if(cc[0]==='eT'&&r.v.eT&&r.v.eT!=='—')cls=' env';
+    if(cc[0]==='sev'){var sv=r.v.sev;if(sv==='بحرانی')cls+=' hot';else if(sv==='هشدار')cls+=' mid';else if(sv==='عادی'&&r.v.a1)cls+=' ok2'}
    }
    h+='<td class="'+cls+'">'+E(r.v[cc[0]]||'—')+'</td>';
   });
@@ -414,11 +420,11 @@ function tableHTML(sec,cols){
   h+='</td></tr>';
  });
  h+='</tbody></table></div>';
- if(nA>0)h+='<div class="by">'+F(nA)+' مورد آرشیو شده</div>';
+ if(nA>0)h+='<div class="by">'+F(nA)+' مورد آرشیو شده — تاریخچه محفوظ است</div>';
  return h;
 }
 
-/* گزارش پخت */
+/* ===== گزارش پخت ===== */
 var CKL=['چپ‌گرد / راست‌گرد موتور','فن راکتور','فن مشعل راکتور','فن مشعل فلر','فن کولینگ تاور','پمپ آب کندانسور','پمپ آب کربن','مکنده دودشور','خالی بودن مخازن هیدرو / کربن','پر بودن مخازن ضدانفجار','باز بودن شیر اتولس','باز بودن شیر فلر','بسته بودن شیرهای مخازن'];
 function ckGet(){return S('pv_ck',{})}
 function togck(i){
@@ -430,19 +436,24 @@ function togck(i){
 function addcrow(){
  var u=U();if(!u)return;
  function g(id){var e=q(id);return e?e.value.trim():''}
- var v={h:g('ch'),a1:g('ca1'),a2:g('ca2'),a3:g('ca3'),a4:g('ca4'),b2:g('cb2'),d2:g('cd'),w:g('cw'),m:g('cm')};
+ var v={h:g('ch'),a1:g('ca1'),a2:g('ca2'),a3:g('ca3'),a4:g('ca4'),b2:g('cb2'),d2:g('cd'),w:g('cw'),sev:g('csev'),act:g('cact'),m:g('cm')};
  if(!v.h)v.h=hhm();
+ if(v.sev==='بحرانی'&&!v.act){toast('در نقطه بحرانی، «اقدام انجام‌شده» الزامی است',1);return}
  var l=R('crow');
  toast('🌡 در حال دریافت دمای محیط…');
  fetchAmbient(u,function(t,city,wind){
   v.eT=t;v.eC=city;v.eW=wind;
   l.unshift({t:Date.now(),v:v,st:'ok',by:u.name,at:hnow(),d:hj()});
   W('pv_crow',l);
-  logA('🌡 ثبت ساعتی '+v.h+' — دمای محیط '+v.eT+'° ('+u.name+')');
+  logA('🌡 ثبت ساعتی '+v.h+' — دمای محیط '+v.eT+'° ('+u.name+')'+(v.sev==='بحرانی'?' ⚠️ نقطه بحرانی':''));
   var msg='✅ ردیف ساعتی ثبت شد — دمای محیط: '+v.eT+'°C';
   if(v.eT==='—')msg='⚠️ ثبت شد ولی دمای محیط دریافت نشد — موقعیت کارخانه را ثبت کن';
-  if(+v.a1>320)msg+=' ⚠️ دمای راکتور بالای ۳۲۰!';
-  toast(msg,v.eT==='—');
+  var er2=false;
+  if(+v.a1>320){msg='🚨 دمای راکتور بالای ۳۲۰!';
+   if(v.sev==='بحرانی'){msg+=' — نقطه بحرانی ثبت شد: «'+(v.act||'')+'»'}
+   er2=true;
+  }else if(v.sev==='بحرانی'){msg='🚨 نقطه بحرانی ثبت شد — اقدام: '+(v.act||'—');er2=true}
+  toast(msg,er2);
   view();
  });
 }
@@ -470,7 +481,7 @@ function addcsum(){
  toast('✅ خلاصه پخت ثبت شد');view();
 }
 
-/* ---- 📸 کاغذ پخت: آپلود + OCR ---- */
+/* ===== 📸 کاغذ پخت: آپلود + OCR + جایگذاری خودکار ===== */
 var PPIMG=null,PPP=[];
 function ppPick(){q('pp_file').click()}
 function ppFile(inp){
@@ -590,7 +601,8 @@ function ppConfirm(){
  fetchAmbient(u,function(t,city,wind){
   var l=R('crow');
   rs.forEach(function(r,idx){
-   l.unshift({t:Date.now()+idx,v:{h:r.h||hhm(),a1:r.a1,a2:r.a2,a3:r.a3,a4:r.a4,b2:'معمولی',d2:'—',w:'—',m:((r.m||'')+' (از عکس کاغذ)').slice(0,90),eT:t,eC:city,eW:wind},st:'ok',by:u.name,at:hnow(),d:hj(),src:'ocr'});
+   var a1=+r.a1||0;
+   l.unshift({t:Date.now()+idx,v:{h:r.h||hhm(),a1:r.a1,a2:r.a2,a3:r.a3,a4:r.a4,b2:'معمولی',d2:'—',w:'—',sev:(a1>320?'بحرانی':(a1>270?'هشدار':'عادی')),act:'',m:((r.m||'')+' (از عکس کاغذ)').slice(0,90),eT:t,eC:city,eW:wind},st:'ok',by:u.name,at:hnow(),d:hj(),src:'ocr'});
   });
   W('pv_crow',l);
   logA('📸 '+F(rs.length)+' ردیف از کاغذ پخت خودکار وارد شد — '+u.name);
@@ -611,7 +623,7 @@ function papersHTML(){
 function vCook(){
  var u=U(),ck=ckGet(),done=0;
  CKL.forEach(function(t,i){var c=ck[String(i)];if(c&&c.d)done++});
- var inner='<div class="meta">🗓 تاریخ: <b>'+hj()+'</b> (خودکار) | 🏭 <b>'+E(u.cname||'—')+'</b> | 📍 '+E(u.addr||u.city||'موقعیت ثبت‌نشده')+'<button class="btn out sm" onclick="go(\'ai\')">🤖 دستیار</button><button class="btn out sm" onclick="addEnvNow()">🌍 شرایط محیطی</button></div>';
+ var inner='<div class="meta">🗓 <b>'+hj()+'</b> (خودکار) | 🏭 <b>'+E(u.cname||'—')+'</b> | 📍 '+E(u.addr||u.city||'موقعیت ثبت‌نشده')+'<button class="btn out sm" onclick="go(\'ai\')">🤖 دستیار</button><button class="btn out sm" onclick="addEnvNow()">🌍 شرایط محیطی</button></div>';
  inner+='<div class="pan"><h3>📸 آپلود کاغذ پخت — تشخیص خودکار ساعات و پارامترها</h3>';
  inner+='<input type="file" id="pp_file" accept="image/*" style="display:none" onchange="ppFile(this)">';
  inner+='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px"><button class="btn go sm" onclick="ppPick()">📷 گرفتن/انتخاب عکس کاغذ</button><button class="btn out sm hid" id="pp_ocr" onclick="ppOCR()">🔍 تشخیص خودکار (OCR)</button><button class="pill gy" onclick="ppSaveOnly()">فقط ثبت عکس</button><span id="ocrStat" class="by"></span></div>';
@@ -625,10 +637,10 @@ function vCook(){
  inner+='<div class="pan"><h3>☑️ چک‌لیست تجهیزات قبل از پخت ('+F(done)+' / '+F(CKL.length)+')</h3><div class="cg">';
  CKL.forEach(function(t,i){
   var c=ck[String(i)],on=!!(c&&c.d);
-  inner+='<label class="ckbox'+(on?' okd':'')+'"><input type="checkbox"'+(on?' checked':'')+' onchange="togck('+i+')"><span>'+t+(c?'<br><span class="by">'+E(c.by)+' · '+E(c.at)+'</span>':'')+'</span></label>';
+  inner+='<label class="ckbox'+(on?' okd':'')+'"><input type="checkbox"'+(on?' checked':'')+' onchange="togck('+i+')"><span>'+E(t)+(c?'<br><span class="by">'+E(c.by)+' · '+E(c.at)+'</span>':'')+'</span></label>';
  });
- inner+='</div>'+(done===CKL.length?'<div class="unl">🟢 همه موارد تایید شده — مجاز به استارت</div>':'<div class="lock">🟡 '+F(CKL.length-done)+' مورد باقی مانده</div>')+'</div>';
- inner+='<div class="pan"><h3>⏱ جدول ساعتی — دمای محیط، ساعت و تاریخ خودکار</h3><div class="fgrid">';
+ inner+='</div>'+(done===CKL.length?'<div class="unl">🟢 همه موارد تایید شده — مجاز به استارت</div>':'<div class="lock">🟡 '+F(CKL.length-done)+' مورد باقی مانده — هنوز استارت نزن</div>')+'</div>';
+ inner+='<div class="pan"><h3>⏱ جدول ساعتی + نقطه بحرانی — دمای محیط و تاریخ خودکار</h3><div class="fgrid">';
  inner+='<div><label>ساعت (خالی = همین لحظه)</label><input id="ch" placeholder="خودکار"></div>';
  inner+='<div><label>دمای آنالوگ °C</label><input id="ca1" type="number"></div>';
  inner+='<div><label>گاز خروجی °C</label><input id="ca2" type="number"></div>';
@@ -637,10 +649,13 @@ function vCook(){
  inner+='<div><label>صدای ضدانفجار</label><select id="cb2"><option>معمولی</option><option>بلند</option><option>قطع</option></select></div>';
  inner+='<div><label>جهت گردش</label><select id="cd"><option>چپ‌گرد</option><option>راست‌گرد</option></select></div>';
  inner+='<div><label>آب‌گیری</label><input id="cw" placeholder="مثلاً ۲ بار"></div>';
+ inner+='<div><label>⚠️ شدت نقطه بحرانی</label><select id="csev"><option>عادی</option><option>هشدار</option><option>بحرانی</option></select></div>';
  inner+='</div>';
+ inner+='<div style="background:#0c1a35;border:1px dashed #6b3a18;border-radius:9px;padding:9px;margin-bottom:9px"><label style="color:#ffb98c;font-size:10.5px;display:block;margin-bottom:4px">🚨 اقدام انجام‌شده برای نقطه بحرانی (در حالت «بحرانی» الزامی)</label><input id="cact" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--ln);background:#f7f7dd;color:#111;font-family:inherit;font-size:13px" placeholder="مثلاً: کاهش Heat Input و ریست فن راکتور"></div>';
  inner+='<div style="background:#0c1a35;border:1px dashed var(--ln);border-radius:9px;padding:9px;margin-bottom:9px"><label style="color:#8fa8cc;font-size:10.5px;display:block;margin-bottom:4px">📝 توضیحات این ساعت</label><input id="cm" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--ln);background:#f7f7dd;color:#111;font-family:inherit;font-size:13px" placeholder="مثلاً: ساعت ۹ فن راکتور ریست شد"></div>';
  inner+='<button class="btn go" onclick="addcrow()">➕ ثبت ردیف ساعتی + دمای محیط خودکار</button>';
- inner+='<div style="margin-top:10px">'+tableHTML('crow',[['h','ساعت'],['a1','دمای آنالوگ'],['a2','گاز خروجی'],['a3','ساید گلس'],['a4','لوله سنگین'],['b2','صدا'],['d2','گردش'],['w','آب‌گیری'],['eT','🌡 دمای محیط'],['eC','شهر'],['m','توضیحات','l']])+'</div></div>';
+ inner+='<div style="margin-top:10px">'+tableHTML('crow',[['h','ساعت'],['a1','دمای آنالوگ'],['a2','گاز خروجی'],['a3','ساید گلس'],['a4','لوله سنگین'],['b2','صدا'],['d2','گردش'],['w','آب‌گیری'],['eT','🌡 محیط'],['eC','شهر'],['sev','شدت'],['act','اقدام','l'],['m','توضیح','l']])+'</div>';
+ inner+='<div class="by" style="margin-top:6px">💡 در طول ۱۲–۱۴ ساعت پخت هر ساعت یک ردیف ثبت کن — یا فقط کاغذ را عکس بگیر تا خودِ سیستم ثبت کند</div></div>';
  inner+='<div class="pan"><h3>🧾 خلاصه پخت</h3><div class="fgrid">';
  inner+='<div><label>مقدار خوراک اولیه (تن)</label><input id="cs_rawq" type="number"></div>';
  inner+='<div><label>نوع خوراک</label><input id="cs_feed"></div>';
@@ -648,8 +663,8 @@ function vCook(){
  inner+='<div><label>حجم هیدروکربن سبک</label><input id="cs_hcl"></div>';
  inner+='<div><label>سیم (kg)</label><input id="cs_sim" type="number"></div>';
  inner+='<div><label>کربن بلک (kg)</label><input id="cs_carb" type="number"></div>';
- inner+='<div><label>تایم پخت</label><input id="cs_tck" placeholder="06:45"></div>';
- inner+='<div><label>تایم خنک‌کاری</label><input id="cs_tcl" placeholder="03:10"></div>';
+ inner+='<div><label>تایم پخت</label><input id="cs_tck" placeholder="12:00"></div>';
+ inner+='<div><label>تایم خنک‌کاری</label><input id="cs_tcl" placeholder="03:00"></div>';
  inner+='<div><label>سرپرست شیفت</label><input id="cs_sup"></div>';
  inner+='<div><label>اپراتور</label><input id="cs_op" value="'+E(u.name)+'"></div>';
  inner+='<div><label>کد بچ</label><input id="cs_bid" placeholder="B-1405-...."></div>';
@@ -659,14 +674,16 @@ function vCook(){
  q('view').innerHTML=page('📋 گزارش پخت یک‌صفحه‌ای',inner);
 }
 
-/* ---- 🤖 دستیار هوشمند ---- */
+/* ===== 🤖 دستیار هوشمند ===== */
 var AI_KEY=S('pv_aikey','');
-var QCH=['دما چند است؟','خلاصه امروز','مطالبات چقدر است؟','انبار کم داریم؟','کارتابل باز چی داره؟','چک‌لیست چقدر مونده؟','کاغذ پخت چطوری آپلود کنم؟'];
+var QCH=['دما چند است؟','خلاصه امروز','مطالبات چقدر است؟','انبار کم داریم؟','کارتابل باز چی داره؟','نقاط بحرانی امروز؟','چک‌لیست چقدر مونده؟','کاغذ پخت چطوری آپلود کنم؟'];
 function briefSummary(){
  var crow=R('crow')[0],out=[];
  out.push('کارخانه: '+(U().cname||'—')+' | تاریخ: '+hj());
  out.push('ردیف ساعتی ثبت‌شده: '+R('crow').length);
- if(crow)out.push('آخرین پخت: ساعت '+crow.v.h+' — آنالوگ '+(crow.v.a1||'—')+'° — دمای محیط '+(crow.v.eT||'—'));
+ if(crow)out.push('آخرین پخت: ساعت '+crow.v.h+' — آنالوگ '+(crow.v.a1||'—')+'° — محیط '+(crow.v.eT||'—')+(crow.v.sev&&crow.v.sev!=='عادی'?' — شدت: '+crow.v.sev:''));
+ var crit=R('crow').filter(function(x){return x.v.sev==='بحرانی'}).length;
+ out.push('نقاط بحرانی ثبت‌شده تاکنون: '+crit);
  var fin=R('fin'),inn=0,outx=0;fin.forEach(function(x){if(x.v.ft==='in')inn+=+x.v.amt||0;else outx+=+x.v.amt||0});
  out.push('مالی: درآمد '+inn+' — هزینه '+outx+' — تراز '+(inn-outx));
  out.push('بچ‌ها: '+R('batch').length+' | انبار: '+R('inv').length+' قلم | کارتابل باز: '+R('cartable').filter(function(x){return x.st!=='done'}).length);
@@ -677,63 +694,69 @@ function localAnswer(qs){
  var crow=R('crow')[0];
  var fin=R('fin'),inn=0,outx=0;fin.forEach(function(x){if(x.st==='arch')return;if(x.v.ft==='in')inn+=+x.v.amt||0;else outx+=+x.v.amt||0});
  var unpaid=R('sell').filter(function(x){return x.st!=='arch'&&!x.v.paid}),ud=0;unpaid.forEach(function(x){ud+=+x.v.total||0});
- if(has('سلام')||has('خوبی')||has('درود'))return 'سلام! 🤖 دستیار پترو پارسیان هستم.\nاز دما، بچ، هزینه، انبار، کارتابل، مطالبات و… بپرس.';
- if(has('کاغذ'))return '📸 آپلود کاغذ پخت:\n۱) صفحه «📋 گزارش پخت» را باز کن\n۲) در پنل «آپلود کاغذ پخت» دکمه 📷 را بزن\n۳) «🔍 تشخیص خودکار» را بزن — ساعت‌ها و دماها خوانده می‌شوند\n۴) پیش‌نمایش را چک کن و «⚡ ثبت خودکار» بزن';
+ if(has('سلام')||has('درود'))return 'سلام! 🤖 دستیار PyroFlow هستم.\nاز دما، بچ، هزینه، انبار، کارتابل، نقطه بحرانی، مطالبات و… بپرس.';
+ if(has('کاغذ'))return '📸 آپلود کاغذ پخت:\n۱) صفحه «📋 گزارش پخت»\n۲) پنل آپلود → 📷 عکس برگه\n۳) «🔍 تشخیص خودکار» → خواندن ساعات و دماها\n۴) پیش‌نمایش را چک کن → «⚡ ثبت خودکار»';
+ if(has('بحرانی')||has('critical')){
+  var crit=R('crow').filter(function(x){return x.v.sev==='بحرani'||x.v.sev==='بحرانی'});
+  if(!crit.length)return '✅ هیچ نقطه بحرانی ثبت نشده — همه‌چیز عادی بوده. \nبرای ثبت: جدول ساعتی → «شدت نقطه بحرانی» را روی «بحرانی» بگذار و «اقدام» را بنویس.';
+  var sc='🚨 '+F(crit.length)+' نقطه بحرانی:\n';
+  crit.slice(0,4).forEach(function(x){sc+='• ساعت '+x.v.h+' — آنالوگ '+(x.v.a1||'—')+'° — اقدام: '+(x.v.act||'ثبت نشده')+'\n'});
+  return sc;
+ }
  if(has('محیط')||has('هوا')){
   var e0=R('env')[0];
-  if(crow&&crow.v.eT&&crow.v.eT!=='—')return '🌡 آخرین دمای محیط ثبت‌شده در پخت: '+crow.v.eT+'°'+(crow.v.eC?' — '+crow.v.eC:'');
+  if(crow&&crow.v.eT&&crow.v.eT!=='—')return '🌡 آخرین دمای محیط پخت: '+crow.v.eT+'°'+(crow.v.eC?' — '+crow.v.eC:'');
   if(e0)return '🌍 آخرین دمای محیط: '+e0.temp+'°C — '+e0.city;
-  return 'دمای محیطی ثبت نشده — در گزارش پخت ردیف ساعتی بزن یا دکمه 🌍 را بزن.';
+  return 'دمای محیطی ثبت نشده — دکمه 🌍 را در گزارش پخت بزن.';
  }
  if(has('دما')||has('آنالوگ')){
   if(crow&&crow.v.a1){
    var a=+crow.v.a1;
-   if(a>320)return '🔥 دمای آنالوگ: '+F(a)+'° ⚠️ بالای ۳۲۰! بررسی فوری کن.';
-   if(a>270)return '🔥 دمای آنالوگ: '+F(a)+'° — داخل زون بحرانی (۲۷۰–۳۲۰).';
+   if(a>320)return '🔥 دمای آنالوگ: '+F(a)+'° 🚨 بالای ۳۲۰! لت کاهش Heat Input و بررسی فن‌ها.';
+   if(a>270)return '🔥 دمای آنالوگ: '+F(a)+'° — زون هشدار (۲۷۰–۳۲۰) — زیر نظر بگیر.';
    return '🔥 دمای آنالوگ: '+F(a)+'° — نرمال. (ساعت '+crow.v.h+')';
   }
-  return 'هنوز دمایی ثبت نشده — در گزارش پخت ردیف ساعتی ثبت کن یا از کاغذ پخت استفاده کن.';
+  return 'هنوز دمایی ثبت نشده — ردیف ساعتی بزن یا از کاغذ پخت استفاده کن.';
  }
- if(has('خلاصه')||has('امروز'))return '📌 خلاصه کارخانه:\n• گزارش پخت: '+F(R('csum').length)+' · ردیف ساعتی: '+F(R('crow').length)+'\n• بچ: '+F(R('batch').length)+'\n• کارتابل باز: '+F(R('cartable').filter(function(x){return x.st!=='done'}).length)+'\n• تراز: '+F(inn-outx)+' تومان\n• مطالبات: '+F(ud)+' تومان';
+ if(has('خلاصه')||has('امروز'))return '📌 خلاصه:\n• گزارش پخت: '+F(R('csum').length)+' · ردیف ساعتی: '+F(R('crow').length)+'\n• بچ: '+F(R('batch').length)+'\n• کارتابل باز: '+F(R('cartable').filter(function(x){return x.st!=='done'}).length)+'\n• تراز: '+F(inn-outx)+' تومان\n• مطالبات: '+F(ud)+' تومان';
  if(has('مطلب')||has('وصول')||has('بدهی')||has('فاکتور')){
-  if(!unpaid.length)return '✅ هیچ مطالبات وصول‌نشده‌ای نداری.';
+  if(!unpaid.length)return '✅ مطالبات وصول‌نشده نداری.';
   var s2='🧾 مطالبات: '+F(ud)+' تومان ('+F(unpaid.length)+' فاکتور):\n';
   unpaid.slice(0,4).forEach(function(x){s2+='• '+x.v.item+' — '+(x.v.cust||'—')+' — '+F(x.v.total)+'\n'});
   return s2;
  }
- if(has('تراز')||has('درآمد')||has('هزینه')||has('مالی'))return '💰 مالی:\n• درآمد: '+F(inn)+' تومان\n• هزینه: '+F(outx)+' تومان\n• تراز: '+F(inn-outx)+' تومان';
+ if(has('تراز')||has('درآمد')||has('هزینه')||has('مالی'))return '💰 مالی:\nدرآمد: '+F(inn)+' | هزینه: '+F(outx)+' | تراز: '+F(inn-outx)+' تومان';
  if(has('انبار')||has('قطعه')||has('موجودی')){
   var inv=R('inv'),low=[];
-  inv.forEach(function(x){if(+x.v.qty<=10)low.push(x.v.item+' ('+x.v.qty+')')});
+  inv.forEach(function(x){if(+x.v.qty<=10)low.push(x.v.item+' ('+x.v.qty+' '+x.v.unit+')')});
   return '🏭 انبار: '+F(inv.length)+' قلم.'+(low.length?'\n⚠️ کم‌موجودی: '+low.join('، '):'');
  }
  if(has('کارتابل')||has('تعمیر')||has('خراب')){
   var op=R('cartable').filter(function(x){return x.st!=='done'});
-  if(!op.length)return '🔧 هیچ کاری باز نیست — کارتابل خالی است ✅';
+  if(!op.length)return '🔧 کارتابل خالی است ✅';
   var s4='🔧 '+F(op.length)+' کار باز:\n';
   op.slice(0,4).forEach(function(x){s4+='• '+x.v.title+' — '+(x.v.tech||'—')+' — مهلت '+(x.v.due||'—')+'\n'});
   return s4;
  }
  if(has('چک')){
   var c=ckGet(),dn=0;CKL.forEach(function(tt,i){var cc=c[String(i)];if(cc&&cc.d)dn++});
-  return '☑️ چک‌لیست تجهیزات: '+F(dn)+' از '+F(CKL.length)+' تایید شده.\n'+(dn<CKL.length?'بقیه را در گزارش پخت تیک بزن تا «مجاز به استارت» شوی.':'هر ۱۳ مورد تایید شده — مجاز به استارت 🟢');
+  return '☑️ چک‌لیست: '+F(dn)+' از '+F(CKL.length)+' تایید شده.\n'+(dn<CKL.length?'بقیه را در گزارش پخت تیک بزن تا «مجاز به استارت» شوی.':'همه تایید شده — مجاز به استارت 🟢');
  }
  if(has('بچ')){
   var b=R('batch')[0];
   if(!b)return 'بچی ثبت نشده — از «📦 بچ و هزینه» اضافه کن.';
   var cst=0;R('bcost').forEach(function(x){if(x.v.b===b.v.id)cst+=+x.v.amt||0});
-  return '📦 آخرین بچ: '+b.v.id+' — '+F(b.v.raw)+' تن '+b.v.feed+'\n• هزینه‌های ثبت‌شده: '+F(cst)+' تومان';
+  return '📦 آخرین بچ: '+b.v.id+' — '+F(b.v.raw)+' تن '+b.v.feed+'\n• هزینه‌ها: '+F(cst)+' تومان\nبرای سود هر بچ: "هزینه بچ" منهای "فروش بچ"';
  }
- if(has('کارخانه')||has('عضو'))return '🏭 '+F(S('pv_firms',[]).length)+' کارخانه عضو شبکه است — در صفحه اول کارت‌هایشان هست.';
  if(has('پرسنل')||has('شیفت')){
   var L=R('hrm').map(function(x){return x.v.n});
-  return '👥 پرسنل ثبت‌شده: '+(L.length?L.join('، '):'—');
+  return '👥 پرسنل: '+(L.length?L.join('، '):'—');
  }
- return '🤖 دقیق متوجه نشدم. نمونه: «دما چند است؟»، «خلاصه امروز»، «مطالبات»، «انبار»، «کارتابل باز».\nبرای هوش حرفه‌ای، کلید رایگان Gemini را در پایین همین صفحه ذخیره کن.';
+ return '🤖 دقیق متوجه نشدم. نمونه: «دما چند است؟»، «خلاصه امروز»، «نقاط بحرانی»، «مطالبات»، «انبار».\nبرای هوش حرفه‌ای با متن آزاد، کلید رایگان Gemini را پایین همین صفحه ذخیره کن.';
 }
 async function geminiAsk(qt){
  try{
-  var prompt='تو دستیار کارخانه پیرولیز «پترو پارسیان» هستی. داده‌های فعلی سامانه:\n'+briefSummary()+'\n\nسوال کاربر: '+qt+'\n\nفارسی، کوتاه، کاربردی و دقیق جواب بده.';
+  var prompt='تو دستیار کارخانه پیرولیز «پترو پارسیان» (سیستم PyroFlow) هستی. داده‌های فعلی سامانه:\n'+briefSummary()+'\n\nسوال کاربر: '+qt+'\n\nفارسی، کوتاه، کاربردی و دقیق جواب بده. اگر عدد لازم بود از داده‌های بالا استفاده کن.';
   var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+encodeURIComponent(AI_KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
   var j=await r.json();
   if(j&&j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts)return j.candidates[0].content.parts.map(function(p){return p.text||''}).join('');
@@ -767,7 +790,7 @@ async function aiSend(preset){
 }
 function aiChip(i){q('ai_in').value=QCH[i];aiSend()}
 function vAI(){
- var inner='<div class="pan"><h3>🤖 دستیار هوشمند پترو پارسیان</h3>';
+ var inner='<div class="pan"><h3>🤖 دستیار هوشمند PyroFlow</h3>';
  inner+='<div class="sug">'+QCH.map(function(c,i){return '<button class="tb" onclick="aiChip('+i+')">'+E(c)+'</button>'}).join('')+'</div>';
  inner+='<div id="aibox"></div>';
  inner+='<input id="ai_in" class="lg" style="margin-bottom:7px" placeholder="سوالت را بنویس…" onkeydown="if(event.key===\'Enter\')aiSend()">';
@@ -775,12 +798,12 @@ function vAI(){
  if(ADM()){
   inner+='<div class="pan"><h3>🔑 اتصال هوش مصنوعی حرفه‌ای (اختیاری)</h3>';
   inner+='<div class="fgrid"><div><label>کلید Gemini — رایگان از aistudio.google.com/apikey</label><input id="ai_key" value="'+E(AI_KEY)+'" placeholder="خالی = موتور محلی"></div></div>';
-  inner+='<button class="btn go sm" onclick="saveAIKey()">💾 ذخیره کلید</button></div>';
+  inner+='<button class="btn go sm" onclick="saveAIKey()">💾 ذخیره کلید</button><div class="by" style="margin-top:6px">در نسخه نهایی سرور‌دار، این کلید به سرور منتقل می‌شود و از مرورگر حذف خواهد شد</div></div>';
  }
  q('view').innerHTML=page('🤖 دستیار هوشمند',inner);renderAIList();
 }
 
-/* ---- بچ و هزینه ---- */
+/* ===== بچ و هزینه ===== */
 var BCAT=['مواد اولیه','برق','گازوئیل','گاز','آب','کارگر / دستمزد','اجاره ملک','حمل‌ونقل','تعمیرات مرتبط','سایر'];
 var CURB=null;
 function pickB(id){CURB=(CURB===id)?null:id;view()}
@@ -798,7 +821,7 @@ function addBCost(){
  var c2=(cat==='سایر'&&lab)?lab:cat;
  var l=R('bcost');l.unshift({t:Date.now(),v:{b:b,cat:c2,amt:amt,note:note},st:'ok',by:u.name,at:hnow()});W('pv_bcost',l);
  var f=R('fin');f.unshift({t:Date.now(),v:{ft:'out',title:'هزینه بچ '+b+' — '+c2,amt:amt},st:'ok',by:u.name,at:hnow()});W('pv_fin',f);
- toast('✅ ثبت شد (مالی هم رفت)');view();
+ toast('✅ ثبت شد (مالی هم ثبت شد)');view();
 }
 function vProd(){
  var u=U(),bs=R('batch');
@@ -821,15 +844,15 @@ function vProd(){
  });
  if(CURB){
   var m2=bMoney(CURB);
-  inner+='<div class="pan" style="border-color:var(--gold)"><h3>🔎 هزینه‌های '+E(CURB)+'</h3><div class="mat-cards">';
+  inner+='<div class="pan" style="border-color:var(--gold)"><h3>🔎 تفکیک هزینه‌های '+E(CURB)+'</h3><div class="mat-cards">';
   BCAT.forEach(function(c){var s2=0;m2.costs.forEach(function(x){if(x.v.cat===c)s2+=(+x.v.amt||0)});inner+='<div class="mc"><b style="color:'+(s2?'#ff9f9f':'#2c3f63')+'">'+F(s2)+'</b><span>'+c+'</span></div>'});
   inner+='</div><div style="margin-top:8px">💰 <b>جمع کل: '+F(m2.tot)+' تومان</b></div></div>';
  }
  inner+='<div class="pan"><h3>📋 جدول بچ‌ها</h3>'+tableHTML('batch',[['id','بچ'],['feed','خوراک'],['raw','تن'],['op','اپراتور'],['start','شروع'],['end','پایان'],['ck','پخت'],['cl','خنک']])+'</div>';
- q('view').innerHTML=page('📦 بچ و هزینه‌های مجزا',inner);
+ q('view').innerHTML=page('📦 بچ و هزینه‌های مجزا (Profit per Batch)',inner);
 }
 
-/* ---- تعمیرات ---- */
+/* ===== تعمیرات ===== */
 var TABS={};
 function setTab(key,k){TABS[key]=k;view()}
 function tabsUI(key,tabs){
@@ -858,11 +881,11 @@ function vMaint(){
  var cur=TABS.maint||'sabt';
  var inner=tabsUI('maint',[{k:'sabt',n:'🔧 سابقه'},{k:'pm',n:'🛠️ PM'},{k:'cart',n:'🗂️ کارتابل'}],cur);
  if(cur==='sabt'){
-  inner+='<div class="pan"><h3>➕ ثبت تعمیر</h3>'+formHTML('maint')+'</div>';
+  inner+='<div class="pan"><h3>➕ ثبت تعمیر (قطعه از انبار کسر + هزینه به مالی)</h3>'+formHTML('maint')+'</div>';
   inner+='<div class="pan"><h3>➕ افزودن سریع قطعه به انبار</h3><div class="fgrid"><div><label>نام قطعه</label><input id="qp_item"></div><div><label>مقدار</label><input id="qp_qty" type="number"></div><div><label>واحد</label><input id="qp_unit" placeholder="عدد"></div></div><button class="btn go" onclick="addPart()">📦 افزودن</button></div>';
-  inner+='<div class="pan"><h3>🔧 سابقه — یادآوری خودکار</h3>'+tableHTML('maint',[['eq','تجهیز','l'],['note','شرح','l'],['part','قطعه'],['pqty','تعداد'],['cost','هزینه'],['tech','تعمیرکار'],['next','بازبینی']])+'</div>';
+  inner+='<div class="pan"><h3>🔧 سابقه تعمیرات — یادآوری خودکار بازبینی</h3>'+tableHTML('maint',[['eq','تجهیز','l'],['note','شرح','l'],['part','قطعه'],['pqty','تعداد'],['cost','هزینه'],['tech','تعمیرکار'],['next','بازبینی']])+'</div>';
  }else if(cur==='pm'){
-  inner+='<div class="pan"><h3>➕ برنامه PM</h3>'+formHTML('pm')+'</div>';
+  inner+='<div class="pan"><h3>➕ برنامه نگهداری پیشگیرانه (PM)</h3>'+formHTML('pm')+'</div>';
   var pmr=R('pm').filter(function(r){return r.st!=='arch'});
   inner+='<div class="pan"><h3>🛠️ PMها</h3>';
   if(!pmr.length)inner+='<div class="empty">PMی نیست</div>';
@@ -883,12 +906,12 @@ function vMaint(){
   inner+='<h3 style="color:#cfe0ff;margin:4px 0">⏳ باز</h3>'+(open.map(crow).join('')||'<div class="empty">کاری باز نیست</div>');
   inner+='<h3 style="color:#cfe0ff;margin:10px 0 4px">✅ انجام‌شده</h3>'+(done.map(crow).join('')||'<div class="empty">—</div>');
  }
- q('view').innerHTML=page('🔧 تعمیرات و نگهداری',inner);
+ q('view').innerHTML=page('🔧 تعمیرات و نگهداری (CMMS)',inner);
 }
 
-/* ---- درخواست + ایجنت ---- */
+/* ===== درخواست + ایجنت ===== */
 function classify(txt){
- var rules=[['اورحال','maint'],['کندانسور','maint'],['تعمیر','maint'],['خراب','maint'],['قطعه','maint'],['واشر','maint'],['نشتی','maint'],['پمپ','maint'],['خرید','inv'],['مرخص','hrm'],['حقوق','hrm'],['دستمزد','hrm'],['کارگر','prod'],['برق','prod'],['گازوئیل','prod'],['آب','prod'],['اجاره','prod'],['انبار','inv'],['فروش','fin'],['فاکتور','fin'],['راکتور','cook'],['بچ','prod']];
+ var rules=[['اورهال','maint'],['کندانسور','maint'],['تعمیر','maint'],['خراب','maint'],['قطعه','maint'],['واشر','maint'],['نشتی','maint'],['پمپ','maint'],['خرید','inv'],['مرخص','hrm'],['حقوق','hrm'],['دستمزد','hrm'],['کارگر','prod'],['برق','prod'],['گازوئیل','prod'],['آب','prod'],['اجاره','prod'],['انبار','inv'],['فروش','fin'],['فاکتور','fin'],['راکتور','cook'],['بچ','prod']];
  for(var i=0;i<rules.length;i++){if((txt||'').indexOf(rules[i][0])>=0)return {d:rules[i][1],k:rules[i][0]}}
  return {d:'other',k:''};
 }
@@ -973,7 +996,7 @@ function vReq(){
  recUI();
 }
 
-/* ---- پرسنل ---- */
+/* ===== پرسنل ===== */
 function vPeople(){
  var L={};
  R('hrm').forEach(function(p){L[p.v.n]={n:p.v.n,r:p.v.r||'—',rep:0,repC:0,batch:0,task:0}});
@@ -981,7 +1004,7 @@ function vPeople(){
  R('batch').forEach(function(b){var t=L[b.v.op];if(t)t.batch++});
  R('cartable').forEach(function(c){var t=L[c.v.tech];if(t&&c.st==='done')t.task++});
  var P=Object.keys(L).map(function(k){return L[k]});
- var inner='<div class="pan"><h3>👥 عملکرد پرسنل</h3><div class="scrl"><table class="dtb" style="min-width:500px"><thead><tr><th>#</th><th>نام</th><th>سمت</th><th>تعمیرات</th><th>هزینه</th><th>بچ</th><th>کارتابل</th></tr></thead><tbody>';
+ var inner='<div class="pan"><h3>👥 عملکرد پرسنل</h3><div class="scrl"><table class="dtb" style="min-width:560px"><thead><tr><th>#</th><th>نام</th><th>سمت</th><th>تعمیرات</th><th>هزینه</th><th>بچ</th><th>کارتابل</th></tr></thead><tbody>';
  if(P.length){P.forEach(function(p,i){inner+='<tr><td>'+(i+1)+'</td><td class="l">'+E(p.n)+'</td><td class="l">'+E(p.r)+'</td><td>'+F(p.rep)+'</td><td>'+F(p.repC)+'</td><td>'+F(p.batch)+'</td><td>'+F(p.task)+'</td></tr>'})}
  else{inner+='<tr><td colspan="7" class="empty">پرسنلی نیست</td></tr>'}
  inner+='</tbody></table></div></div>';
@@ -990,7 +1013,7 @@ function vPeople(){
  q('view').innerHTML=page('👥 پرسنل و عملکرد',inner);
 }
 
-/* ---- شبکه ---- */
+/* ===== شبکه ===== */
 var NETS=[
  {k:'chat',n:'💬 چت کارخانه‌ها',lv:2,fs:[['txt','پیام',1]]},
  {k:'prices',n:'🏷 قیمت مواد اولیه (هر شهر)',lv:1,fs:[['city','شهر',1],['item','ماده',1],['price','قیمت (تومان)',1]]},
@@ -1010,7 +1033,7 @@ function postNet(k){
   if(N.fs[j][2]===1&&!val){toast('«'+N.fs[j][1]+'» لازم است',1);return}
   v[N.fs[j][0]]=val;
  }
- var l=R(k);l.unshift({t:Date.now(),v:v,st:'ok',by:u.name,at:hnow()});W('pv_'+k,l);
+ var l=R(k);l.unshift({t:Date.now(),v:v,st:'ok',by:u.name+' / '+(u.cname||''),at:hnow()});W('pv_'+k,l);
  toast('✅ ارسال شد');view();
 }
 function vNet(){
@@ -1021,8 +1044,8 @@ function vNet(){
   inner+='<div class="lockbox"><div style="font-size:30px">🔒</div><b>این ماژول با عضویت '+(N.lv===2?'طلایی 🟡':'برنزی 🥉')+' فعال می‌شود</b><br><span class="by">عضویت فعلی: '+planName(u.plan)+'</span><br><button class="btn go sm" onclick="go(\'pay\')" style="margin-top:9px">💳 خرید عضویت</button></div>';
   q('view').innerHTML=page('🌐 شبکه و بازار',inner);return;
  }
- inner+='<div class="pan"><h3>➕ '+N.n+'</h3><div class="fgrid">';
- N.fs.forEach(function(f,i){inner+='<div><label>'+f[1]+'</label><input id="nf_'+i+'"></div>'});
+ inner+='<div class="pan"><h3>➕ '+E(N.n)+'</h3><div class="fgrid">';
+ N.fs.forEach(function(f,i){inner+='<div><label>'+E(f[1])+'</label><input id="nf_'+i+'"></div>'});
  inner+='</div><button class="btn go" onclick="postNet(\''+N.k+'\')">📤 ارسال</button></div>';
  var rows=R(N.k).filter(function(r){return r.st!=='arch'}).slice(0,25);
  inner+='<div class="pan"><h3>📄 آخرین‌ها</h3>';
@@ -1033,10 +1056,10 @@ function vNet(){
   inner+='<br><span class="by">'+E(r.by||'—')+' · '+E(r.at||'—')+'</span></div></div>';
  });
  inner+='</div>';
- q('view').innerHTML=page('🌐 شبکه و بازار کارخانه‌ها',inner);
+ q('view').innerHTML=page('🌐 شبکه و بازار کارخانه‌ها (PyroHub)',inner);
 }
 
-/* ---- پرداخت ---- */
+/* ===== پرداخت ===== */
 function buyPlan(lv){
  var u=U();if(!u)return;
  var p=null;for(var i=0;i<PLANS.length;i++){if(PLANS[i].lv===+lv)p=PLANS[i]}
@@ -1060,7 +1083,7 @@ function vPay(){
  var u=U();
  var inner='<div class="pan"><h3>💳 عضویت فعلی شما: '+planName(u.plan)+'</h3><div class="plans">';
  inner+='<div class="plan"><b class="t">رایگان</b><div class="pr">۰</div><ul><li>داشبورد و گزارش پخت</li><li>دستیار هوشمند</li><li>درخواست با ایجنت</li></ul></div>';
- PLANS.forEach(function(p){inner+='<div class="plan'+(p.lv===2?' gd':'')+'"><b class="t">'+p.n+'</b><div class="pr">'+p.pr+'</div><ul>'+p.ft.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul><button class="btn go sm" onclick="buyPlan('+p.lv+')">💳 درخواست خرید</button></div>'});
+ PLANS.forEach(function(p){inner+='<div class="plan'+(p.lv===2?' gd':'')+'"><b class="t">'+p.n+'</b><div class="pr">'+p.pr+'</div><ul>'+p.ft.map(function(x){return '<li>'+E(x)+'</li>'}).join('')+'</ul><button class="btn go sm" onclick="buyPlan('+p.lv+')">💳 درخواست خرید</button></div>'});
  inner+='</div><div class="note">درگاه واقعی (زرین‌پال) در نسخه نهایی وصل می‌شود</div></div>';
  var reqs=S('pv_payreq',[]),pend=reqs.filter(function(r){return r.st==='pend'});
  if(ADM()&&pend.length){
@@ -1071,7 +1094,7 @@ function vPay(){
  q('view').innerHTML=page('💳 عضویت و پرداخت',inner);
 }
 
-/* ---- مالی/انبار ---- */
+/* ===== مالی/انبار ===== */
 function payOff(t){var l=R('sell'),r=null;for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t)){r=l[i];break}}if(r){r.v.paid=1;W('pv_sell',l);view()}}
 function vFin(){
  var cur=TABS.fin||'sell';
@@ -1091,12 +1114,12 @@ function vFin(){
  q('view').innerHTML=page('💰 مالی و فروش',inner);
 }
 function vInv(){
- var inner='<div class="pan"><h3>➕ افزودن کالا</h3>'+formHTML('inv')+'</div><div class="pan"><h3>📋 موجودی</h3>'+tableHTML('inv',[['item','کالا','l'],['qty','موجودی'],['unit','واحد']])+'</div>';
- inner+='<div class="pan"><h3>🛢️ خروجی تولید (کد بچ را بنویس)</h3>'+formHTML('out')+'</div><div class="pan"><h3>📋 خروجی‌ها</h3>'+tableHTML('out',[['prod','محصول'],['qty','مقدار'],['unit','واحد'],['batch','بچ']])+'</div>';
- q('view').innerHTML=page('🏭 انبار',inner);
+ var inner='<div class="pan"><h3>➕ ورود کالا به انبار (Transaction)</h3>'+formHTML('inv')+'</div><div class="pan"><h3>📋 موجودی</h3>'+tableHTML('inv',[['item','کالا','l'],['qty','موجودی'],['unit','واحد']])+'</div>';
+ inner+='<div class="pan"><h3>🛢️ خروجی تولید (وارد انبار می‌شود — کد بچ را بنویس)</h3>'+formHTML('out')+'</div><div class="pan"><h3>📋 خروجی‌ها</h3>'+tableHTML('out',[['prod','محصول'],['qty','مقدار'],['unit','واحد'],['batch','بچ']])+'</div>';
+ q('view').innerHTML=page('🏭 انبار (Inventory)',inner);
 }
 
-/* ---- داشبورد ---- */
+/* ===== داشبورد ===== */
 function gauge(val,unit,min,max,label,c){
  var r=30,pc=Math.min(1,Math.max(0,(val-min)/(max-min)));
  var pt=2*Math.PI*r*0.72,d=pt*pc;
@@ -1134,6 +1157,7 @@ function vDash(){
  var lastC=R('crow')[0];
  var pend=R('req').filter(function(r){return r.st==='pend'}).length;
  var cs=R('cartable').filter(function(x){return x.st!=='done'}).length;
+ var crit=R('crow').filter(function(x){return x.v.sev==='بحرانی'}).length;
  var pends=US().filter(function(x){return x.st==='pend'});
  var inner='<div class="kpis">';
  inner+='<button class="kpi k1" onclick="go(\'cook\')"><small>📋 گزارش‌های پخت</small><b>'+F(R('csum').length)+'</b></button>';
@@ -1141,13 +1165,14 @@ function vDash(){
  inner+='<button class="kpi k3" onclick="go(\'req\')"><small>📥 درخواست تازه</small><b>'+F(pend)+'</b></button>';
  inner+='<button class="kpi k4" onclick="go(\'maint\')"><small>🔧 کارتابل باز</small><b>'+F(cs)+'</b></button>';
  inner+='<button class="kpi k5" onclick="go(\'fin\')"><small>🧾 تراز (تومان)</small><b>'+F(net)+'</b></button></div>';
+ if(crit)inner+='<div class="lock">🚨 '+F(crit)+' نقطه بحرانی ثبت شده — در گزارش پخت با جزئیات «اقدام» ببین</div>';
  if(pends.length&&ADM())inner+='<div class="lock">👤 '+F(pends.length)+' ثبت‌نام منتظر تایید شماست (مدیریت)</div>';
  var amb=(lastC&&lastC.v.eT&&lastC.v.eT!=='—')?(E(lastC.v.eT)+'°C — '+E(lastC.v.eC||'')+' (ساعت '+E(lastC.v.h)+')'):'ثبت نشده';
  inner+='<div class="meta">🗓 <b>'+hj()+'</b> | 🏭 <b>'+E(u.cname||'—')+'</b> | 🌡 دمای محیط: <b>'+amb+'</b><button class="btn out sm" onclick="go(\'ai\')" style="margin-inline-start:auto">🤖 بپرس از دستیار</button></div>';
  var h1=(lastC&&lastC.v&&lastC.v.a1)?+lastC.v.a1:235;
  inner+='<div class="row3">';
- inner+='<div class="pan"><h3>🔥 سیستم پیرولیز</h3>'+reactorSVG(h1)+'</div>';
- inner+='<div class="pan"><h3>⏲️ چرخه بچ (۱۲ تا ۱۴ ساعت)</h3><div class="tl">'+[['#1db86a','06:00','Start راکتور'],['#f0a92c','08:30','ورود به زون بحرانی'],['#f0a92c','11:10','شروع Cracking'],['#2bd9a8','18:45','پایان پخت'],['#2f9be8','19:00','شروع Cooling'],['#7b5cd6','24:10','تخلیه محصول']].map(function(x){return '<div class="tl-r"><span class="tl-d" style="background:'+x[0]+'"></span><div><span style="font-family:monospace">'+x[1]+'</span><br><span class="by">'+x[2]+'</span></div></div>'}).join('')+'</div></div>';
+ inner+='<div class="pan"><h3>🔥 سیستم پیرولیز (زنده)</h3>'+reactorSVG(h1)+'</div>';
+ inner+='<div class="pan"><h3>⏲️ چرخه بچ (۱۲ تا ۱۴ ساعت)</h3><div class="tl">'+[['#1db86a','08:00','بارگیری + Start راکتور'],['#f0a92c','09:30','Heating'],['#f0a92c','11:00','شروع Cracking'],['#2bd9a8','19:00','پایان پخت / Oil Recovery'],['#2f9be8','20:00','Shutdown + Cooling'],['#7b5cd6','23:00','تخلیه + انبار محصول']].map(function(x){return '<div class="tl-r"><span class="tl-d" style="background:'+x[0]+'"></span><div><span style="font-family:monospace">'+E(x[1])+'</span><br><span class="by">'+E(x[2])+'</span></div></div>'}).join('')+'</div></div>';
  inner+='<div class="pan"><h3>📊 گیج‌ها</h3><div class="gwrap">'+gauge(h1,'°C',0,450,'دمای آنالوگ','#ff9d5c')+gauge(0.42,' Bar',0,1,'فشار','#38b6ff')+gauge(1.2,' rpm',0,3,'چرخش','#38e0a0')+'</div></div>';
  inner+='</div>';
  var log=S('pv_agentlog',[]);
@@ -1155,10 +1180,10 @@ function vDash(){
  if(log.length){log.slice(0,5).forEach(function(x){inner+='<div class="ai-it"><span>›</span><span style="flex:1">'+E(x.txt)+'</span></div>'})}
  else{inner+='<div class="empty">—</div>'}
  inner+='</div>';
- q('view').innerHTML=page('📊 داشبورد',inner);
+ q('view').innerHTML=page('📊 داشبورد — Factory Status',inner);
 }
 
-/* ---- مدیریت ---- */
+/* ===== مدیریت ===== */
 function vSettings(){
  var u=U();
  var inner='<div class="pan"><h3>🔑 درخواست‌های بازیابی رمز</h3>';
@@ -1170,7 +1195,7 @@ function vSettings(){
   });
  }else{inner+='<div class="empty">درخواستی نیست</div>'}
  inner+='</div>';
- inner+='<div class="pan"><h3>👑 کاربران — تایید، نقش، دسترسی</h3>';
+ inner+='<div class="pan"><h3>👑 کاربران — تایید، نقش، دسترسی (RBAC)</h3>';
  US().forEach(function(x){
   inner+='<div class="pan" style="margin-bottom:8px;background:#0c1a35"><div class="ai-it"><span>'+(x.admin?'👑':(x.plan>=2?'🟡':(x.plan>=1?'🥉':'👁')))+'</span><div style="flex:1"><b>'+E(x.name)+'</b> <span class="by">'+E(x.email)+'</span> '+planName(x.plan)+(x.cname?'<br><span class="by">🏭 '+E(x.cname)+' · 📍 '+E(x.addr||x.city||'—')+(x.lat?' · <a href="https://maps.google.com/?q='+x.lat+','+x.lon+'" target="_blank" style="color:#8fc4ff">نقشه</a>':'')+'</span>':'')+(x.st==='pend'?' <span class="st-badge sb-pnd">در انتظار</span>':'')+'</div></div>';
   if(x.st==='pend'&&ADM())inner+='<button class="pill ok" onclick="usrOk(\''+E(x.email)+'\')">✅ تایید حساب (نمایش در صفحه اول)</button> ';
@@ -1192,7 +1217,7 @@ function vSettings(){
  q('view').innerHTML=page('⚙️ مدیریت و دسترسی‌ها',inner);
 }
 
-/* ---- لندینگ ---- */
+/* ===== لندینگ ===== */
 function ltab(w){
  q('lt0').classList.toggle('on',w===0);q('lt1').classList.toggle('on',w===1);
  q('lf0').classList.toggle('hid',w!==0);q('lf1').classList.toggle('hid',w!==1);
@@ -1208,13 +1233,13 @@ function firmCard(f){
 }
 function vHome(){
  var firms=S('pv_firms',[]);
- var h='<div class="view"><div class="hero"><div class="fl">🔥</div><h1>پترو پارسیان — اکسیر جوانی</h1><p>سامانه جامع مدیریت کارخانه‌های پیرولیز: ثبت ساعتی دما با دمای محیطِ خودکار، آپلود کاغذ پخت با تشخیص خودکار ساعات و پارامترها، دستیار هوشمند پرسش و پاسخ، هزینه دقیق هر بچ، تعمیرات و کارتابل و شبکه تعامل کارخانه‌ها.</p></div>';
+ var h='<div class="view"><div class="hero"><div class="fl">🔥</div><h1>پترو پارسیان — PyroFlow</h1><p>سیستم مدیریت و کنترل عملیات کارخانه پیرولیز: بچ (Batch)، جدول ساعتی با نقطه بحرانی و دمای محیط خودکار، آپلود کاغذ پخت با تشخیص خودکار ساعات، دستیار هوشمند، هزینه و سود هر بچ، CMMS، انبار و فروش — روی مسیر PyroHub.</p></div>';
  h+='<div class="pan"><h3>🏭 کارخانه‌های عضو شبکه ('+F(firms.length)+')</h3><div class="firms">';
  if(firms.length){firms.forEach(function(f){h+=firmCard(f)})}
  else{h+='<div class="empty">هنوز کارخانه‌ای تایید نشده — اولین باش</div>'}
  h+='</div></div>';
  h+='<div class="feat">';
- [['📋','فرم پخت یک‌صفحه‌ای','دقیقاً مثل برگه کاغذی + دمای محیط خودکار هر ساعت'],['📸','آپلود کاغذ پخت','عکس برگه را بده؛ ساعات و دماها خودکار در جدول می‌نشینند'],['🤖','دستیار هوشمند','از دما تا مطالبات بپرس — جواب از داده‌های واقعی'],['🔧','CMMS کامل','قطعه از انبار، هزینه مالی، یادآوری بازبینی'],['🔐','دسترسی‌های مدیر','هر نفر با کاربری خودش؛ ثبت به نامش'],['🌐','شبکه کارخانه‌ها','چت، قیمت مواد هر شهر، کاریابی، تامین قطعات']].forEach(function(x){h+='<div class="ft"><b>'+x[0]+' '+x[1]+'</b>'+E(x[2])+'</div>'});
+ [['📋','فرم پخت یک‌صفحه‌ای','چک‌لیست + جدول ساعتی + نقطه بحرانی + دمای محیط خودکار'],['📸','آپلود کاغذ پخت','عکس برگه را بده؛ ساعات و دماها خودکار در جدول می‌نشینند'],['🤖','دستیار هوشمند','از دما تا مطالبات بپرس — جواب از داده‌های واقعی'],['📦','سود هر بچ','هزینه تفکیکی + خروجی هر بچ = Profit per Batch'],['🔧','CMMS کامل','قطعه از انبار، هزینه مالی، PM و یادآوری'],['🌐','شبکه کارخانه‌ها','چت، قیمت مواد هر شهر، کاریابی، تامین قطعات']].forEach(function(x){h+='<div class="ft"><b>'+x[0]+' '+x[1]+'</b>'+E(x[2])+'</div>'});
  h+='</div>';
  h+='<div class="row2">';
  h+='<div class="pan"><div class="tabs"><button class="tab on" id="lt0" onclick="ltab(0)">ورود</button><button class="tab" id="lt1" onclick="ltab(1)">ثبت‌نام</button></div>';
@@ -1224,20 +1249,20 @@ function vHome(){
  h+='<input id="rc" class="lg" placeholder="🏭 نام شرکت / کارخانه">';
  h+='<input id="ra" class="lg" placeholder="📍 آدرس دقیق کارخانه">';
  h+='<input id="rb" class="lg" placeholder="☎️ شماره بازرگانی (برای پیامک بازیابی رمز)">';
- h+='<button class="btn out sm" style="width:100%;margin-bottom:8px" onclick="capLoc()">📍 گرفتن موقعیت دقیق کارخانه از نقشه</button>';
+ h+='<button class="btn out sm" style="width:100%;margin-bottom:8px" onclick="capLoc()">📍 گرفتن موقعیت دقیق کارخانه از نقشه (برای دمای هوای خودکار)</button>';
  h+='<div id="locTag" class="by" style="margin-bottom:8px">موقعیتی ثبت نشده</div>';
  h+='<input id="re" class="lg" type="email" placeholder="ایمیل"><input id="rp" class="lg" type="password" placeholder="رمز (حداقل ۶)">';
  h+='<button class="btn go" style="width:100%" onclick="doReg()">ثبت‌نام کارخانه</button></div>';
  h+='<div class="note">اولین ثبت‌نام = مدیر کل 👑 · بعد از <b>تایید مدیر</b>، کارت کارخانه در همین صفحه نمایش داده می‌شود</div></div>';
  h+='<div class="pan"><h3>💳 پلن‌های عضویت</h3><div class="plans">';
  h+='<div class="plan"><b class="t">رایگان</b><div class="pr">۰</div><ul><li>داشبورد و گزارش پخت</li><li>دستیار هوشمند</li><li>درخواست با ایجنت</li></ul></div>';
- PLANS.forEach(function(p){h+='<div class="plan'+(p.lv===2?' gd':'')+'"><b class="t">'+p.n+'</b><div class="pr">'+p.pr+'</div><ul>'+p.ft.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>'});
+ PLANS.forEach(function(p){h+='<div class="plan'+(p.lv===2?' gd':'')+'"><b class="t">'+p.n+'</b><div class="pr">'+p.pr+'</div><ul>'+p.ft.map(function(x){return '<li>'+E(x)+'</li>'}).join('')+'</ul></div>'});
  h+='</div></div>';
  h+='</div></div>';
  q('view').innerHTML=h;
 }
 
-/* ---- مسیریابی ---- */
+/* ===== مسیریابی ===== */
 var NAVG=[
  ['کلی',[['dash','📊','داشبورد'],['cook','📋','گزارش پخت']]],
  ['عملیات',[['prod','📦','بچ و هزینه'],['maint','🔧','تعمیرات'],['inv','🏭','انبار'],['fin','💰','مالی']]],
