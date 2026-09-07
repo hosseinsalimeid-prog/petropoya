@@ -54,7 +54,6 @@ td.hot{background:#e2453c33!important;color:#ff9f9f!important;font-weight:800}
 td.mid{background:#b8860b33!important;color:#ffd98c!important;font-weight:800}
 td.env{background:#0e2038!important;color:#8fc4ff!important;font-weight:700}
 td.ok2{color:#7dffbe!important;font-weight:700}
-.dtb input{width:70px;padding:4px;border-radius:6px;border:1px solid var(--ln);background:#f7f7dd;color:#111;font-family:inherit;font-size:12px;text-align:center}
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px;margin-bottom:9px}
 .fgrid label{display:block;font-size:10px;color:#8fa8cc;margin-bottom:3px}
 .fgrid input,.fgrid select{width:100%;padding:8px;border-radius:8px;border:1px solid var(--ln);background:#f7f7dd;color:#111;font-family:inherit;font-size:13px}
@@ -127,7 +126,7 @@ td.ok2{color:#7dffbe!important;font-weight:700}
 .aib.a{background:#1d1a0e;border:1px solid #6b5518;color:#ffe9b8}
 .sug{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
 .supgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
-.sc{background:linear-gradient(180deg,#12224a,#0d1a35);border:1px solid var(--ln);border-radius:14px;padding:12px;cursor:pointer;position:relative}
+.sc{background:linear-gradient(180deg,#12224a,#0d1a35);border:1px solid var(--ln);border-radius:14px;padding:12px;cursor:pointer}
 .sc:hover{border-color:var(--gold)}
 .sc.run{border-color:var(--gr)}
 .sc.blk{opacity:.55}
@@ -187,16 +186,24 @@ function R(k){return S(ORGK[k]?OK(k):('pv_'+k),[])}
 function supaHead(x){var h={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};if(x)for(var k in x)h[k]=x[k];return h}
 function supaUp(k,v){
  fetch(SB_URL+'/rest/v1/pv_data',{method:'POST',headers:supaHead({'Prefer':'resolution=merge-duplicates'}),body:JSON.stringify([{id:k,val:v}])})
- .catch(function(){toast('⚠️ ذخیره ابری موقتاً ناموفق — بعدا 🔄 همگام بزن',1)});
+ .catch(function(){});
 }
+/* ✅ اصلاح: زمان‌بندی ۸ ثانیه‌ای — اگر ابر پاسخ ندهد، آفلاین رندر می‌شود (صفحه آبی نمی‌ماند) */
 function cloudLoad(silent,cb){
+ var done=false;
+ var to=setTimeout(function(){if(!done){done=true;if(!silent)toast('⚠️ ابر کند بود — آفلاین ادامه می‌دهیم',1);if(cb)cb(false)}},8000);
  fetch(SB_URL+'/rest/v1/pv_data?select=id,val',{headers:supaHead()})
  .then(function(r){return r.json()})
  .then(function(rows){
+  if(done)return;done=true;clearTimeout(to);
   if(!Array.isArray(rows))throw 0;
   rows.forEach(function(rw){DATA[rw.id]=rw.val});
   if(cb)cb(true);
- }).catch(function(){if(!silent)toast('⚠️ اتصال ابری برقرار نشد',1);if(cb)cb(false)});
+ }).catch(function(){
+  if(done)return;done=true;clearTimeout(to);
+  if(!silent)toast('⚠️ اتصال ابری برقرار نشد',1);
+  if(cb)cb(false);
+ });
 }
 function firstSyncDoneF(){firstSyncDone=true}
 function migrateLocal(){try{var n=0;
@@ -243,8 +250,8 @@ function d2j(gy,gm,gd){var gdm=[0,31,59,90,120,151,181,212,243,273,304,334];var 
 function hj(){var d=new Date(),j=d2j(d.getFullYear(),d.getMonth()+1,d.getDate());return j[0]+'/'+p2(j[1])+'/'+p2(j[2])}
 function hnow(){var d=new Date();return hj()+' — '+p2(d.getHours())+':'+p2(d.getMinutes())+':'+p2(d.getSeconds())}
 function hhm(){var d=new Date();return p2(d.getHours())+':'+p2(d.getMinutes())}
-function dayO(j){var p=String(j||'').split('/');if(p.length!==3)return null;var y=+p[0],m=+p[1],d=+p[2];if(!y||!m||!d)return null;return y*365+((m<=6)?((m-1)*31+d):(186+(m-7)*30+d))}
-function daysU(j){var t=dayO(hj()),x=dayO(j);if(t==null||x==null)return null;return x-t}
+function daysU(j){var p=String(j||'').split('/');if(p.length!==3)return null;var t=dayN(hj()),x=dayN(j);if(t==null||x==null)return null;return x-t}
+function dayN(j){var p=String(j||'').split('/');if(p.length!==3)return null;var y=+p[0],m=+p[1],d=+p[2];if(!y||!m||!d)return null;return y*365+((m<=6)?((m-1)*31+d):(186+(m-7)*30+d))}
 function dLbl(d){if(d==null)return 'بدون تاریخ';if(d>0)return F(d)+' روز مانده';if(d===0)return 'امروز!';return F(-d)+' روز گذشته'}
 setInterval(function(){var c=q('clk');if(c){var d=new Date();c.textContent='📅 '+hj()+' 🕒 '+p2(d.getHours())+':'+p2(d.getMinutes())+':'+p2(d.getSeconds())}},1000);
 
@@ -275,8 +282,7 @@ function approvePw(t){
  if(!r)return;
  var l=US(),tg=null;
  for(var j=0;j<l.length;j++){if(l[j].email===r.em){tg=l[j];break}}
- if(!tg){toast('کاربر پیدا نشد',1);return}
- if(!canManage(tg)){toast('⛔ فقط کارخانه خودت',1);return}
+ if(!tg||!canManage(tg)){toast('⛔ مجاز نیستی',1);return}
  tg.pass=r.newHash;W('pv_users',l);
  r.st='ok';W('pv_pwreset',reqs);
  toast('✅ رمز عوض شد');render();
@@ -290,18 +296,18 @@ function rejectPw(t){
 /* دما و موقعیت */
 function revGeo(la,lo,cb){
  fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+la+'&longitude='+lo+'&localityLanguage=fa')
- .then(function(r){return r.json()}).catch(function(){return {}}).
- then(function(g){cb(g.city||g.locality||g.principalSubdivision||'')});
+ .then(function(r){return r.json()}).catch(function(){return {}})
+ .then(function(g){cb(g.city||g.locality||g.principalSubdivision||'')});
 }
 function getWeather(la,lo,cb){
  fetch('https://api.open-meteo.com/v1/forecast?latitude='+la+'&longitude='+lo+'&current_weather=true')
- .then(function(r){return r.json()}).catch(function(){return {}}).
- then(function(w){if(w&&w.current_weather)cb(Math.round(w.current_weather.temperature),Math.round(w.current_weather.windspeed));else cb('—','—')});
+ .then(function(r){return r.json()}).catch(function(){return {}})
+ .then(function(w){if(w&&w.current_weather)cb(Math.round(w.current_weather.temperature),Math.round(w.current_weather.windspeed));else cb('—','—')});
 }
 function ipLoc(cb){
  fetch('https://ipwho.is/')
- .then(function(r){return r.json()}).catch(function(){return {}}).
- then(function(j){if(j&&j.latitude)cb(+j.latitude,+j.longitude,j.city||'');else cb()});
+ .then(function(r){return r.json()}).catch(function(){return {}})
+ .then(function(j){if(j&&j.latitude)cb(+j.latitude,+j.longitude,j.city||'');else cb()});
 }
 function saveMyCoords(la,lo,city){
  var u=U();if(!u||u.lat)return;
@@ -354,8 +360,7 @@ function saveMyLoc(){
  },function(){toast('دسترسی موقعیت داده نشد',1)},{timeout:9000,enableHighAccuracy:true});
 }
 function pushFirm(u){
- if(!u)return;
- if(!u.admin)return;
+ if(!u||!u.admin)return;
  if(!u.cname&&!u.addr&&!u.bno)return;
  var f=S('pv_firms',[]);
  for(var i=0;i<f.length;i++){if(f[i].em===u.email)return}
@@ -412,8 +417,7 @@ function usrOk(e){
  var u=U();if(!u||!u.admin)return;
  var l=US(),t=null;
  for(var i=0;i<l.length;i++){if(l[i].email===e)t=l[i]}
- if(!t){toast('پیدا نشد',1);return}
- if(!canManage(t)){toast('⛔ فقط کارخانه خودت',1);return}
+ if(!t||!canManage(t)){toast('⛔ مجاز نیستی',1);return}
  t.st='ok';W('pv_users',l);pushFirm(t);toast('✅ تایید شد');render();
 }
 function usrRej(e){
@@ -621,6 +625,15 @@ function endProc(){
  toast('🏁 فرایند پخت تمام شد — مدت کل: '+p.dur);render();
 }
 function resetProc(){W('pv_proc',null);toast('🔄 آمادهٔ فرایند جدید');render()}
+/* ✅ بازگردانی procHTML که تصادفاً حذف شده بود */
+function procHTML(){
+ var p=getProc();
+ if(!p||!p.st)return '<div class="pan"><h3>⏱ وضعیت فرایند پخت</h3><div class="lockbox">⏸ فرایندی فعال نیست — آمادهٔ استارت</div><button class="btn go" style="width:100%;margin-top:8px" onclick="startProc()">▶️ شروع فرایند پخت</button></div>';
+ if(p.st==='run'){
+  return '<div class="pan" style="border-color:var(--gr)"><h3>⏱ وضعیت فرایند پخت — در جریان 🟢</h3><div class="onbox">شروع: <b>'+E(p.st_d)+' — '+E(p.st_t)+'</b>'+(p.by?' · اپراتور: '+E(p.by):'')+'<br>مدت تا الان: <b>'+fmtDur(Date.now()-p.s)+'</b></div><button class="btn go" style="width:100%;margin-top:8px" onclick="endProc()">🏁 ثبت پایان فرایند (اتمام پخت)</button></div>';
+ }
+ return '<div class="pan"><h3>⏱ وضعیت فرایند پخت — تمام شد ✅</h3><div class="onbox">شروع: '+E(p.st_d)+' '+E(p.st_t)+'<br>پایان: '+E(p.ed||'—')+' '+E(p.et||'—')+'<br><b>مدت کل: '+E(p.dur||'—')+'</b></div><button class="btn out sm" style="width:100%;margin-top:8px" onclick="resetProc()">🔄 فرایند جدید (ریست)</button></div>';
+}
 setInterval(function(){
  if(route==='sup'&&SUP()&&U()){try{render()}catch(e){}}
 },60000);
@@ -1279,13 +1292,12 @@ function vPay(){
  var inner='<div class="pan"><h3>💳 عضویت فعلی: '+planName(u.plan)+(u.mon?' + 🎧 سرویس پایش فعال':'')+'</h3><div class="plans">';
  inner+='<div class="plan"><b class="t">رایگان</b><div class="pr">۰</div><ul><li>داشبورد و گزارش پخت</li><li>دستیار هوشمند</li><li>درخواست با ایجنت</li></ul></div>';
  PLANS.forEach(function(p){inner+='<div class="plan'+(p.lv===2?' gd':'')+'"><b class="t">'+p.n+'</b><div class="pr">'+p.pr+'</div><ul>'+p.ft.map(function(x){return '<li>'+E(x)+'</li>'}).join('')+'</ul><button class="btn go sm" onclick="buyPlan('+p.lv+')">💳 درخواست</button></div>'});
- inner+='</div>';
  if(u.admin){
+  inner+='</div>';
   inner+='<div class="pan" style="border-color:var(--blu);margin-top:10px"><h3>🎧 سرویس ویژه: پایش فرایند پخت + آموزش تلفنی</h3><div style="font-size:12px;line-height:2;color:#cfe0ff">تیم پشتیبانی متخصص، فرایند پخت شما را زنده پایش می‌کند؛ در صورت انحراف، <b>تماس تلفنی گرفته و راهنمایی و آموزش می‌دهد</b>.</div>';
   if(!u.mon)inner+='<button class="btn go sm" style="margin-top:8px" onclick="buyMon()">🎧 درخواست فعال‌سازی سرویس پایش</button>';
   inner+='</div>';
- }
- inner+='</div>';
+ }else{inner+='</div>';}
  q('view').innerHTML=page('💳 عضویت و خدمات',inner);
 }
 
@@ -1387,7 +1399,7 @@ function tempColor(t){t=+t;if(!t)return '#5b6f94';if(t>320)return '#ff5b52';if(t
 function vSup(){
  var u=U();
  var orgs=u.super?allOrgs():orgsOfSupport(u);
- var inner='<div class="meta">🎧 <b>پایش زنده فرایند پخت</b> — '+F(orgs.length)+' کارخانه | هر ۶۰ ثانیه خودکار نوسازی می‌شود<button class="btn out sm" onclick="render()" style="margin-inline-start:auto">🔄 نوسازی الان</button></div>';
+ var inner='<div class="meta">🎧 <b>پایش زنده فرایند پخت</b> — '+F(orgs.length)+' کارخانه | هر ۶۰ ثانیه خودکار نوسازی<button class="btn out sm" onclick="render()" style="margin-inline-start:auto">🔄 نوسازی الان</button></div>';
  if(!orgs.length){
   inner+='<div class="pan"><div class="empty">'+(u.sup?'مدیر کل هنوز کارخانه‌ای به تو اختصاص نداده — از او بخواه (حداکثر ۱۰ کارخانه)':'هنوز کارخانه‌ای عضو نشده')+'</div></div>';
   q('view').innerHTML=page('🎧 پایش کارخانه‌ها',inner);return;
@@ -1471,9 +1483,9 @@ function vSupF(){
   if(!bs.length)inner+='<div class="empty">—</div>';
   bs.forEach(function(b){
    var costs=orgL(org,'bcost').filter(function(c){return (c.v.b||'')===b.v.id});
-   var t=0,cst=0;
-   costs.forEach(function(c){t+=(+c.v.amt||0)});
-   inner+='<div class="ai-it"><span>📦</span><div style="flex:1"><b>'+E(b.v.id)+'</b> — '+E(b.v.feed)+' — '+F(b.v.raw)+' تن<span class="by"> · هزینه: '+F(t)+'</span></div></div>';
+   var tt=0;
+   costs.forEach(function(c){tt+=(+c.v.amt||0)});
+   inner+='<div class="ai-it"><span>📦</span><div style="flex:1"><b>'+E(b.v.id)+'</b> — '+E(b.v.feed)+' — '+F(b.v.raw)+' تن<span class="by"> · هزینه: '+F(tt)+'</span></div></div>';
   });
   inner+='</div>';
  }
@@ -1499,7 +1511,7 @@ function vSupF(){
   inner+='</div>';
  }
  if(has('people')){
-  var stf=US().filter(function(x){return x.org===org});
+  var stf=US().filter(function(x){return x.org===org&&!x.sup});
   inner+='<div class="pan"><h3>👥 پرسنل ('+F(stf.length)+')</h3>';
   stf.forEach(function(x){inner+='<div class="ai-it"><span>'+(x.st==='pend'?'⏳':'👤')+'</span><div style="flex:1">'+E(x.name)+'<span class="by"> — '+E(x.email||'')+(x.st==='pend'?' — در انتظار تایید':'')+'</span></div></div>'});
   if(!stf.length)inner+='<div class="empty">—</div>';
@@ -1713,10 +1725,10 @@ function render(){
  sh+='<div style="border-top:1px solid var(--ln);margin-top:10px;padding-top:8px"><button class="nv" onclick="logout()">🚪 خروج</button></div>';
  side.innerHTML=sh;
  if(route==='home')route=(u.sup&&!u.admin)?'sup':'dash';
- /* کنترل دسترسی */
  var allowed=true;
  if(route==='sup'||route==='supf'){allowed=SUP()}
- else if(['dash','cook','prod','maint','inv','req','ai','people','fin','net','settings'].indexOf(route)>=0){
+ else if(route==='settings'&&u.sup){allowed=true}
+ else if(['dash','cook','prod','maint','inv','req','ai','people','fin','net','pay','settings'].indexOf(route)>=0){
   if(!(u.admin||u.super||(u.perms||[]).indexOf(route)>=0))allowed=false;
  }
  if(!allowed){
@@ -1730,11 +1742,13 @@ function render(){
 }
 function view(){render()}
 
-/* راه‌اندازی */
+/* راه‌اندازی — با صفحهٔ «در حال اتصال» + مهلت ۸ ثانیه */
 var SB_OK=false;
 (function boot(){
  var inConfig=SB_URL.indexOf('https://')===0&&SB_KEY.indexOf('ey')===0;
  seedGlobal();
+ q('lay').classList.remove('hid');
+ q('view').innerHTML='<div class="view" style="text-align:center;padding-top:100px"><div style="font-size:44px">🔥</div><p style="color:#8fa8cc;margin-top:12px;font-size:14px">⏳ در حال اتصال به دیتابیس ابر…</p><p class="by" style="margin-top:6px">حداکثر ۸ ثانیه — اگر طول کشید اینترنت/VPN را چک کن</p></div>';
  if(!inConfig){
   firstSyncDoneF();fixUsers();render();
   setTimeout(function(){toast('ℹ️ دیتابیس ابری تنظیم نشده')},800);
@@ -1743,7 +1757,7 @@ var SB_OK=false;
  cloudLoad(true,function(ok){
   if(!ok){
    firstSyncDoneF();fixUsers();render();
-   setTimeout(function(){toast('⚠️ ابر در دسترس نیست — آفلاین',1)},800);
+   setTimeout(function(){toast('⚠️ ابر در دسترس نیست (اینترنت/VPN) — آفلاین کار می‌کند',1)},800);
    return;
   }
   SB_OK=true;
