@@ -146,13 +146,13 @@ function E(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return 
 function F(n){return (+n||0).toLocaleString('fa-IR')}
 function p2(n){return String(n).padStart(2,'0')}
 
-/* ═════════ ⭐⭐ دیتابیس ابری Supabase — تنظیم شد ✅ ══════ */
+/* ═════════ ⭐⭐ دیتابیس ابری Supabase — کلید درست جایگذاری شد ✅ ══════ */
 var SB_URL='https://ccrbetnfrkiqarxvrcuv.supabase.co';
-var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjcmJldG5mcmtpcWFyeHZyY3V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2MjkxOTYsImV4cCI6MjEwNDIwNTE5Nn0.25gM2qRrkJW_VJv27rNvbMsJNrUhWr3N8y0J8_1Uul';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjcmJldG5mcmtpcWFyeHZyY3V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2MjkxOTYsImV4cCI6MjEwNDIwNTE5Nn0.25gM2qRrkjW_VJv27rNvb-MsJNrUhWr3N8y0J8_1UuI';
 
 /* ═══ موتور ابری: بقیه کد را دست نزن ═══ */
-var DATA={};                 /* کش دادهٔ مشترک */
-var firstSyncDone=false;     /* تا قبل از اولین همگام‌سازی، صفحه رندر نشود */
+var DATA={};
+var firstSyncDone=false;
 function LSg(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
 function LSs(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast('حافظه دستگاه پر است!',1);return false}}
 function supaHead(x){var h={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};if(x)for(var k in x)h[k]=x[k];return h}
@@ -639,7 +639,7 @@ function papersHTML(){
  l.slice(0,4).forEach(function(p){
   h+='<a href="'+p.img+'" target="_blank" style="border:1px solid var(--ln);border-radius:8px;overflow:hidden;display:block"><img src="'+p.img+'" style="width:86px;height:86px;object-fit:cover"><span class="by" style="display:block;padding:2px;text-align:center">'+E(p.d||'')+'</span></a>';
  });
- h+='</div><div class="by" style="margin-top:4px">'+F(l.length)+' کاغذ آرشیو شده — کلیک روی عکس = نمای کامل</div>';
+ h+='</div><div class="by" style="margin-top:4px">'+F(l.length)+' کاغذ آرشیو شده — کلیک على عکس = نمای کامل</div>';
  return h;
 }
 function vCook(){
