@@ -17,7 +17,6 @@ a{color:inherit;text-decoration:none}ul{list-style:none}button{font-family:inher
 #tw{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:2000;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:8px}
 .ts{background:var(--panel2);border:1px solid var(--ln);color:var(--text);padding:11px 20px;border-radius:22px;font-size:13px;opacity:0;transform:translateY(10px);transition:.25s;max-width:90vw;box-shadow:0 8px 24px #000a}
 .ts.sh{opacity:1;transform:none}.ts.er{border-color:var(--dgr);color:#ffb4b4}.ts.ok{border-color:var(--teal);color:#b9ffe6}
-/* ===== Landing ===== */
 .navbar{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(10,14,23,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--ln)}
 .nav-inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 22px}
 .brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:800}
@@ -95,7 +94,6 @@ label{font-size:11.5px;color:var(--mut)}
 .mtab{flex:1;padding:10px;border-radius:11px;border:1px solid var(--ln);color:var(--mut);font-size:13.5px;font-weight:700}
 .mtab.on{background:var(--flame);color:#12100d;border-color:var(--flame)}
 .mnote{margin-top:14px;font-size:11.5px;color:var(--mut2);text-align:center;line-height:1.9}
-/* ===== App ===== */
 header.app{position:sticky;top:0;z-index:500;height:58px;background:rgba(13,18,32,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:14px;padding:0 18px}
 header.app .grow{flex:1}
 .chip{background:var(--panel2);border:1px solid var(--ln);padding:5px 12px;border-radius:16px;font-size:11.5px;color:var(--mut);white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
@@ -127,7 +125,6 @@ main.mn{flex:1;padding:22px 24px 70px;min-width:0}
 .kpi .sub{font-size:10.5px;color:var(--mut2);margin-top:5px}
 .tealc{color:var(--teal)}.dgrc{color:var(--dgr)}.flc{color:var(--flame)}.bluc{color:var(--blue)}
 .two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
-/* ===== Responsive (موبایل) ===== */
 @media(max-width:900px){
 nav.side{position:fixed;right:-280px;top:0;z-index:900;transition:.3s;height:100vh;padding-top:70px;box-shadow:-10px 0 34px rgba(0,0,0,.65)}
 nav.side.open{right:0}
@@ -158,7 +155,6 @@ main.mn{padding:14px 10px 60px}
 }
 @media(max-width:480px){.card-grid{grid-template-columns:1fr}}
 @media print{header.app,nav.side,#tw,.btn,.page-head,#backdrop{display:none!important}}
-/* Tables */
 .tbl-wrap{overflow-x:auto;border:1px solid var(--ln);border-radius:11px}
 table.tb{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;min-width:640px}
 .tb th{text-align:right;color:#ffb066;font-weight:700;font-size:10.5px;padding:10px 11px;border-bottom:2px solid rgba(255,122,48,.3);background:var(--panel2);white-space:nowrap}
@@ -171,7 +167,6 @@ td.mid{background:rgba(245,185,66,.16)!important;color:#ffdd99!important;font-we
 td.env{background:rgba(79,163,209,.15)!important;color:#8ec9e8!important;font-weight:700}
 td.ok2{color:var(--teal)!important;font-weight:700}
 .empty{text-align:center;color:var(--mut2);padding:20px;font-size:12px}
-/* Badges */
 .bdg-pill{padding:3px 10px;border-radius:16px;font-size:10px;font-weight:700;display:inline-block}
 .bd-ok{background:var(--ts);color:var(--teal)}.bd-warn{background:var(--as);color:var(--amber)}.bd-dgr{background:var(--ds);color:var(--dgr)}.bd-info{background:var(--bs);color:var(--blue)}
 .pill{border-radius:8px;padding:4px 10px;font-weight:700;font-size:10.5px}
@@ -183,8 +178,6 @@ td.ok2{color:var(--teal)!important;font-weight:700}
 .cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
 .permtag{display:inline-flex;align-items:center;gap:5px;background:var(--panel2);border:1px solid var(--ln);border-radius:9px;padding:5px 11px;font-size:10.5px;color:var(--mut);cursor:pointer;margin:3px 2px}
 .permtag.on{background:var(--ts);border-color:rgba(43,217,168,.4);color:var(--teal)}
-.permtag.su{background:#0b1c26;border-color:#1c4a5e}
-.permtag.su.on{background:var(--bs);border-color:rgba(79,163,209,.4);color:var(--blue)}
 .al-row{display:flex;gap:11px;align-items:flex-start;padding:10px 2px;border-bottom:1px dashed var(--ln)}
 .al-row:last-child{border-bottom:none}
 .al-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
@@ -215,7 +208,6 @@ td.ok2{color:var(--teal)!important;font-weight:700}
 .leg-r{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .leg-l{display:flex;align-items:center;gap:7px;color:var(--mut)}
 .leg-dot{width:9px;height:9px;border-radius:3px}
-.chart-title{font-size:11px;color:var(--mut);margin-bottom:8px}
 .stepper{display:flex;justify-content:space-between;margin-top:14px;padding:0 4px}
 .step{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;position:relative}
 .step .dt{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid var(--ln);color:var(--mut);background:var(--bg)}
@@ -232,7 +224,6 @@ td.ok2{color:var(--teal)!important;font-weight:700}
 @keyframes rise{0%{transform:translateY(0) scale(.5);opacity:0}18%{opacity:.5}100%{transform:translateY(-36px) scale(1.6);opacity:0}}
 .rotation-glow{animation:rg 2s ease-in-out infinite}
 @keyframes rg{0%,100%{opacity:.25}50%{opacity:.7}}
-/* Voice buttons */
 .vbt{display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px 16px;border:1.5px dashed var(--flame);border-radius:14px;background:linear-gradient(180deg,rgba(255,122,48,.07),transparent);cursor:pointer;width:100%;margin-bottom:14px;transition:.2s}
 .vbt:hover{border-style:solid}
 .vbt.rec{border-color:var(--dgr);background:rgba(239,75,75,.08);animation:pulse 1.2s infinite}
@@ -600,7 +591,7 @@ function forgotPw(){
   toast('✅ درخواست ثبت شد — مدیر تایید می‌کند','ok');
  });
 }
-function approvePw(t){
+function approvPw(t){
  var u=U();if(!u||!u.admin)return;
  var reqs=S('pv_pwreset',[]),r=null;
  for(var i=0;i<reqs.length;i++){if(String(reqs[i].t)===String(t))r=reqs[i]}
@@ -1061,7 +1052,7 @@ function ppConfirm(){
  });
 }
 
-/* ═══ ⭐ صوت: ضبط + پخش + تشخیص خودکار متن (ایجنت) ═══ */
+/* ═══ صوت (پایه — بلاک PRO آن را ارتقا می‌دهد) ═══ */
 var REC=false,mediaR=null,CHUNKS=[],CV=null,VTT='',SRV=null,SRVon=false;
 function pickMime(){
  var types=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/aac'];
@@ -1070,61 +1061,7 @@ function pickMime(){
  }
  return '';
 }
-function recUI(){
- var el=q('recBox');if(!el)return;
- if(REC){
-  el.innerHTML='<span class="bdg-pill bd-warn">🔴 در حال ضبط… حرف بزنید</span>'+
-  '<div class="livetxt" id="liveTxt">…</div>'+
-  '<button class="pill pi-r" onclick="stopRec()">⏹ پایان ضبط</button>';
- }else if(CV){
-  el.innerHTML='<div style="font-size:10.5px;color:var(--teal);margin-bottom:5px">✔ صوت ضبط شد — پخش کنید:</div>'+
-  '<audio controls src="'+CV+'" style="width:100%;max-width:290px"></audio>'+
-  (VTT?'<div class="livetxt" style="color:var(--teal)">📝 متن تشخیص‌شده: '+E(VTT)+'</div>':'<div style="font-size:10.5px;color:var(--mut2);margin:5px 0">⚠️ این مرورگر تشخیص خودکار متن ندارد — متن را در کادر پایین تایپ کنید (صوت سالم ضبط شده)</div>')+
-  '<button class="pill pi-g" onclick="CV=null;VTT=\'\';recUI()">✖ حذف ضبط</button>';
- }else{
-  el.innerHTML='<button class="btn btn-pri sm" onclick="startRec()">🎙 ضبط صوت (هم پخش می‌شود، هم ایجنت متنش را در کادر می‌نویسد)</button>';
- }
-}
-function startRec(){
- if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast('مرورگر ضبط صوت را پشتیبانی نمی‌کند','er');return}
- navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
-  var opts={};
-  var mt=pickMime();if(mt)opts.mimeType=mt;
-  try{mediaR=new MediaRecorder(st,opts)}catch(e){mediaR=new MediaRecorder(st)}
-  CHUNKS=[];VTT='';
-  mediaR.ondataavailable=function(e){if(e.data&&e.data.size)CHUNKS.push(e.data)};
-  mediaR.onstop=function(){
-   var b=new Blob(CHUNKS,{type:mediaR.mimeType||'audio/webm'});
-   var r=new FileReader();
-   r.onload=function(){CV=r.result;recUI()};
-   r.readAsDataURL(b);
-   st.getTracks().forEach(function(x){x.stop()});
-   stopSR();
-   setTimeout(function(){
-    if(VTT){
-     var t=q('rq_txt');
-     if(t){
-      var cur=t.value.trim();
-      t.value=cur?cur+' '+VTT:VTT;
-     }
-     toast('✅ ایجنت متن را در کادر نوشت — چک و ارسال کنید','ok');
-    }else{
-     toast('🎙 ضبط شد — پخش شود؛ متن را در کادر بنویسید','');
-    }
-   },200);
-  };
-  mediaR.start();
-  REC=true;recUI();
-  toast('🔴 ضبط شروع شد — پس از حرف زدن، «پایان ضبط» را بزنید','');
-  startSR();
- }).catch(function(){toast('دسترسی میکروفون داده نشد','er')});
-}
-function stopRec(){
- if(mediaR&&mediaR.state!=='inactive')mediaR.stop();
- REC=false;
- var el=q('recBox');
- if(el)el.innerHTML='<span class="bdg-pill bd-info">⏳ در حال آماده‌سازی صوت…</span>';
-}
+function recUI(){/* در بلاک PRO نسخهٔ کامل جایگزین می‌شود */}
 function startSR(){
  var WS=window.SpeechRecognition||window.webkitSpeechRecognition;
  if(!WS)return;
@@ -1136,8 +1073,6 @@ function startSR(){
    acc='';
    for(var i=0;i<e.results.length;i++)acc+=e.results[i][0].transcript;
    VTT=acc;
-   var lt=q('liveTxt');
-   if(lt)lt.textContent='📝 '+acc;
   };
   SRV.onend=function(){SRVon=false};
   SRV.onerror=function(){SRVon=false};
@@ -1150,7 +1085,7 @@ function stopSR(){try{if(SRV&&SRVon)SRV.stop()}catch(e){}}
 var SRC=null;
 function cookVoice(){
  var WS=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!WS){toast('مرورگر شما تشخیص گفتار ندارد (iOS) — از Chrome اندروید استفاده کنید یا دستی ثبت کنید','er');return}
+ if(!WS){toast('مرورگر شما تشخیص گفتار ندارد — از Chrome اندروید استفاده کنید یا دستی ثبت کنید','er');return}
  try{
   if(SRC){try{SRC.abort()}catch(e){}}
   SRC=new WS();
@@ -1537,7 +1472,6 @@ function postReq(){
  W('pv_req',l);
  if(dest==='maint'){var c2=R('cartable');c2.unshift({t:Date.now(),v:{tech:'',title:(txt||'درخواست صوتی').slice(0,70),due:''},st:'pend',by:u.name,at:hj()});W('pv_cartable',c2)}
  CV=null;VTT='';
- var al=R('agentlog');al.unshift({t:Date.now(),txt:'📥 درخواست '+u.name+' → '+(ROUTE_FA[dest]||dest)});W('pv_agentlog',al.slice(0,100));
  var tx=q('rq_txt');if(tx)tx.value='';
  toast('✅ ایجنت: '+(ROUTE_FA[dest]||dest),'ok');view();
 }
@@ -1552,7 +1486,7 @@ function reqAct(act,t){
 function vReq(){
  var inner='<div class="pan"><h3>📝 درخواست جدید — ضبط صوت + متن خودکار ایجنت</h3>';
  inner+='<div class="recbox" id="recBox"></div>';
- inner+='<div class="note bl"><span>🎙</span><div><b>چطور کار می‌کند؟</b> «ضبط صوت» را بزنید → حرف بزنید (مثلاً: کندانسور نشتی دارد) → «پایان ضبط». صوت ذخیره و قابل پخش است و متنش به‌طور خودکار در کادر زیر نوشته می‌شود — چک کنید و بفرستید.</div></div>';
+ inner+='<div class="note bl"><span>🎙</span><div><b>چطور کار می‌کند؟</b> «ضبط صوت» یا «فقط گفتار به متن» را بزنید → حرف بزنید → متن خودکار در کادر زیر ثبت می‌شود — چک کنید و بفرستید.</div></div>';
  inner+='<input id="rq_txt" style="margin-bottom:10px" placeholder="متن درخواست (خودکار از صوت یا دستی)">';
  inner+='<button class="btn btn-pri full" onclick="postReq()">🚀 ارسال به ایجنت</button></div>';
  var reqs=R('req');
@@ -1669,7 +1603,7 @@ function vNet(){
   inner+='<br><span style="font-size:10px;color:var(--mut2)">'+E(r.by||'—')+' · '+E(r.at||'—')+'</span></div></div>';
  });
  inner+='</div>';
- q('view').innerHTML='<div class="page-head"><h2>🌐 شبکه (PyroHub)</h2></div>'+inner+'</div>';
+ q('view').innerHTML='<div class="page-head"><h2>🌐 شبکه (PyroHub)</h2></div>'+inner;
 }
 
 /* ═══ دستیار ═══ */
@@ -1854,7 +1788,7 @@ function vSup(){
   inner+='<div style="display:flex;gap:6px;margin-top:10px" onclick="event.stopPropagation()"><button class="pill pi-ok" onclick="supVisit(\''+o.email+'\',\'تماس آموزشی\')">📞 تماس</button><button class="pill pi-g" onclick="supVisit(\''+o.email+'\',\'یادداشت\')">📝 یادداشت</button></div></div>';
  });
  inner+='</div>';
- q('view').innerHTML='<div class="page-head"><h2>🎧 پایش کارخانه‌ها</h2><span class="sub">'+(u.super?'مدیر کل':'پشتیبان')+'</span></div>'+inner;
+ q('view').innerHTML='<div class="page-head"><h2>🎧 پایش کارخانه‌ها</h2><span class="sub">'+(u.super?'مدیر کل':'پشتیبانی')+'</span></div>'+inner;
 }
 function vSupF(){
  var u=U(),org=SUPOrg;
@@ -1880,7 +1814,7 @@ function vSupF(){
  }
  if(has('inv')){
   var inv=orgL(org,'inv');
-  inner+='<div class="pan"><h3>🏭 انبار (ڈ'+F(inv.length)+')</h3>';
+  inner+='<div class="pan"><h3>🏭 انبار ('+F(inv.length)+')</h3>';
   inv.slice(0,10).forEach(function(x){
    inner+='<div class="al-row"><span class="al-ic '+(+x.v.qty<=10?'ai-dg':'ai-t')+'">'+(+x.v.qty<=10?'⚠️':'📦')+'</span><div style="flex:1;font-size:12px">'+E(x.v.item)+' — '+F(x.v.qty)+' '+E(x.v.unit||'')+'</div></div>';
   });
@@ -1958,23 +1892,29 @@ function vSettings(){
   inner+='<div style="margin-top:9px"><span style="font-size:10.5px;color:var(--mut)">صفحات (کلیک):</span><br>';
   SUPMODS.forEach(function(m){
    var onx=al.on&&al.mods.indexOf(m[0])>=0;
-   inner+='<span class="permtag su'+(onx?' on':'')+'" onclick="supTglMod(\''+m[0]+'\')">'+(onx?'✅ ':'⛔ ')+m[1]+'</span>';
+   inner+='<span class="permtag'+(onx?' on':'')+'" onclick="supTglMod(\''+m[0]+'\')">'+(onx?'✅ ':'⛔ ')+m[1]+'</span>';
   });
   inner+='</div></div>';
   var stf=myStaff();
-  inner+='<div class="pan"><h3>👥 پرسنل من</h3>';
+  inner+='<div class="pan"><h3>👥 پرسنل من — دسترسی صفحات</h3>';
   if(!stf.length)inner+='<div class="empty">پرسنلی نیست — هنگام ثبت‌نام، ایمیل شما ('+E(u.email)+') را وارد کنند</div>';
   stf.forEach(function(x){
    inner+='<div class="permrow"><div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><span class="al-ic '+(x.admin?'ai-t':'ai-i')+'">'+(x.admin?'🛡️':'👤')+'</span><div style="flex:1;min-width:140px"><b>'+E(x.name)+'</b> <span style="font-size:10px;color:var(--mut2)">'+E(x.email)+'</span> '+(x.st==='pend'?'<span class="bdg-pill bd-warn">در انتظار</span>':'<span class="bdg-pill bd-ok">فعال</span>')+'</div>';
    if(x.st==='pend')inner+='<button class="pill pi-ok" onclick="usrOk(\''+E(x.email)+'\')">✅ تایید</button> <button class="pill pi-r" onclick="usrRej(\''+E(x.email)+'\')">🗑</button>';
+   else inner+='<button class="pill pi-g" onclick="coAdmin(\''+E(x.email)+'\')">'+(x.admin?'سلب هم‌مدیری':'هم‌مدیر 🛡️')+'</button>';
    inner+='</div>';
+   if(x.st!=='pend'&&!x.admin){
+    inner+='<div style="margin-top:8px"><span style="font-size:10px;color:var(--mut)">دسترسی صفحات:</span><br>';
+    MODS.forEach(function(m){var onx=hasMod(x,m[0]);inner+='<span class="permtag'+(onx?' on':'')+'" onclick="permTgl(\''+E(x.email)+'\',\''+m[0]+'\')">'+(onx?'✅ ':'⛔ ')+m[1]+'</span>'});
+    inner+='</div>';
+   }
    inner+='</div>';
   });
   inner+='</div>';
   var pwr=S('pv_pwreset',[]).filter(function(r){return r.st==='pend'});
   if(pwr.length){
    inner+='<div class="pan"><h3>🔑 بازیابی رمز</h3>';
-   pwr.forEach(function(r){inner+='<div class="ai-it"><span class="al-ic ai-w">🔑</span><div style="flex:1;min-width:160px"><b>'+E(r.name)+'</b> <span style="font-size:10px;color:var(--mut2)">'+E(r.em)+'</span></div><button class="pill pi-ok" onclick="approvePw('+r.t+')">تایید</button> <button class="pill pi-g" onclick="rejectPw('+r.t+')">رد</button></div>'});
+   pwr.forEach(function(r){inner+='<div class="ai-it"><span class="al-ic ai-w">🔑</span><div style="flex:1;min-width:160px"><b>'+E(r.name)+'</b> <span style="font-size:10px;color:var(--mut2)">'+E(r.em)+'</span></div><button class="pill pi-ok" onclick="approvPw('+r.t+')">تایید</button> <button class="pill pi-g" onclick="rejectPw('+r.t+')">رد</button></div>'});
    inner+='</div>';
   }
  }
@@ -2072,13 +2012,14 @@ var SB_OK=false;
  });
 })();
 </script>
- <script>
+<script>
 "use strict";
-/* ═══════════ PyroFlow PRO — نسخهٔ یکپارچه و اصلاح‌شده ═══════════
-   🛡 نگهبانی · 🧾 مأموریت · 📊 عملکرد · 🔌 PLC · 📲 پیامک · ✏️ ویرایش مخفی
-   ⚙️ تنظیمات کارخانه · 📦 آماده‌سازی/تخلیه · 📍 موقعیت دمای محیط */
-
-/* ─── مودال عمومی (یک‌بار ساخته می‌شود) ─── */
+/* ═══════ PyroFlow PRO v6 — START ═══════
+   🛡 نگهبانی 🧾 مأموریت 📊 عملکرد 🔌 PLC 📲 پیامک ✏️ ویرایش مخفی
+   ⚙️ تنظیمات کارخانه 📦 آماده‌سازی 📍 موقعیت 🧾 نشست‌پذیری پخت 🎙 صوت اصلاح‌شده */
+/* همهٔ کلیدها یک‌کارخانه‌ای (org-scoped) */
+['crowarch','guard','cars','tasks','plc','prep','raws','invhist','eqresp','nfmanager','auditm','smssystem','smsout','agentfind'].forEach(function(k){ORGK[k]=1});
+/* مودال عمومی */
 (function(){
  if(!q('peModal')){
   var m=document.createElement('div');
@@ -2089,8 +2030,7 @@ var SB_OK=false;
  }
 })();
 function PE_closeM(){q('peModal').classList.add('hid')}
-
-/* ─── ابزارهای مشترک ─── */
+/* ═══ ابزارها ═══ */
 function PE_whoNames(){
  var s={};
  US().forEach(function(x){if(x.st==='ok'&&x.name)s[x.name]=1});
@@ -2101,7 +2041,7 @@ function _mgrNote(txt){
  var l=S('pv_nfmanager',[]);
  l.unshift({t:Date.now(),txt:String(txt).slice(0,240)});
  W('pv_nfmanager',l.slice(0,200));
- var al=R('agentlog');al.unshift({t:Date.now(),txt:'📇 گزارش مدیر: '+String(txt).slice(0,80)});W('pv_agentlog',al.slice(0,100));
+ var al=R('agentlog');al.unshift({t:Date.now(),txt:'📇 مدیر: '+String(txt).slice(0,80)});W('pv_agentlog',al.slice(0,100));
 }
 function smsSend(cat,txt){
  var s=S('pv_smssystem',null);
@@ -2123,7 +2063,155 @@ function PE_audit(sec,rid,f,b4,af){
  l.unshift({t:Date.now(),sec:sec,rid:String(rid),f:f,b4:String(b4),af:String(af),by:u.name,at:hj(),tm:hhm()});
  W('pv_auditm',l.slice(0,300));
 }
-
+/* ═══ 🧾 نشست‌پذیری پخت: شروع = چک‌لیست نو + جدول نو + بایگانی قبلی ═══ */
+window.startProc=function(){
+ var u=U();if(!u)return;
+ var old=R('crow'),oldc=R('csum');
+ var pid='P'+String(Date.now());
+ if(old.length||oldc.length){
+  var arch=R('crowarch');
+  arch.unshift({t:Date.now(),id:'P-'+hj()+'-'+hhm(),when:hj(),at:hhm(),by:u.name,rows:old,csum:oldc});
+  W('pv_crowarch',arch.slice(0,40));
+  W('pv_crow',[]);W('pv_csum',[]);
+  W('pv_proc',{st:'run',id:pid,s:Date.now(),st_t:hhm(),st_d:hj(),by:u.name});
+  toast('📦 نشست قبلی ('+F(old.length)+' ردیف) به بایگانی قفل رفت 🔒','ok');
+ }
+ W('pv_ck',{}); /* چک‌لیست نو */
+ if(!getProc()||!getProc().st)W('pv_proc',{st:'run',id:pid,s:Date.now(),st_t:hhm(),st_d:hj(),by:u.name});
+ var l=R('crow');
+ l.unshift({t:Date.now(),v:{h:hhm(),a1:'',a2:'',a3:'',a4:'',b2:'معمولی',d2:'—',w:'—',sev:'عادی',act:'',m:'▶️ شروع فرایند — '+u.name,eT:'—',eC:'—'},st:'ok',by:u.name,at:hj()});
+ W('pv_crow',l);
+ var al=R('agentlog');al.unshift({t:Date.now(),txt:'▶️ نشست '+pid+' — چک‌لیست و جدول نو'});W('pv_agentlog',al.slice(0,100));
+ toast('▶️ شروع شد — چک‌لیست نو ✅ · جدول ساعتی نو ✅','ok');
+ smsSend('proc','▶️ شروع پخت — '+hhm());
+ render();
+};
+window.endProc=function(){
+ var u=U(),p=getProc();
+ if(!p||p.st!=='run'){toast('فرایندی در جریان نیست','er');return}
+ p.e=Date.now();p.et=hhm();p.ed=hj();p.dur=fmtDur(p.e-p.s);p.st='done';
+ var cr=R('crow');
+ cr.unshift({t:Date.now(),v:{h:hhm(),a1:'',a2:'',a3:'',a4:'',b2:'معمولی',d2:'—',w:'—',sev:'عادی',act:'',m:'🏁 پایان — مدت '+p.dur,eT:'—',eC:'—'},st:'ok',by:u.name,at:hj()});
+ var arch=R('crowarch');
+ arch.unshift({t:Date.now(),id:(p.id||'P-'+hj()),when:p.st_d,at:p.st_t,en:hhm(),dur:p.dur,by:p.by||u.name,rows:cr,csum:R('csum')});
+ W('pv_crowarch',arch.slice(0,40));
+ W('pv_crow',[]);W('pv_csum',[]);
+ W('pv_proc',p);
+ var al=R('agentlog');al.unshift({t:Date.now(),txt:'🏁 پایان نشست — '+F(cr.length)+' ردیف قفل شد'});W('pv_agentlog',al.slice(0,100));
+ toast('🏁 پایان — '+F(cr.length)+' ردیف به بایگانی رفت 🔒','ok');
+ smsSend('proc','🏁 پایان پخت — مدت '+p.dur);
+ render();
+};
+/* جدول‌ها: crow فقط نشست جاری + دکمهٔ ویرایش مخفی */
+var CROWF=[['h','ساعت'],['a1','دمای آنالوگ'],['a2','گاز خروجی'],['a3','ساید گلس'],['a4','لوله سنگین'],['sev','شدت'],['act','اقدام'],['m','توضیح']];
+function tableHTML(sec,cols){
+ var all=R(sec),rows=[],nA=0;
+ all.forEach(function(x){if(x.st==='arch'){nA++}else{rows.push(x)}});
+ if(sec==='crow'){
+  var p=getProc();
+  var endT=(p&&p.e)?p.e:Date.now();
+  rows=(p&&p.st==='run')?rows.filter(function(r){return r.t>=(p.s-1500)}):rows.filter(function(r){return p&&r.t<=endT&&(r.t>=(p.s-1500))});
+  if(!rows.length){
+   return '<div class="empty">📭 جدول این نشست خالی است'+((!p||p.st!=='run')?' — برای نشست جدید «▶️ شروع فرایند» را بزن · نشست‌های قبلی در 📖 بایگانی نشست‌هاست':' — از فرم پایین ردیف ثبت کن')+'</div>';
+  }
+ }
+ if(!rows.length)return '<div class="empty">رکوردی نیست — از فرم بالا ثبت کنید</div>';
+ var h='<div class="tbl-wrap"><table class="tb"><thead><tr>';
+ cols.forEach(function(c){h+='<th>'+E(c[1])+'</th>'});
+ h+='<th>ثبت‌کننده</th><th>زمان</th><th>وضعیت</th><th></th></tr></thead><tbody>';
+ rows.forEach(function(r){
+  h+='<tr>';
+  cols.forEach(function(cc){
+   var txt=E((r.v&&r.v[cc[0]])||'—');
+   if(sec==='crow'&&cc[0]==='a1'){var tv=+r.v.a1;var hc=tv>320?'hot':(tv>270?'mid':(tv>0?'ok2':''));h+='<td class="'+hc+'">'+txt+'</td>';return}
+   if(sec==='crow'&&cc[0]==='eT'&&r.v.eT&&r.v.eT!=='—'){h+='<td class="env">'+txt+'</td>';return}
+   if(sec==='crow'&&cc[0]==='sev'){var sv=r.v.sev;h+='<td class="'+(sv==='بحرانی'?'hot':(sv==='هشدار'?'mid':''))+'">'+txt+'</td>';return}
+   h+='<td class="tx">'+txt+'</td>';
+  });
+  h+='<td class="tx">'+E(r.by||'—')+'</td><td style="font-family:var(--mono);font-size:10px">'+E(r.at||'—')+'</td>';
+  h+='<td>'+(r.st==='ok'?'<span class="bdg-pill bd-ok">تایید</span>':'<span class="bdg-pill bd-warn">در انتظار</span>')+'</td><td style="white-space:nowrap">';
+  h+='<button class="pill pi-b" onclick="PE_openEdit(\''+sec+'\','+r.t+')">✏️</button> ';
+  if(ADM())h+='<button class="pill pi-g" onclick="arch(\''+sec+'\','+r.t+')">آرشیو</button>';
+  if(r.st==='pend'&&ADM())h+=' <button class="pill pi-ok" onclick="appr(\''+sec+'\','+r.t+')">تایید</button>';
+  h+='</td></tr>';
+ });
+ h+='</tbody></table></div>';
+ if(nA>0)h+='<div class="empty" style="padding:8px">'+F(nA)+' مورد آرشیو شده</div>';
+ return h;
+}
+function PE_rowsTable(rows){
+ if(!rows||!rows.length)return '<div class="empty">—</div>';
+ var h='<div class="tbl-wrap"><table class="tb" style="min-width:560px"><thead><tr><th>ساعت</th><th>آنالوگ</th><th>گاز</th><th>ساید</th><th>لوله</th><th>محیط</th><th>شدت</th><th>توضیح</th></tr></thead><tbody>';
+ rows.forEach(function(r){
+  var a=+((r.v&&r.v.a1)||0);
+  var cls=a>320?'hot':(a>270?'mid':(a>0?'ok2':''));
+  h+='<tr><td>'+E((r.v&&r.v.h)||'—')+'</td><td class="'+cls+'">'+E((r.v&&r.v.a1)||'—')+'</td><td>'+E((r.v&&r.v.a2)||'—')+'</td><td>'+E((r.v&&r.v.a3)||'—')+'</td><td>'+E((r.v&&r.v.a4)||'—')+'</td><td class="'+(((r.v&&r.v.eT)&&r.v.eT!=='—')?'env':'')+'">'+E((r.v&&r.v.eT)||'—')+'</td><td>'+E((r.v&&r.v.sev)||'—')+'</td><td class="tx">'+E((r.v&&r.v.m)||'')+'</td></tr>';
+ });
+ return h+'</tbody></table></div>';
+}
+function vCookArch(){
+ var arch=R('crowarch');
+ var inner='<div class="page-head"><h2>📖 بایگانی نشست‌های پخت</h2><span class="sub">'+F(arch.length)+' نشست قفل‌شده · غیرقابل ویرایش</span></div>';
+ if(!arch.length){inner+='<div class="pan"><div class="empty">هنوز نشستی بایگانی نشده — با شروع فرایند بعدی، جدول قبلی خودکار اینجا قفل می‌شود</div></div>';q('view').innerHTML=inner;return}
+ arch.forEach(function(a){
+  inner+='<div class="pan"><h3>📦 '+E(String(a.id||'نشست'))+' · '+E(a.when||'')+' '+(a.at||'')+' → '+(a.en||'')+(a.dur?' · مدت '+E(a.dur):'')+'<span class="bdg-pill bd-info">'+F((a.rows||[]).length)+' ردیف</span></h3>';
+  inner+=PE_rowsTable(a.rows);
+  if(a.csum&&a.csum.length)inner+='<div class="s" style="margin-top:6px">🧾 خلاصه‌های این نشست: '+F(a.csum.length)+'</div>';
+  inner+='</div>';
+ });
+ q('view').innerHTML=inner;
+}
+VIEWS.cookarch=vCookArch;
+/* تزریق بنر نشست در گزارش پخت */
+var _bVCook=VIEWS.cook;
+VIEWS.cook=function(){
+ if(_bVCook)_bVCook();
+ var v=q('view');if(!v)return;
+ var p=getProc();
+ var sid=(p&&p.id)?String(p.id):(p&&p.st==='run'?'جاری':'—');
+ var ck=S(OK('ck'),{}),dn=0;
+ CKL.forEach(function(t,i){var c=ck[String(i)];if(c&&c.d)dn++});
+ var banner='<div class="meta-bar">🧾 <b>نشست: '+E(sid)+'</b> | ✅ چک‌لیست این نشست: '+F(dn)+'/'+F(CKL.length)+(p&&p.st==='run'?' | شروع: '+E(p.st_t):'')+'<button class="btn btn-gh sm" onclick="go(\'cookarch\')" style="margin-inline-start:auto">📖 بایگانی نشست‌ها</button></div>';
+ v.innerHTML=banner+v.innerHTML;
+};
+/* ═══ ✏️ ویرایش مخفی رکوردها ═══ */
+function PE_openEdit(sec,t){
+ if(!PE_canEdit(sec)){toast('⛔ اجازه ویرایش ندارید','er');return}
+ var l=R(sec),r=null;
+ for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
+ if(!r)return;
+ var fs=(sec==='crow')?CROWF:(SEC[sec]?SEC[sec].f:[]);
+ var h='<h3 style="font-size:14px;margin-bottom:9px">✏️ ویرایش رکورد</h3><div class="fgrid">';
+ fs.forEach(function(f){
+  h+='<div><label>'+E(f[1])+'</label><input data-k="'+f[0]+'" value="'+E(r.v[f[0]]||'')+'"></div>';
+ });
+ h+='</div><button class="btn btn-pri full" style="margin-top:10px" onclick="PE_saveEdit(\''+sec+'\','+t+')">💾 ثبت تغییرات</button>';
+ q('peMBody').innerHTML=h;
+ q('peModal').classList.remove('hid');
+}
+function PE_saveEdit(sec,t){
+ var l=R(sec),r=null;
+ for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
+ if(!r){PE_closeM();return}
+ var ins=q('peMBody').querySelectorAll('input[data-k]');
+ var ch=[];
+ for(var i=0;i<ins.length;i++){
+  var k=ins[i].getAttribute('data-k');
+  var nv=ins[i].value.trim();
+  if(String(r.v[k]||'')===nv)continue;
+  PE_audit(sec,t,k,r.v[k]||'',nv);
+  ch.push(k+': «'+(r.v[k]||'—')+'» ← «'+nv+'»');
+  r.v[k]=nv;
+ }
+ if(ch.length){
+  W('pv_'+sec,l);
+  var u=U();
+  _mgrNote('✏️ '+u.name+' رکورد «'+sec+'» را ویرایش کرد — '+ch.join(' | ').slice(0,180));
+  smsSend('edit','✏️ ویرایش رکورد توسط '+u.name+' — '+ch.length+' فیلد — '+hhm());
+  toast('✅ ذخیره شد','ok');
+ }
+ PE_closeM();view();
+}
 /* ═══ 🛡 نگهبانی ═══ */
 function PE_gIn(){
  var u=U();if(!u)return;
@@ -2197,7 +2285,6 @@ function vGuard(){
  }
  q('view').innerHTML='<div class="page-head"><h2>🛡 نگهبانی و تردد</h2></div>'+inner;
 }
-
 /* ═══ 🧾 مأموریت‌ها ═══ */
 function PE_taskAdd(){
  var u=U();if(!u)return;
@@ -2206,7 +2293,6 @@ function PE_taskAdd(){
  var l=R('tasks');
  l.unshift({t:Date.now(),v:{who:who.value,title:title.value.trim(),detail:q('t_det').value.trim(),sup:u.name},st:'assigned'});
  W('pv_tasks',l.slice(0,200));
- var al=R('agentlog');al.unshift({t:Date.now(),txt:'🧾 مأموریت «'+title.value.trim()+'» → '+who.value});W('pv_agentlog',al.slice(0,100));
  toast('✅ مأموریت ثبت شد','ok');view();
 }
 function PE_taskDone(t){
@@ -2229,7 +2315,7 @@ function PE_taskAcc(t){
  r.workMs=r.done-r.t;
  W('pv_tasks',l);
  smsSend('task','✔ تحویل شد: «'+r.v.title+'» — مدت '+fmtDur(r.workMs));
- toast('✅ تحویل گرفته شد — مدت: '+fmtDur(r.workMs),'ok');view();
+ toast('✅ تحویل — مدت: '+fmtDur(r.workMs),'ok');view();
 }
 function vTasks(){
  var u=U(),l=R('tasks');
@@ -2248,7 +2334,7 @@ function vTasks(){
  if(!pend.length)inner+='<div class="empty">—</div>';
  pend.forEach(function(x){
   var mine0=(x.v.who===u.name&&x.st==='assigned');
-  inner+='<div class="al-row"><span class="al-ic '+(x.st==='assigned'?'ai-i':'ai-w')+'">'+(x.st==='assigned'?'🧾':'⏳')+'</span><div style="flex:1;min-width:180px"><b>'+E(x.v.title)+'</b> — 👤 '+E(x.v.who)+'<br><span class="s">مسئول: '+E(x.v.sup)+' · '+ago(x.t)+(x.v.detail?' — '+E(x.v.detail):'')+'</span></div>';
+  inner+='<div class="al-row"><span class="al-ic '+(x.st==='assigned'?'ai-i':'ai-w')+'">'+(x.st==='assigned'?'🧾':'⏳')+'</span><div style="flex:1;min-width:180px"><b>'+E(x.v.title)+'</b> — 👤 '+E(x.v.who)+'<br><span class="s">مسئول: '+E(x.v.sup)+' · '+ago(x.t)+'</span></div>';
   if(mine0)inner+='<button class="pill pi-ok" onclick="PE_taskDone('+x.t+')">✅ انجام دادم</button>';
   else if(x.st==='submitted'&&u.admin)inner+='<button class="pill pi-ok" onclick="PE_taskAcc('+x.t+')">🤝 تحویل بگیر</button>';
   inner+='<span class="bdg-pill '+(x.st==='assigned'?'bd-info':'bd-warn')+'">'+(x.st==='assigned'?'در جریان':'انجام شد')+'</span></div>';
@@ -2259,9 +2345,8 @@ function vTasks(){
   inner+='<tr><td class="tx">'+E(x.v.title)+'</td><td>'+E(x.v.who)+'</td><td class="tx">'+E(x.v.sup)+'</td><td class="tx">'+E(x.accBy||'—')+'</td><td class="ok2">'+(x.workMs?fmtDur(x.workMs):'—')+'</td></tr>';
  });
  inner+='</tbody></table></div></div>';
- q('view').innerHTML='<div class="page-head"><h2>🧾 مأموریت‌ها و تحویل کار</h2></div>'+inner;
+ q('view').innerHTML='<div class="page-head"><h2>🧾 مأموریت‌ها</h2></div>'+inner;
 }
-
 /* ═══ 📊 عملکرد پرسنل ═══ */
 function vPerf(){
  var u=U();if(!u.admin&&!u.super){q('view').innerHTML='<div class="pan"><div class="lock">فقط مدیر</div></div>';return}
@@ -2289,12 +2374,12 @@ function vPerf(){
  if(!any)inner+='<tr><td colspan="7" class="empty">پس از ثبت ورود/خروج و مأموریت، خودکار محاسبه می‌شود</td></tr>';
  inner+='</tbody></table></div></div>';
  var nf=S('pv_nfmanager',[]);
- inner+='<div class="pan" style="border-color:rgba(180,138,255,.4)"><h3>📇 گزارش‌های مخفی (کاربران اطلاع ندارند) — '+F(nf.length)+'</h3>';
+ inner+='<div class="pan" style="border-color:rgba(180,138,255,.4)"><h3>📇 گزارش‌های مخفی ('+F(nf.length)+')</h3>';
  if(!nf.length)inner+='<div class="empty">—</div>';
  nf.slice(0,20).forEach(function(x){inner+='<div class="al-row"><span class="al-ic ai-i">📇</span><div style="flex:1;font-size:11.5px">'+E(x.txt)+'<br><span class="s">'+ago(x.t)+'</span></div></div>'});
  inner+='</div>';
  var au=S('pv_auditm',[]);
- inner+='<div class="pan"><h3>🛡 ویرایش‌های رکورد (قبل→بعد، مخفی برای ویرایش‌گر)</h3><div class="tbl-wrap"><table class="tb" style="min-width:540px"><thead><tr><th>چه‌کسی</th><th>بخش</th><th>فیلد</th><th>قبل</th><th>بعد</th><th>زمان</th></tr></thead><tbody>';
+ inner+='<div class="pan"><h3>🛡 ویرایش‌های رکورد (قبل→بعد)</h3><div class="tbl-wrap"><table class="tb" style="min-width:540px"><thead><tr><th>چه‌کسی</th><th>بخش</th><th>فیلد</th><th>قبل</th><th>بعد</th><th>زمان</th></tr></thead><tbody>';
  if(!au.length)inner+='<tr><td colspan="6" class="empty">هیچ ویرایشی نشده</td></tr>';
  au.slice(0,25).forEach(function(x){
   inner+='<tr><td class="tx">'+E(x.by)+'</td><td>'+E(x.sec)+'</td><td>'+E(x.f)+'</td><td class="hot">'+E(x.b4||'—')+'</td><td class="ok2">'+E(x.af||'—')+'</td><td style="font-size:9.5px">'+E(x.at)+' '+E(x.tm)+'</td></tr>';
@@ -2302,86 +2387,13 @@ function vPerf(){
  inner+='</tbody></table></div></div>';
  q('view').innerHTML='<div class="page-head"><h2>📊 ارزیابی عملکرد پرسنل</h2></div>'+inner;
 }
-
-/* ═══ ✏️ ویرایش مخفی رکوردها ═══ */
-var CROWF=[['h','ساعت'],['a1','دمای آنالوگ'],['a2','گاز خروجی'],['a3','ساید گلس'],['a4','لوله سنگین'],['sev','شدت'],['act','اقدام'],['m','توضیح']];
-function PE_openEdit(sec,t){
- if(!PE_canEdit(sec)){toast('⛔ اجازه ویرایش ندارید','er');return}
- var l=R(sec),r=null;
- for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
- if(!r)return;
- var fs=(sec==='crow')?CROWF:(SEC[sec]?SEC[sec].f:[]);
- var h='<h3 style="font-size:14px;margin-bottom:9px">✏️ ویرایش رکورد</h3><div class="fgrid">';
- fs.forEach(function(f){
-  h+='<div><label>'+E(f[1])+'</label><input data-k="'+f[0]+'" value="'+E(r.v[f[0]]||'')+'"></div>';
- });
- h+='</div><button class="btn btn-pri full" style="margin-top:10px" onclick="PE_saveEdit(\''+sec+'\','+t+')">💾 ثبت تغییرات</button>';
- q('peMBody').innerHTML=h;
- q('peModal').classList.remove('hid');
-}
-function PE_saveEdit(sec,t){
- var l=R(sec),r=null;
- for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
- if(!r){PE_closeM();return}
- var ins=q('peMBody').querySelectorAll('input[data-k]');
- var ch=[];
- for(var i=0;i<ins.length;i++){
-  var k=ins[i].getAttribute('data-k');
-  var nv=ins[i].value.trim();
-  if(String(r.v[k]||'')===nv)continue;
-  PE_audit(sec,t,k,r.v[k]||'',nv);
-  ch.push(k+': «'+(r.v[k]||'—')+'» ← «'+nv+'»');
-  r.v[k]=nv;
- }
- if(ch.length){
-  W('pv_'+sec,l);
-  var u=U();
-  _mgrNote('✏️ '+u.name+' رکورد «'+sec+'» را ویرایش کرد — '+ch.join(' | ').slice(0,180));
-  smsSend('edit','✏️ ویرایش رکورد توسط '+u.name+' — '+ch.length+' فیلد — '+hhm());
-  toast('✅ ذخیره شد','ok');
- }
- PE_closeM();view();
-}
-/* جدول‌ها با دکمهٔ ویرایش (روی اصلی override می‌شود) */
-function tableHTML(sec,cols){
- var all=R(sec),rows=[],nA=0;
- all.forEach(function(x){if(x.st==='arch'){nA++}else{rows.push(x)}});
- if(!rows.length)return '<div class="empty">رکوردی نیست — از فرم بالا ثبت کنید</div>';
- var h='<div class="tbl-wrap"><table class="tb"><thead><tr>';
- cols.forEach(function(c){h+='<th>'+E(c[1])+'</th>'});
- h+='<th>ثبت‌کننده</th><th>زمان</th><th>وضعیت</th><th></th></tr></thead><tbody>';
- rows.forEach(function(r){
-  h+='<tr>';
-  cols.forEach(function(cc){
-   var txt=E(r.v[cc[0]]||'—');
-   if(sec==='crow'&&cc[0]==='a1'){var tv=+r.v.a1;var hc=tv>320?'hot':(tv>270?'mid':(tv>0?'ok2':''));h+='<td class="'+hc+'">'+txt+'</td>';return}
-   if(sec==='crow'&&cc[0]==='eT'&&r.v.eT&&r.v.eT!=='—'){h+='<td class="env">'+txt+'</td>';return}
-   if(sec==='crow'&&cc[0]==='sev'){var sv=r.v.sev;h+='<td class="'+(sv==='بحرانی'?'hot':(sv==='هشدار'?'mid':''))+'">'+txt+'</td>';return}
-   h+='<td class="tx">'+txt+'</td>';
-  });
-  h+='<td class="tx">'+E(r.by||'—')+'</td><td style="font-family:var(--mono);font-size:10px">'+E(r.at||'—')+'</td>';
-  h+='<td>'+(r.st==='ok'?'<span class="bdg-pill bd-ok">تایید</span>':'<span class="bdg-pill bd-warn">در انتظار</span>')+'</td><td style="white-space:nowrap">';
-  h+='<button class="pill pi-b" onclick="PE_openEdit(\''+sec+'\','+r.t+')">✏️</button> ';
-  if(ADM())h+='<button class="pill pi-g" onclick="arch(\''+sec+'\','+r.t+')">آرشیو</button>';
-  if(r.st==='pend'&&ADM())h+=' <button class="pill pi-ok" onclick="appr(\''+sec+'\','+r.t+')">تایید</button>';
-  h+='</td></tr>';
- });
- h+='</tbody></table></div>';
- if(nA>0)h+='<div class="empty" style="padding:8px">'+F(nA)+' مورد آرشیو شده</div>';
- return h;
-}
-
-/* ═══ 🔌 PLC سه‌منبع ═══ */
+/* ═══ 🔌 PLC ═══ */
 var PLC_T=null;
 function PE_plcSave(rand){
  var u=U();if(!u&&!rand)return;
  var a1=rand?String(rand):q('pl_1').value.trim();
  if(!a1){toast('حداقل دمای آنالوگ لازم است','er');return}
- var v={a1:a1,
-  a2:rand?String(Math.round(+rand*0.55)):q('pl_2').value.trim(),
-  a3:rand?String(Math.round(+rand*0.35)):q('pl_3').value.trim(),
-  a4:rand?String(Math.round(+rand*0.3)):q('pl_4').value.trim(),
-  t:Date.now(),at:hhm(),by:rand?'PLC زنده':(u?u.name:'—')};
+ var v={a1:a1,a2:rand?String(Math.round(+rand*0.55)):q('pl_2').value.trim(),a3:rand?String(Math.round(+rand*0.35)):q('pl_3').value.trim(),a4:rand?String(Math.round(+rand*0.3)):q('pl_4').value.trim(),t:Date.now(),at:hhm(),by:rand?'PLC زنده':(u?u.name:'—')};
  var l=R('plc');
  l.unshift(v);W('pv_plc',l.slice(0,100));
  PE_plcCompare(true);
@@ -2397,7 +2409,7 @@ function PE_plcToggle(){
    var base=cr&&cr.v&&+cr.v.a1?+cr.v.a1:300;
    PE_plcSave(String(Math.round(base+(Math.random()*4-2))));
   },25000);
-  toast('▶️ پایش زنده PLC فعال شد (هر ۲۵ ثانیه)','ok');
+  toast('▶️ پایش زنده PLC فعال شد','ok');
  }else{
   if(PLC_T)clearInterval(PLC_T);
   toast('پایش PLC خاموش شد');
@@ -2407,9 +2419,9 @@ function PE_plcToggle(){
 function PE_plcCompare(silent){
  var plc=R('plc')[0],crow=R('crow')[0];
  var box=q('plcRes');if(!box)return;
- if(!plc||!crow){box.innerHTML='<div class="lock">برای مقایسه، هم داده PLC و هم یک ردیف دستی/صوتی لازم است</div>';return}
+ if(!plc||!crow){box.innerHTML='<div class="lock">برای مقایسه، هم داده PLC و هم ردیف دستی لازم است</div>';return}
  var fname={a1:'آنالوگ',a2:'گاز خروجی',a3:'ساید گلس',a4:'لوله سنگین'},bad=[];
- var html='<div class="pan"><h3>⚖️ مقایسه سه‌منبع: PLC ↔ دستی/صوتی ↔ کاغذی</h3><div class="tbl-wrap"><table class="tb" style="min-width:520px"><thead><tr><th>فیلد</th><th>PLC</th><th>دستی/صوتی</th><th>اختلاف</th><th>وضعیت</th></tr></thead><tbody>';
+ var html='<div class="pan"><h3>⚖️ مقایسه سه‌منبع</h3><div class="tbl-wrap"><table class="tb" style="min-width:520px"><thead><tr><th>فیلد</th><th>PLC</th><th>دستی/صوتی</th><th>اختلاف</th><th>وضعیت</th></tr></thead><tbody>';
  ['a1','a2','a3','a4'].forEach(function(k){
   var pv=+plc[k]||0,mv=+crow.v[k]||0;
   var d=Math.abs(pv-mv),ok=d<=8;
@@ -2417,25 +2429,25 @@ function PE_plcCompare(silent){
   html+='<tr><td class="tx">'+fname[k]+'</td><td>'+E(plc[k])+'</td><td>'+E(crow.v[k]||'—')+'</td><td>'+F(Math.round(d))+'°</td><td class="'+(ok?'ok2':'hot')+'">'+(ok?'✅ تطبیق':'🚨 مغایرت')+'</td></tr>';
  });
  html+='</tbody></table></div>';
- html+=bad.length?'<div class="lock">🚨 ایجنت: مغایرت بالای رواداری (۸°) در: '+E(bad.join('، '))+' — بررسی فوری.</div>':'<div class="gbox">✅ ایجنت: منابع هم‌خوان هستند.</div>';
+ html+=bad.length?'<div class="lock">🚨 ایجنت: مغایرت بالای ۸° در: '+E(bad.join('، '))+' — بررسی فوری.</div>':'<div class="gbox">✅ منابع هم‌خوان هستند.</div>';
  box.innerHTML=html+'</div>';
  if(bad.length){
-  if(!silent)toast('🚨 مغایرت PLC با ثبت دستی','er');
-  _mgrNote('🔌 مغایرت سه‌منبع: '+bad.join('، '));
-  smsSend('plc','🚨 مغایرت PLC با دستی: '+bad.join('، ')+' — '+hhm());
+  if(!silent)toast('🚨 مغایرت PLC','er');
+  _mgrNote('🔌 مغایرت: '+bad.join('، '));
+  smsSend('plc','🚨 مغایرت PLC: '+bad.join('، ')+' — '+hhm());
  }
 }
 function vPLC(){
  var inner='<div class="pan"><h3>🔌 داده PLC فرایند پخت</h3>';
- inner+='<div class="note bl"><span>ℹ️</span><div>سه منبع: <b>کاغذی (OCR)</b> · <b>دستی/صوتی</b> · <b>PLC</b>. ایجنت مغایرت را قبل از خسارت اعلام می‌کند. اتصال واقعی PLC از طریق گیت‌وی (Modbus/OPC) به همین فرم تزریق می‌شود.</div></div>';
+ inner+='<div class="note bl"><span>ℹ️</span><div>سه منبع: کاغذی (OCR) · دستی/صوتی · PLC مستقیم. اتصال واقعی از گیت‌وی (Modbus/OPC).</div></div>';
  inner+='<div class="fgrid">';
  inner+='<div><label>دمای آنالوگ</label><input id="pl_1" type="number"></div>';
  inner+='<div><label>گاز خروجی</label><input id="pl_2" type="number"></div>';
  inner+='<div><label>ساید گلس</label><input id="pl_3" type="number"></div>';
  inner+='<div><label>لوله سنگین</label><input id="pl_4" type="number"></div></div>';
- inner+='<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-pri sm" onclick="PE_plcSave()">🔌 ثبت Snapshot و مقایسه</button><button class="btn btn-gh sm" onclick="PE_plcToggle()">'+(S('pv_plcsim',false)?'⏹ قطع پایش زنده':'▶️ پایش زنده (هر ۲۵ ثانیه)')+'</button></div></div>';
+ inner+='<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-pri sm" onclick="PE_plcSave()">🔌 ثبت Snapshot</button><button class="btn btn-gh sm" onclick="PE_plcToggle()">'+(S('pv_plcsim',false)?'⏹ قطع پایش زنده':'▶️ پایش زنده (هر ۲۵ ثانیه)')+'</button></div></div>';
  var l=R('plc');
- inner+='<div class="pan"><h3>📡 آخرین داده‌های PLC</h3><div class="tbl-wrap"><table class="tb" style="min-width:460px"><thead><tr><th>ساعت</th><th>آنالوگ</th><th>گاز</th><th>ساید</th><th>لوله</th><th>منبع</th></tr></thead><tbody>';
+ inner+='<div class="pan"><h3>📡 آخرین داده‌ها</h3><div class="tbl-wrap"><table class="tb" style="min-width:460px"><thead><tr><th>ساعت</th><th>آنالوگ</th><th>گاز</th><th>ساید</th><th>لوله</th><th>منبع</th></tr></thead><tbody>';
  if(!l.length)inner+='<tr><td colspan="6" class="empty">—</td></tr>';
  l.slice(0,12).forEach(function(x){inner+='<tr><td>'+E(x.at)+'</td><td>'+E(x.a1)+'</td><td>'+E(x.a2)+'</td><td>'+E(x.a3)+'</td><td>'+E(x.a4)+'</td><td class="tx">'+E(x.by)+'</td></tr>'});
  inner+='</tbody></table></div></div>';
@@ -2443,17 +2455,16 @@ function vPLC(){
  q('view').innerHTML='<div class="page-head"><h2>🔌 پایش PLC سه‌منبع</h2></div>'+inner;
  PE_plcCompare(true);
 }
-
 /* ═══ 📲 پیامک ═══ */
 function PE_smsSave(){
  var u=U();if(!u.admin&&!u.super)return;
  W('pv_smssystem',{on:q('sm_on').checked,phone:q('sm_phone').value.trim(),key:q('sm_key').value.trim(),
   cats:{crit:q('sm_crit').checked,plc:q('sm_plc').checked,vehicle:q('sm_car').checked,task:q('sm_task').checked,edit:q('sm_edit').checked,agent:q('sm_ag').checked,proc:q('sm_proc').checked}});
- toast('✅ تنظیمات ذخیره شد','ok');view();
+ toast('✅ ذخیره شد','ok');view();
 }
 function PE_smsFlush(){
  var s=S('pv_smssystem',null);
- if(!s||!s.key||!s.phone){toast('اول شماره و کلید درگاه را ذخیره کنید','er');return}
+ if(!s||!s.key||!s.phone){toast('اول شماره و کلید را ذخیره کنید','er');return}
  var o=S('pv_smsout',[]),n=0;
  o.forEach(function(x){if(x.st!=='ارسل شد'){try{fetch('https://api.kavenegar.com/v1/'+encodeURIComponent(s.key)+'/sms/send.json?receptor='+encodeURIComponent(s.phone)+'&message='+encodeURIComponent(x.txt));x.st='ارسل شد';n++}catch(e){}}});
  W('pv_smsout',o);toast(n?('📮 '+n+' پیام ارسال شد'):'صف خالی است','ok');view();
@@ -2462,36 +2473,34 @@ function vSMS(){
  var u=U();if(!u.admin&&!u.super){q('view').innerHTML='<div class="pan"><div class="lock">فقط مدیر</div></div>';return}
  var s=S('pv_smssystem',null)||{on:false,phone:'',key:'',cats:{}};
  var c=s.cats||{};
- var inner='<div class="pan"><h3>📲 پیامک خودکار (اختیاری — بخش به بخش)</h3>';
- inner+='<div class="note"><span>ℹ️</span><div>رویدادهای تیک‌خورده خودکار در «صف» ثبت و با درگاه (کاوه‌نگار) ارسال می‌شوند.</div></div>';
+ var inner='<div class="pan"><h3>📲 پیامک خودکار (بخش به بخش)</h3>';
  inner+='<label class="chk" style="width:100%;margin-bottom:8px"><input type="checkbox" id="sm_on"'+(s.on?' checked':'')+'><span><b>سیستم پیامک فعال</b></span></label>';
- [['sm_crit','🚨 نقطه بحرانی دما',c.crit],['sm_plc','🔌 مغایرت PLC',c.plc],['sm_car','🚚 ورود/خروج خودرو',c.vehicle],['sm_task','🧾 مأموریت‌ها',c.task],['sm_edit','✏️ ویرایش رکورد توسط پرسنل',c.edit],['sm_ag','🤖 هشدار ایجنت',c.agent],['sm_proc','▶️ شروع/پایان پخت',c.proc]].forEach(function(r){
+ [['sm_crit','🚨 نقطه بحرانی',c.crit],['sm_plc','🔌 مغایرت PLC',c.plc],['sm_car','🚚 ورود/خروج خودرو',c.vehicle],['sm_task','🧾 مأموریت‌ها',c.task],['sm_edit','✏️ ویرایش رکورد',c.edit],['sm_ag','🤖 هشدار ایجنت',c.agent],['sm_proc','▶️ شروع/پایان پخت',c.proc]].forEach(function(r){
   inner+='<label class="chk" style="width:100%;margin-bottom:6px"><input type="checkbox" id="'+r[0]+'"'+(r[2]?' checked':'')+'><span>'+r[1]+'</span></label>';
  });
  inner+='<div class="fgrid" style="margin-top:8px">';
  inner+='<div><label>موبایل مدیر</label><input id="sm_phone" value="'+E(s.phone)+'" placeholder="09..."></div>';
- inner+='<div><label>کلید درگاه</label><input id="sm_key" value="'+E(s.key)+'" placeholder="اختیاری"></div></div>';
+ inner+='<div><label>کلید درگاه (کاوه‌نگار)</label><input id="sm_key" value="'+E(s.key)+'" placeholder="اختیاری"></div></div>';
  inner+='<button class="btn btn-pri sm" onclick="PE_smsSave()">💾 ذخیره</button> <button class="btn btn-gh sm" onclick="PE_smsFlush()">📮 ارسال صف</button></div>';
  var o=S('pv_smsout',[]);
- inner+='<div class="pan"><h3>📮 صف پیامک ('+F(o.length)+')</h3><div class="tbl-wrap"><table class="tb" style="min-width:460px"><thead><tr><th>زمان</th><th>رویداد</th><th>متن</th><th>وضعیت</th></tr></thead><tbody>';
+ inner+='<div class="pan"><h3>📮 صف ('+F(o.length)+')</h3><div class="tbl-wrap"><table class="tb" style="min-width:460px"><thead><tr><th>زمان</th><th>رویداد</th><th>متن</th><th>وضعیت</th></tr></thead><tbody>';
  if(!o.length)inner+='<tr><td colspan="4" class="empty">—</td></tr>';
  o.slice(0,30).forEach(function(x){inner+='<tr><td style="font-size:9.5px">'+ago(x.t)+'</td><td class="tx">'+E(x.cat)+'</td><td class="tx">'+E(x.txt)+'</td><td>'+(x.st==='ارسل شد'?'✅':'⏳')+'</td></tr>'});
  inner+='</tbody></table></div></div>';
- q('view').innerHTML='<div class="page-head"><h2>📲 پیامک و اطلاع‌رسانی</h2></div>'+inner;
+ q('view').innerHTML='<div class="page-head"><h2>📲 پیامک</h2></div>'+inner;
 }
-
-/* ═══ 🤖 ایجنت نگهبان (کامل) ═══ */
+/* ═══ 🤖 ایجنت نگهبان ═══ */
 function agentWatch(){
  var u=U();if(!u)return;
  var f=[];
  var p=getProc();
  if(p&&p.st==='run'&&(Date.now()-p.s)/3600000>14)f.push('پخت بیش از ۱۴ ساعت در جریان است');
- R('crow').forEach(function(x){if(x.v.sev==='بحرانی'&&!x.v.act)f.push('نقطه بحرانی ساعت '+(x.v.h||'—')+' بدون اقدام ثبت')});
+ R('crow').forEach(function(x){if(x.v.sev==='بحرانی'&&!x.v.act)f.push('نقطه بحرانی ساعت '+(x.v.h||'—')+' بدون اقدام')});
  R('inv').forEach(function(x){if(+x.v.qty<=5)f.push('موجودی بحرانی: '+x.v.item)});
  var reqs=R('req').filter(function(x){return x.st==='pend'&&Date.now()-x.t>7200000}).length;
  if(reqs)f.push(F(reqs)+' درخواست بیش از ۲ ساعت بی‌پاسخ');
  var plc=R('plc')[0],cr=R('crow')[0];
- if(plc&&cr&&plc.a1&&cr.v.a1&&Math.abs(+plc.a1-+cr.v.a1)>15)f.push('اختلاف شدید PLC/دستی در دمای آنالوگ');
+ if(plc&&cr&&plc.a1&&cr.v.a1&&Math.abs(+plc.a1-+cr.v.a1)>15)f.push('اختلاف شدید PLC/دستی');
  R('eqresp').forEach(function(e){
   R('inv').forEach(function(x){
    if(x.v.item===e.item&&+x.v.qty<=e.min)f.push(e.item+' زیر حد ('+x.v.qty+') — مسئول: '+e.who);
@@ -2501,15 +2510,13 @@ function agentWatch(){
   var nf=S('pv_agentfind',[]);
   f.forEach(function(x){nf.unshift({t:Date.now(),txt:x})});
   W('pv_agentfind',nf.slice(0,80));
-  var al=R('agentlog');al.unshift({t:Date.now(),txt:'🤖 ایجنت: '+f[0]+(f.length>1?' (+'+(f.length-1)+' مورد)':'')});
-  W('pv_agentlog',al.slice(0,100));
+  var al=R('agentlog');al.unshift({t:Date.now(),txt:'🤖 ایجنت: '+f[0]});W('pv_agentlog',al.slice(0,100));
   if(!agentWatch._t||Date.now()-agentWatch._t>600000){toast('🤖 ایجنت: '+f[0],'er');agentWatch._t=Date.now()}
   smsSend('agent','🤖 PyroFlow هشدار: '+f[0]);
  }
 }
-
 /* ═══ 📦 آماده‌سازی و تخلیه ═══ */
-var PREPT=[['cut','🔪 برش لاستیک / آماده‌سازی خوراک'],['load','📥 بارگیری راکتور'],['empt','🧹 خالی‌سازی و آماده‌سازی'],['dis_carb','⬛ تخلیه کربن بلک'],['dis_wire','🧵 جمع‌آوری سیم فولادی'],['pack','📦 بسته‌بندی و انتقال'],['other','🛠 کار جانبی']];
+var PREPT=[['cut','🔪 برش لاستیک / آماده‌سازی خوراک'],['load','📥 بارگیری راکتور'],['empt','🧹 خالی‌سازی'],['dis_carb','⬛ تخلیه کربن بلک'],['dis_wire','🧵 جمع‌آوری سیم فولادی'],['pack','📦 بسته‌بندی و انتقال'],['other','🛠 کار جانبی']];
 function PREP_TN(k){for(var i=0;i<PREPT.length;i++){if(PREPT[i][0]===k)return PREPT[i][1]}return k}
 function PR_add(){
  var u=U();if(!u)return;
@@ -2527,16 +2534,16 @@ function PR_start(t){
  r.st='doing';r.start=Date.now();r.stT=hhm();r.startBy=u.name;
  W('pv_prep',l);
  smsSend('task','📦 شروع: '+PREP_TN(r.v.type)+' — '+u.name);
- toast('▶️ شروع شد — مدت‌سنج فعال','ok');view();
+ toast('▶️ شروع — مدت‌سنج فعال','ok');view();
 }
 function PR_fin(t){
  var u=U();if(!u)return;
  var l=R('prep'),r=null;
  for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
  if(!r||r.st!=='doing')return;
- var defq=(r.v.type==='dis_carb'||r.v.type==='dis_wire')?prompt('مقدار خروجی برداشته‌شده (عدد):'):(r.v.qty||'');
+ var defq=(r.v.type==='dis_carb'||r.v.type==='dis_wire')?prompt('مقدار خروجی (عدد):'):(r.v.qty||'');
  if(defq===null)return;
- var cost=prompt('دستمزد این کار (تومان — خالی = بدون هزینه):');
+ var cost=prompt('دستمزد (تومان — خالی = بدون):');
  cost=(cost&&!isNaN(+cost))?+cost:0;
  r.finQ=String(defq);
  r.st='done';r.fin=Date.now();r.ms=r.fin-(r.start||r.t);r.finT=hhm();r.cost=cost;r.finBy=u.name;
@@ -2604,28 +2611,27 @@ function vPrep(){
  inner+='</div><div class="pan"><h3>🧾 در انتظار شروع ('+F(pend.length)+')</h3>';
  if(!pend.length)inner+='<div class="empty">—</div>';
  pend.forEach(function(x){
-  inner+='<div class="al-row"><span class="al-ic ai-i">🧾</span><div style="flex:1;min-width:180px"><b>'+E(PREP_TN(x.v.type))+'</b> — '+E(x.v.qty||'—')+' '+E(x.v.unit||'')+(x.v.batch?' · بچ '+E(x.v.batch):'')+(x.v.who?' · 👤 '+E(x.v.who):'')+'<br><span class="s">'+E(x.by)+' · '+E(x.at)+'</span></div><button class="pill pi-w" onclick="PR_start('+x.t+')">▶️ شروع</button> <button class="pill pi-r" onclick="PR_del('+x.t+')">🗑</button></div>';
+  inner+='<div class="al-row"><span class="al-ic ai-i">🧾</span><div style="flex:1;min-width:180px"><b>'+E(PREP_TN(x.v.type))+'</b> — '+E(x.v.qty||'—')+' '+E(x.v.unit||'')+(x.v.batch?' · بچ '+E(x.v.batch):'')+'<br><span class="s">'+E(x.by)+' · '+E(x.at)+'</span></div><button class="pill pi-w" onclick="PR_start('+x.t+')">▶️ شروع</button> <button class="pill pi-r" onclick="PR_del('+x.t+')">🗑</button></div>';
  });
- inner+='</div><div class="pan"><h3>✅ تاریخچه (مدت + هزینه + خروجی)</h3><div class="tbl-wrap"><table class="tb" style="min-width:560px"><thead><tr><th>نوع</th><th>مقدار</th><th>بچ</th><th>مجری</th><th>مدت</th><th>دستمزد</th><th>خروجی</th><th></th></tr></thead><tbody>';
+ inner+='</div><div class="pan"><h3>✅ تاریخچه</h3><div class="tbl-wrap"><table class="tb" style="min-width:560px"><thead><tr><th>نوع</th><th>مقدار</th><th>بچ</th><th>مجری</th><th>مدت</th><th>دستمزد</th><th>خروجی</th><th></th></tr></thead><tbody>';
  var hist=l.filter(function(x){return x.st==='verified'||x.st==='done'});
  if(!hist.length)inner+='<tr><td colspan="8" class="empty">—</td></tr>';
  hist.slice(0,25).forEach(function(x){
   inner+='<tr><td class="tx">'+E(PREP_TN(x.v.type))+'</td><td>'+E(x.finQ||'—')+'</td><td>'+E(x.v.batch||'—')+'</td><td class="tx">'+E(x.v.who||x.by)+'</td><td class="ok2">'+(x.ms?fmtDur(x.ms):'—')+'</td><td>'+(x.cost?F(x.cost):'—')+'</td><td class="tx">'+E(x.outNote||'—')+'</td><td>'+(x.st==='done'&&ADM()?'<button class="pill pi-ok" onclick="PR_ver('+x.t+')">تایید</button>':'<span class="bdg-pill bd-ok">تایید</span>')+'</td></tr>';
  });
  inner+='</tbody></table></div></div>';
- q('view').innerHTML='<div class="page-head"><h2>📦 آماده‌سازی مواد و تخلیه محصولات</h2></div>'+inner;
+ q('view').innerHTML='<div class="page-head"><h2>📦 آماده‌سازی و تخلیه</h2></div>'+inner;
 }
-
 /* ═══ ⚙️ تنظیمات کارخانه ═══ */
 function vFSet(){
  var u=U();
  if(!u.admin&&!u.super){q('view').innerHTML='<div class="pan"><div class="lock">فقط مدیر</div></div>';return}
  var cur=TABS.fset||'mat';
- var inner=tabsUI('fset',[{k:'mat',n:'📦 مواد انبار (±)'},{k:'staff',n:'👥 پرسنل'},{k:'raws',n:'🧱 مواد اولیه'},{k:'hist',n:'🕓 سوابق'}]);
+ var inner=tabsUI('fset',[{k:'mat',n:'📦 مواد (±)'},{k:'staff',n:'👥 پرسنل'},{k:'raws',n:'🧱 مواد اولیه'},{k:'hist',n:'🕓 سوابق'}]);
  if(cur==='mat'){
   var inv=R('inv');
-  inner+='<div class="pan"><h3>📦 تنظیم دستی موجودی — خودکار به مالی و گزارش مدیر</h3><div class="note"><span>ℹ️</span><div>«±» را بزن: خرید = هزینه به مالی · مصرف = خروج انبار. همه در «سوابق» و گزارش مخفی مدیر ثبت می‌شود.</div></div><div class="tbl-wrap"><table class="tb" style="min-width:520px"><thead><tr><th>کالا</th><th>موجودی</th><th>واحد</th><th>وضعیت</th><th></th></tr></thead><tbody>';
-  if(!inv.length)inner+='<tr><td colspan="5" class="empty">از انبار قلم اضافه کنید</td></tr>';
+  inner+='<div class="pan"><h3>📦 تنظیم دستی موجودی</h3><div class="note"><span>ℹ️</span><div>خرید = هزینه به مالی · مصرف = خلاف انبار. همه در سوابق + گزارش مخفی مدیر.</div></div><div class="tbl-wrap"><table class="tb" style="min-width:520px"><thead><tr><th>کالا</th><th>موجودی</th><th>واحد</th><th>وضعیت</th><th></th></tr></thead><tbody>';
+  if(!inv.length)inner+='<tr><td colspan="5" class="empty">—</td></tr>';
   inv.forEach(function(x){
    var lowx=+x.v.qty<=10;
    inner+='<tr><td class="tx">'+E(x.v.item)+'</td><td class="'+(lowx?'hot':'ok2')+'">'+F(x.v.qty)+'</td><td>'+E(x.v.unit||'—')+'</td><td>'+(lowx?'⚠️ کم':'✅')+'</td><td><button class="pill pi-b" onclick="FS_adj(\''+E(x.v.item)+'\')">± تغییر</button></td></tr>';
@@ -2633,26 +2639,26 @@ function vFSet(){
   inner+='</tbody></table></div></div>';
   var hrm2=R('hrm').filter(function(p){return p.st!=='arch'});
   inner+='<div class="pan"><h3>🛡 تخصیص مسئولیت قطعه (هشدار کم‌موجودی)</h3><div class="fgrid">';
-  inner+='<div><label>کالا/قطعه</label><select id="eq_it">'+inv.map(function(x){return '<option>'+E(x.v.item)+'</option>'}).join('')+'</select></div>';
+  inner+='<div><label>قطعه</label><select id="eq_it">'+inv.map(function(x){return '<option>'+E(x.v.item)+'</option>'}).join('')+'</select></div>';
   inner+='<div><label>مسئول</label><select id="eq_wh">'+hrm2.map(function(p){return '<option>'+E(p.v.n)+'</option>'}).join('')+'</select></div>';
   inner+='<div><label>حد هشدار</label><input id="eq_min" type="number" placeholder="5"></div></div>';
-  inner+='<button class="btn btn-gh sm" onclick="FS_eqSave()">🛡 اتصال مسئول</button></div>';
+  inner+='<button class="btn btn-gh sm" onclick="FS_eqSave()">🛡 اتصال</button></div>';
  }
  if(cur==='staff'){
   var past=R('hrm').filter(function(p){return p.st==='arch'});
-  inner+='<div class="pan"><h3>➕ استخدام نیروی جدید</h3><div class="fgrid">';
+  inner+='<div class="pan"><h3>➕ استخدام</h3><div class="fgrid">';
   inner+='<div><label>نام *</label><input id="hs_n"></div>';
   inner+='<div><label>سمت</label><input id="hs_r"></div>';
   inner+='<div><label>شیفت</label><select id="hs_sh"><option>صبح</option><option>عصر</option><option>شب</option><option>روتاری</option></select></div></div>';
   inner+='<button class="btn btn-pri sm" onclick="FS_hire()">✍️ استخدام</button></div>';
-  inner+='<div class="pan"><h3>👥 پرسنل فعال</h3><div class="tbl-wrap"><table class="tb" style="min-width:560px"><thead><tr><th>نام</th><th>سمت</th><th>شیفت</th><th>از تاریخ</th><th></th></tr></thead><tbody>';
+  inner+='<div class="pan"><h3>👥 فعال</h3><div class="tbl-wrap"><table class="tb" style="min-width:560px"><thead><tr><th>نام</th><th>سمت</th><th>شیفت</th><th>از</th><th></th></tr></thead><tbody>';
   var on3=R('hrm').filter(function(p){return p.st!=='arch'});
   if(!on3.length)inner+='<tr><td colspan="5" class="empty">—</td></tr>';
   on3.forEach(function(p){
    inner+='<tr><td class="tx"><b>'+E(p.v.n)+'</b></td><td>'+E(p.v.r||'—')+'</td><td>'+E(p.v.sh||'—')+'</td><td style="font-size:9.5px">'+E(p.at||'—')+'</td><td><button class="pill pi-r" onclick="FS_retire('+p.t+')">🏁 پایان همکاری</button></td></tr>';
   });
   inner+='</tbody></table></div></div>';
-  inner+='<div class="pan" style="border-color:rgba(180,138,255,.4)"><h3>🗄 پرسنل گذشته — سابقه حفظ‌شده ('+F(past.length)+')</h3><div class="tbl-wrap"><table class="tb" style="min-width:520px"><thead><tr><th>نام</th><th>سمت</th><th>از</th><th>تا</th><th>مجموع حضور</th><th></th></tr></thead><tbody>';
+  inner+='<div class="pan" style="border-color:rgba(180,138,255,.4)"><h3>🗄 گذشته — سابقه حفظ‌شده ('+F(past.length)+')</h3><div class="tbl-wrap"><table class="tb" style="min-width:520px"><thead><tr><th>نام</th><th>سمت</th><th>از</th><th>تا</th><th>مجموع حضور</th><th></th></tr></thead><tbody>';
   if(!past.length)inner+='<tr><td colspan="6" class="empty">—</td></tr>';
   past.forEach(function(p){
    var tot=0;
@@ -2663,12 +2669,12 @@ function vFSet(){
  }
  if(cur==='raws'){
   var raws=R('raws');
-  inner+='<div class="pan"><h3>🧱 مواد اولیهٔ کارخانه</h3><div class="fgrid">';
-  inner+='<div><label>نام ماده *</label><input id="rw_n" placeholder="مثلاً نایلون"></div>';
+  inner+='<div class="pan"><h3>🧱 مواد اولیه</h3><div class="fgrid">';
+  inner+='<div><label>نام *</label><input id="rw_n" placeholder="مثلاً نایلون"></div>';
   inner+='<div><label>واحد</label><input id="rw_u" value="تن"></div></div>';
   inner+='<button class="btn btn-pri sm" onclick="FS_rawAdd()">➕ افزودن</button></div>';
   inner+='<div class="pan"><h3>📋 فهرست</h3><div class="tbl-wrap"><table class="tb" style="min-width:420px"><thead><tr><th>ماده</th><th>واحد</th><th>وضعیت</th><th></th></tr></thead><tbody>';
-  if(!raws.length)inner+='<tr><td colspan="4" class="empty">ماده‌ای نیست</td></tr>';
+  if(!raws.length)inner+='<tr><td colspan="4" class="empty">—</td></tr>';
   raws.forEach(function(r){
    inner+='<tr><td class="tx">'+E(r.v.name)+'</td><td>'+E(r.v.unit||'تن')+'</td><td>'+(r.st==='arch'?'<span class="bdg-pill bd-warn">غیرفعال</span>':'<span class="bdg-pill bd-ok">فعال</span>')+'</td><td>'+(r.st!=='arch'?'<button class="pill pi-g" onclick="FS_rawOff('+r.t+')">غیرفعال</button>':'<button class="pill pi-ok" onclick="FS_rawOn('+r.t+')">فعال</button>')+'</td></tr>';
   });
@@ -2679,25 +2685,25 @@ function vFSet(){
   ih.forEach(function(x){rows.push({t:x.t,k:'📦 انبار',s:x.item,c:(x.qty>0?'+':'')+F(x.qty),r:x.reason,by:x.by})});
   R('hrm').forEach(function(p){
    if(p.hiredLog)rows.push({t:p.hiredLog,k:'👥 استخدام',s:p.v.n,c:'—',r:'استخدام',by:p.hiredBy||'—'});
-   if(p.leaveLog)rows.push({t:p.leaveLog,k:'👥 پایان کار',s:p.v.n,c:'—',r:'خروج',by:p.leaveBy||'—'});
+   if(p.leaveLog)rows.push({t:p.leaveLog,k:'👥 پایان',s:p.v.n,c:'—',r:'خروج',by:p.leaveBy||'—'});
   });
   rows.sort(function(a,b){return b.t-a.t});
-  inner+='<div class="pan"><h3>🕓 سوابق تغییرات</h3><div class="tbl-wrap"><table class="tb" style="min-width:560px"><thead><tr><th>زمان</th><th>نوع</th><th>موضوع</th><th>تغییر</th><th>دلیل</th><th>توسط</th></tr></thead><tbody>';
+  inner+='<div class="pan"><h3>🕓 سوابق</h3><div class="tbl-wrap"><table class="tb" style="min-width:560px"><thead><tr><th>زمان</th><th>نوع</th><th>موضوع</th><th>تغییر</th><th>دلیل</th><th>توسط</th></tr></thead><tbody>';
   if(!rows.length)inner+='<tr><td colspan="6" class="empty">—</td></tr>';
   rows.slice(0,40).forEach(function(x){
    inner+='<tr><td style="font-size:9.5px">'+ago(x.t)+'</td><td class="tx">'+x.k+'</td><td class="tx">'+E(x.s)+'</td><td class="'+(String(x.c).indexOf('-')===0?'hot':'ok2')+'">'+x.c+'</td><td class="tx">'+E(x.r||'—')+'</td><td class="tx">'+E(x.by)+'</td></tr>';
   });
   inner+='</tbody></table></div></div>';
  }
- q('view').innerHTML='<div class="page-head"><h2>⚙️ تنظیمات اختصاصی کارخانه</h2><span class="sub">'+E(u.cname||'—')+'</span></div>'+inner;
+ q('view').innerHTML='<div class="page-head"><h2>⚙️ تنظیمات کارخانه</h2><span class="sub">'+E(u.cname||'—')+'</span></div>'+inner;
 }
 function FS_adj(item){
- q('peMBody').innerHTML='<h3 style="font-size:14px;margin-bottom:9px">± تنظیم موجودی: '+E(item)+'</h3>'+
+ q('peMBody').innerHTML='<h3 style="font-size:14px;margin-bottom:9px">± موجودی: '+E(item)+'</h3>'+
  '<div class="fgrid">'+
- '<div><label>مقدار (+ افزایش / − کاهش)</label><input id="fa_qty" type="number"></div>'+
+ '<div><label>مقدار (+ / −)</label><input id="fa_qty" type="number"></div>'+
  '<div><label>دلیل</label><select id="fa_r"><option>خرید جدید</option><option>مصرف در تولید</option><option>اتلاف / معیوب</option><option>اصلاح شمارش</option></select></div>'+
- '<div><label>در صورت خرید: مبلغ کل (تومان)</label><input id="fa_amt" type="number" placeholder="اختیاری"></div></div>'+
- '<button class="btn btn-pri full" style="margin-top:10px" onclick="FS_adjSave(\''+E(item)+'\')">💾 اعمال به انبار + مالی</button>';
+ '<div><label>در صورت خرید: مبلغ (تومان)</label><input id="fa_amt" type="number" placeholder="اختیاری"></div></div>'+
+ '<button class="btn btn-pri full" style="margin-top:10px" onclick="FS_adjSave(\''+E(item)+'\')">💾 اعمال</button>';
  q('peModal').classList.remove('hid');
 }
 function FS_adjSave(item){
@@ -2715,15 +2721,15 @@ function FS_adjSave(item){
  W('pv_invhist',ih.slice(0,200));
  if(amt>0){var f=R('fin');f.unshift({t:Date.now(),v:{ft:'out',title:'خرید '+item,amt:amt},st:'ok',by:u.name,at:hj()});W('pv_fin',f)}
  _mgrNote('📦 انبار: '+item+' '+(qty>0?'+':'')+qty+' ('+rs+') — '+u.name);
- smsSend('edit','📦 تغییر انبار: '+item+' '+(qty>0?'+':'')+qty+' — '+rs);
+ smsSend('edit','📦 انبار: '+item+' '+(qty>0?'+':'')+qty+' — '+rs);
  PE_closeM();
- toast('✅ اعمال شد'+(amt>0?' — هزینه به مالی':''),'ok');view();
+ toast('✅ اعمال شد'+(amt>0?' — به مالی':''),'ok');view();
 }
 function FS_eqSave(){
  var l=R('eqresp');
  l.unshift({t:Date.now(),item:q('eq_it').value,who:q('eq_wh').value,min:+q('eq_min').value||5,by:U().name});
  W('pv_eqresp',l.slice(0,100));
- toast('✅ مسئول متصل شد — کم‌موجودی گزارش می‌شود','ok');view();
+ toast('✅ مسئول متصل شد','ok');view();
 }
 function FS_hire(){
  var u=U();if(!u||!u.admin)return;
@@ -2734,7 +2740,7 @@ function FS_hire(){
  W('pv_hrm',l);
  _mgrNote('👥 استخدام '+n);
  smsSend('task','👥 استخدام: '+n);
- toast('✅ اضافه شد — سابقه از امروز','ok');view();
+ toast('✅ اضافه شد','ok');view();
 }
 function FS_retire(t){
  var u=U();if(!u||!u.admin)return;
@@ -2745,17 +2751,17 @@ function FS_retire(t){
  r.st='arch';r.leaveAt=hj();r.leaveLog=Date.now();r.leaveBy=u.name;
  W('pv_hrm',l);
  _mgrNote('👥 پایان همکاری '+r.v.n);
- smsSend('task','🏁 پایان همکاری: '+r.v.n);
- toast('✅ — سوابق در «پرسنل گذشته» حفظ شد','ok');view();
+ smsSend('task','🏁 پایان: '+r.v.n);
+ toast('✅ — سابقه در «گذشته» حفظ شد','ok');view();
 }
 function FS_rehire(t){
  var u=U();if(!u||!u.admin)return;
  var l=R('hrm'),r=null;
  for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
  if(!r)return;
- r.st='ok';r.at=hj();r.reHired=1;
+ r.st='ok';r.at=hj();
  W('pv_hrm',l);
- toast('✅ بازگشت به کار — سوابق قبلی دست‌نخورده','ok');view();
+ toast('✅ بازگشت — سوابق قبلی دست‌نخورده','ok');view();
 }
 function FS_rawAdd(){
  var u=U();if(!u||!u.admin)return;
@@ -2764,7 +2770,7 @@ function FS_rawAdd(){
  var l=R('raws');
  l.unshift({t:Date.now(),v:{name:n,unit:q('rw_u').value.trim()||'تن'},st:'ok',by:u.name,at:hj()});
  W('pv_raws',l);
- toast('✅ اضافه شد — در بچ‌های جدید قابل انتخاب','ok');view();
+ toast('✅ اضافه شد','ok');view();
 }
 function FS_rawOff(t){
  var l=R('raws'),r=null;
@@ -2776,7 +2782,7 @@ function FS_rawOn(t){
  for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
  if(r){r.st='ok';W('pv_raws',l);toast('✅ فعال شد','ok');view()}
 }
-/* فرم بچ: خوراک از کاتالوگ مواد اولیه */
+/* فرم بچ: خوراک از کاتالوگ */
 var _oldFormHTML=formHTML;
 formHTML=function(sec){
  var h=_oldFormHTML(sec);
@@ -2789,38 +2795,35 @@ formHTML=function(sec){
  }
  return h;
 };
-
 /* ═══ 📍 موقعیت و دمای محیط ═══ */
 function vLoc(){
  var u=U();if(!u)return;
- var inner='<div class="pan"><h3>📍 آدرس و موقعیت ثبت دمای محیط</h3>';
- inner+='<div class="note bl"><span>ℹ️</span><div>دمای محیط از همین موقعیت گرفته می‌شود.<br><b>راه ۱:</b> GPS در محل کارخانه (دقیق‌ترین)<br><b>راه ۲:</b> آدرس و مختصات دستی</div></div>';
- inner+='<div class="meta-bar"><span>🏭 آدرس: <b>'+(u.addr?E(u.addr):'— ثبت نشده')+'</b></span><span>🏙 شهر: <b>'+(u.city?E(u.city):'—')+'</b></span><span>📍 مختصات: <b>'+(u.lat?E((+u.lat).toFixed(4))+', '+E((+u.lon).toFixed(4)):'—')+'</b></span></div>';
- if(!u.lat)inner+='<div class="lkb">⚠️ موقعیتی ثبت نشده — برای دقت، ثبت کن</div>';
- inner+='</div>';
- inner+='<div class="pan"><h3>📍 راه ۱ — GPS</h3><button class="btn btn-pri full" onclick="LOC_gps()">📍 موقعیت من را بگیر و ذخیره کن</button></div>';
- inner+='<div class="pan"><h3>✍️ راه ۲ — ویرایش دستی</h3><div class="fgrid">';
- inner+='<div><label>آدرس دقیق کارخانه</label><input id="lc_addr" value="'+E(u.addr||'')+'"></div>';
+ var inner='<div class="pan"><h3>📍 آدرس و موقعیت دمای محیط</h3>';
+ inner+='<div class="note bl"><span>ℹ️</span><div>راه ۱: GPS در محل کارخانه · راه ۲: آدرس و مختصات دستی</div></div>';
+ inner+='<div class="meta-bar"><span>🏭 آدرس: <b>'+(u.addr?E(u.addr):'—')+'</b></span><span>🏙 شهر: <b>'+(u.city?E(u.city):'—')+'</b></span><span>📍 مختصات: <b>'+(u.lat?E((+u.lat).toFixed(4))+', '+E((+u.lon).toFixed(4)):'—')+'</b></span></div></div>';
+ inner+='<div class="pan"><h3>📍 GPS</h3><button class="btn btn-pri full" onclick="LOC_gps()">📍 بگیر و ذخیره کن</button></div>';
+ inner+='<div class="pan"><h3>✍️ دستی</h3><div class="fgrid">';
+ inner+='<div><label>آدرس دقیق</label><input id="lc_addr" value="'+E(u.addr||'')+'"></div>';
  inner+='<div><label>شهر</label><input id="lc_city" value="'+E(u.city||'')+'"></div>';
  inner+='<div><label>عرض (lat)</label><input id="lc_lat" type="number" step="any" value="'+(u.lat?E((+u.lat).toFixed(6)):'')+'" placeholder="36.32"></div>';
  inner+='<div><label>طول (lon)</label><input id="lc_lon" type="number" step="any" value="'+(u.lon?E((+u.lon).toFixed(6)):'')+'" placeholder="59.55"></div>';
  inner+='</div><button class="btn btn-pri full" onclick="LOC_save()">💾 ذخیره</button></div>';
- inner+='<div class="pan"><h3>🌡 تست دما</h3><button class="btn btn-gh full sm" onclick="LOC_test()">🌡 دریافت دمای محیط الان</button><div id="locTest" style="margin-top:9px"></div></div>';
- q('view').innerHTML='<div class="page-head"><h2>📍 موقعیت و دمای محیط</h2></div>'+inner;
+ inner+='<div class="pan"><h3>🌡 تست</h3><button class="btn btn-gh full sm" onclick="LOC_test()">🌡 دمای الان</button><div id="locTest" style="margin-top:9px"></div></div>';
+ q('view').innerHTML='<div class="page-head"><h2>📍 موقعیت و دما</h2></div>'+inner;
 }
 function LOC_gps(){
  var u=U();if(!u)return;
- if(!navigator.geolocation){toast('مرورگر GPS را پشتیبانی نمی‌کند','er');return}
- toast('📍 در حال گرفتن موقعیت…');
+ if(!navigator.geolocation){toast('پشتیبانی نمی‌شود','er');return}
+ toast('📍 در حال گرفتن…');
  navigator.geolocation.getCurrentPosition(function(pos){
   var la=pos.coords.latitude,lo=pos.coords.longitude;
   var l=US();
   for(var i=0;i<l.length;i++){if(l[i].email===u.email){l[i].lat=la;l[i].lon=lo;break}}
   W('pv_users',l);
   LOC_syncFirm(l.filter(function(x){return x.email===u.email})[0]);
-  toast('✅ موقعیت ذخیره شد','ok');
+  toast('✅ ذخیره شد','ok');
   setTimeout(LOC_test,400);
- },function(){toast('دسترسی موقعیت داده نشد — دستی وارد کن','er')},{timeout:9000,enableHighAccuracy:true});
+ },function(){toast('دسترسی داده نشد — دستی وارد کن','er')},{timeout:9000,enableHighAccuracy:true});
 }
 function LOC_save(){
  var u=U();if(!u)return;
@@ -2862,19 +2865,132 @@ function LOC_test(){
  if(!box)return;
  box.innerHTML='<span class="spin"></span> <span style="font-size:11.5px;color:var(--mut)">در حال دریافت…</span>';
  fetchAmbient(u,function(t,city,wind){
-  var src=u.lat?'موقعیت ثبت‌شده شما':'GPS/شبکه لحظه‌ای';
-  box.innerHTML='<div class="'+(t==='—'?'lkb':'gbox')+'">🌡 دما: <b style="font-family:var(--mono)">'+E(String(t))+'°C</b>'+(t!=='—'&&wind&&wind!=='—'?' · 💨 '+E(String(wind))+' km/h':'')+'<br>🏙 '+E(city||u.city||'نامشخص')+' — منبع: '+src+'</div>';
+  box.innerHTML='<div class="'+(t==='—'?'lkb':'gbox')+'">🌡 <b style="font-family:var(--mono)">'+E(String(t))+'°C</b>'+(t!=='—'&&wind&&wind!=='—'?' · 💨 '+E(String(wind))+' km/h':'')+'<br>🏙 '+E(city||u.city||'نامشخص')+'</div>';
   var l=R('env');l.unshift({t:Date.now(),at:hj(),city:city||u.city||'—',temp:t,wind:wind||'—',by:u.name});W('pv_env',l.slice(0,50));
  });
 }
-
+/* ═══ 🎙 صوت اصلاح‌شده: ضبط + پخش + متن زنده در کادر ═══ */
+var SRBASE='',SRONLY=false;
+function buildSR(){
+ var WS=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!WS){toast('⚠️ این مرورگر تشخیص گفتار ندارد — از Chrome اندروید یا دسکتاپ Chrome/Edge استفاده کن (ضبط و پخش همه‌جا کار می‌کند)','er');return null}
+ var r=new WS();
+ r.lang='fa-IR';r.interimResults=true;r.continuous=true;
+ r.onresult=function(e){
+  var tmp='';
+  for(var i=0;i<e.results.length;i++){
+   var res=e.results[i];
+   if(res.isFinal)SRBASE+=res[0].transcript+' ';
+   else tmp+=res[0].transcript;
+  }
+  VTT=(SRBASE+tmp).replace(/\s+/g,' ').trim();
+  var lt=q('liveTxt')||q('spLive');
+  if(lt)lt.textContent='📝 '+VTT;
+  var t=q('rq_txt');
+  if(t&&VTT)t.value=VTT;
+ };
+ r.onerror=function(e){SRVon=false;if(e&&e.error==='not-allowed')toast('دسترسی میکروفون داده نشد','er')};
+ r.onend=function(){
+  SRVon=false;
+  if(REC||SRONLY){try{r.start();SRVon=true}catch(e){}}
+ };
+ return r;
+}
+function recUI(){
+ var el=q('recBox');if(!el)return;
+ if(REC){
+  el.innerHTML='<span class="bdg-pill bd-warn">🔴 در حال ضبط… حرف بزن (متن زنده پایین + در کادر می‌آید)</span>'+
+  '<div class="livetxt" id="liveTxt">'+(VTT?E(VTT):'…')+'</div>'+
+  '<button class="pill pi-r" onclick="stopRec()">⏹ پایان ضبط</button>';
+ }else if(CV){
+  el.innerHTML='<div style="font-size:10.5px;color:var(--teal);margin-bottom:5px">✔ صوت آماده — پخش:</div>'+
+  '<audio controls src="'+CV+'" style="width:100%;max-width:280px"></audio>'+
+  (VTT?'<div class="livetxt" style="color:var(--teal)">📝 '+E(VTT)+'</div>':'<div style="font-size:10.5px;color:var(--mut2);margin:5px 0">متن تشخیص داده نشد — در کادر بنویس (صوت سالم است)</div>')+
+  '<button class="pill pi-g" onclick="CV=null;VTT=\'\';SRBASE=\'\';recUI()">✖ حذف</button>';
+ }else{
+  el.innerHTML='<div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn btn-pri sm" onclick="startRec()">🎙 ضبط صوت + متن خودکار</button><button class="btn btn-gh sm" onclick="startSpeechOnly()">🗣 فقط گفتار به متن</button></div>';
+ }
+}
+var _spT=null;
+function startSpeechOnly(){
+ SRONLY=true;SRBASE='';VTT='';
+ SRV=buildSR();
+ if(!SRV){SRONLY=false;return}
+ var el=q('spBox');
+ if(el)el.innerHTML='<span class="bdg-pill bd-warn">🔴 شنیدن… (متن زنده در کادر پایین نوشته می‌شود)</span><div class="livetxt" id="spLive">…</div><button class="pill pi-r" onclick="stopSpeechOnly()">⏹ پایان</button>';
+ try{SRV.start();SRVon=true;toast('🗣 حرف بزن — متن زنده در کادر ثبت می‌شود','ok')}catch(e){}
+ clearTimeout(_spT);
+ _spT=setTimeout(function(){if(SRONLY&&SRBASE===''){stopSpeechOnly();toast('زمان تمام شد — دوباره بزن','')}},60000);
+}
+function stopSpeechOnly(){
+ SRONLY=false;
+ clearTimeout(_spT);
+ try{if(SRV&&SRVon)SRV.stop()}catch(e){}
+ var t=q('rq_txt');
+ if(t&&VTT){var cur=t.value.trim();t.value=cur?cur+' '+VTT:VTT}
+ var el=q('spBox');
+ if(el)el.innerHTML='<button class="btn btn-gh sm" onclick="startSpeechOnly()">🗣 گفتار جدید</button>'+(VTT?'<span class="s" style="margin-inline-start:7px">آخرین متن در کادر ثبت شد ✅</span>':'');
+ if(VTT)toast('✅ متن در کادر ثبت شد — چک و ارسال کن','ok');
+ else toast('چیزی تشخیص داده نشد — دوباره تلاش کن یا دستی بنویس','er');
+ SRBASE='';VTT='';
+}
+window.startRec=function(){
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast('ضبط پشتیبانی نمی‌شود','er');return}
+ navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
+  var opts={};
+  var mt=pickMime();if(mt)opts.mimeType=mt;
+  try{mediaR=new MediaRecorder(st,opts)}catch(e){mediaR=new MediaRecorder(st)}
+  CHUNKS=[];CV=null;VTT='';SRBASE='';
+  mediaR.ondataavailable=function(e){if(e.data&&e.data.size)CHUNKS.push(e.data)};
+  mediaR.onstop=function(){
+   var b=new Blob(CHUNKS,{type:mediaR.mimeType||'audio/webm'});
+   var rd=new FileReader();
+   rd.onload=function(){CV=rd.result;recUI()};
+   rd.readAsDataURL(b);
+   try{st.getTracks().forEach(function(x){x.stop()})}catch(e){}
+  };
+  mediaR.start();
+  REC=true;recUI();
+  SRV=buildSR();
+  if(SRV){try{SRV.start();SRVon=true}catch(e){}}
+  toast('🔴 ضبط شروع — پس از حرف زدن «پایان ضبط» را بزن','');
+ }).catch(function(){toast('دسترسی میکروفون داده نشد','er')});
+};
+window.stopRec=function(){
+ REC=false;
+ if(mediaR&&mediaR.state!=='inactive'){try{mediaR.stop()}catch(e){}}
+ if(SRV&&SRVon){try{SRV.stop()}catch(e){}}
+ var el=q('recBox');
+ if(el)el.innerHTML='<span class="bdg-pill bd-info">⏳ در حال آماده‌سازی…</span>';
+ setTimeout(function(){
+  var t=q('rq_txt');
+  if(t&&VTT){
+   var cur=t.value.trim();
+   t.value=cur?cur+' '+VTT:VTT;
+   toast('✅ متن در کادر نوشته شد — چک و ارسال کن','ok');
+  }
+  recUI();
+ },400);
+};
+/* تزریق کادر گفتار مجزا در صفحهٔ درخواست‌ها */
+var _bVReq=VIEWS.req;
+VIEWS.req=function(){
+ if(_bVReq)_bVReq();
+ var rb=q('recBox');
+ if(rb&&!q('spBox')){
+  var d=document.createElement('div');
+  d.className='recbox';d.id='spBox';
+  rb.parentNode.insertBefore(d,rb);
+ }
+ recUI();
+};
 /* ═══ ثبت صفحات و منو ═══ */
 VIEWS.guard=vGuard;VIEWS.tasks=vTasks;VIEWS.perf=vPerf;VIEWS.plc=vPLC;VIEWS.sms=vSMS;
 VIEWS.fset=vFSet;VIEWS.prep=vPrep;VIEWS.loc=vLoc;
-NAVG.push(['نگهبانی و کار',[['guard','🛡','نگهبانی'],['tasks','🧾','مأموریت‌ها'],['prep','📦','آماده‌سازی و تخلیه']]]);
-NAVG.push(['مدیریت پیشرفته',[['plc','🔌','پایش PLC'],['perf','📊','عملکرد پرسنل'],['sms','📲','پیامک و گزارش'],['fset','⚙️','تنظیمات کارخانه'],['loc','📍','آدرس و دمای محیط']]]);
-
-/* ═══ رندر نهایی (v5 — همهٔ صفحات) ═══ */
+NAVG.push(['گزارش پخت',[['cookarch','📖','بایگانی نشست‌ها']]]);
+NAVG.push(['نگهبانی و کار',[['guard','🛡','نگهبانی'],['tasks','🧾','مأموریت‌ها'],['prep','📦','آماده‌سازی']]]);
+NAVG.push(['مدیریت پیشرفته',[['plc','🔌','پایش PLC'],['perf','📊','عملکرد پرسنل'],['sms','📲','پیامک'],['fset','⚙️','تنظیمات کارخانه'],['loc','📍','آدرس و دما']]]);
+/* ═══ رندر نهایی ═══ */
 function render(){
  var u=U();
  var appS=q('appShell'),land=q('landing');
@@ -2885,31 +3001,26 @@ function render(){
  if(q('uAvat'))q('uAvat').textContent=u.name.trim().split(' ').map(function(w){return w[0]}).slice(0,2).join('');
  var al=computeAlerts();
  var bd=q('bellBadge');
- if(bd){var n5=al.filter(function(x){return x.lv!=='t'}).length;bd.textContent=F(n5);bd.style.display=n5?'flex':'none'}
+ if(bd){var n6=al.filter(function(x){return x.lv!=='t'}).length;bd.textContent=F(n6);bd.style.display=n6?'flex':'none'}
  var sh='';
  if(u.sup&&!u.admin){
   sh+='<div class="sgrp">پشتیبانی</div><button class="snv'+(route==='sup'||route==='supf'?' on':'')+'" onclick="go(\'sup\')"><span class="i">🎧</span> پایش کارخانه‌ها</button>';
-  sh+='<div class="sgrp">حساب</div><button class="snv'+(route==='loc'?' on':'')+'" onclick="go(\'loc\')"><span class="i">📍</span> آدرس و دمای محیط</button><button class="snv'+(route==='settings'?' on':'')+'" onclick="go(\'settings\')"><span class="i">⚙️</span> حساب من</button>';
+  sh+='<div class="sgrp">حساب</div><button class="snv'+(route==='loc'?' on':'')+'" onclick="go(\'loc\')"><span class="i">📍</span> آدرس و دما</button><button class="snv'+(route==='settings'?' on':'')+'" onclick="go(\'settings\')"><span class="i">⚙️</span> حساب من</button>';
  }else{
   NAVG.forEach(function(g){
-   var ok=g[1].filter(function(n){return u.admin||u.super||(u.perms||[]).indexOf(n[0])>=0||(n[0]==='dash'||n[0]==='ai'||n[0]==='pay'||n[0]==='guard'||n[0]==='tasks'||n[0]==='prep'||n[0]==='loc')});
+   var ok=g[1].filter(function(n){return u.admin||u.super||(u.perms||[]).indexOf(n[0])>=0||(n[0]==='dash'||n[0]==='ai'||n[0]==='pay'||n[0]==='guard'||n[0]==='tasks'||n[0]==='prep'||n[0]==='loc'||n[0]==='cookarch')});
    if(!ok.length)return;
    sh+='<div class="sgrp">'+g[0]+'</div>';
    ok.forEach(function(n){sh+='<button class="snv'+(route===n[0]?' on':'')+'" onclick="go(\''+n[0]+'\')"><span class="i">'+n[1]+'</span> '+n[2]+'</button>'});
   });
-  if(u.sup||u.super)sh+='<div class="sgrp">پشتیبانی</div><button class="snv'+(route==='sup'||route==='supf'?' on':'')+'" onclick="go(\'sup\')"><span class="i">🎧</span> پایش کارخانه‌ها</button>';
+  if(u.sup||u.super)sh+='<div class="sgrp">پشتیبانی</div>';
  }
  sh+='<div style="border-top:1px solid var(--ln);margin-top:12px;padding-top:8px"><button class="snv" onclick="logout()"><span class="i">🚪</span> خروج</button></div>';
  q('side').innerHTML=sh;
  var V=VIEWS[route];
  if(V)V();
 }
-
-/* ═══ قلاب پیامک روی رویدادها ═══ */
-var _oStart=window.startProc;
-if(_oStart)window.startProc=function(){_oStart();smsSend('proc','▶️ شروع پخت — '+hhm())};
-var _oEnd=window.endProc;
-if(_oEnd)window.endProc=function(){_oEnd();var p=getProc();smsSend('proc','🏁 پایان پخت — مدت '+(p&&p.dur?p.dur:'—'))};
+/* هookهای پیامک دیگر رویدادها */
 var _oCrow=window.addcrow;
 if(_oCrow)window.addcrow=function(){
  var sv=q('csev')?q('csev').value:'';
@@ -2917,8 +3028,7 @@ if(_oCrow)window.addcrow=function(){
  _oCrow();
  if(sv==='بحرانی'||(+a1>320))smsSend('crit','🚨 نقطه بحرانی — آنالوگ '+a1+'° — '+hhm());
 };
-
-/* ═══ بذر مواد اولیه + شروع ═══ */
+/* بذر مواد + اجرا */
 setTimeout(function(){
  if(U()&&!R('raws').length){
   W('pv_raws',[
@@ -2929,7 +3039,8 @@ setTimeout(function(){
  }
 },500);
 setInterval(agentWatch,90000);
-setTimeout(function(){if(U()){render();agentWatch()}},800);
+setTimeout(function(){if(U())render()},800);
+/* ═══════ PyroFlow PRO v6 — END ═══════ */
 </script>
 </body>
 </html>
