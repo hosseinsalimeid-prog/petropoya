@@ -3042,5 +3042,45 @@ setInterval(agentWatch,90000);
 setTimeout(function(){if(U())render()},800);
 /* ═══════ PyroFlow PRO v6 — END ═══════ */
 </script>
+ <script>
+"use strict";
+/* ═══════ پچ — بازگرداندن منوی 🎧 پایش برای مدیرکل و پشتیبان ═══════ */
+function render(){
+ var u=U();
+ var appS=q('appShell'),land=q('landing');
+ if(!u){appS.classList.add('hid');land.classList.remove('hid');window.scrollTo(0,0);return}
+ appS.classList.remove('hid');land.classList.add('hid');
+ if(route==='home')route=(u.sup&&!u.admin)?'sup':'dash';
+ if(q('hFactory'))q('hFactory').innerHTML='🏭 <b>'+E(u.cname||'—')+'</b>';
+ if(q('uAvat'))q('uAvat').textContent=u.name.trim().split(' ').map(function(w){return w[0]}).slice(0,2).join('');
+ var al=computeAlerts();
+ var bd=q('bellBadge');
+ if(bd){var n7=al.filter(function(x){return x.lv!=='t'}).length;bd.textContent=F(n7);bd.style.display=n7?'flex':'none'}
+ var sh='';
+ if(u.sup&&!u.admin){
+  /* پشتیبانِ تیم پشتیبانی */
+  sh+='<div class="sgrp">پشتیبانی PyroFlow</div>';
+  sh+='<button class="snv'+(route==='sup'||route==='supf'?' on':'')+'" onclick="go(\'sup\')"><span class="i">🎧</span> پایش کارخانه‌ها</button>';
+  sh+='<div class="sgrp">حساب</div>';
+  sh+='<button class="snv'+(route==='settings'?' on':'')+'" onclick="go(\'settings\')"><span class="i">⚙️</span> حساب من</button>';
+ }else{
+  NAVG.forEach(function(g){
+   var ok=g[1].filter(function(n){return u.admin||u.super||(u.perms||[]).indexOf(n[0])>=0||(n[0]==='dash'||n[0]==='ai'||n[0]==='pay'||n[0]==='guard'||n[0]==='tasks'||n[0]==='prep'||n[0]==='loc'||n[0]==='cookarch')});
+   if(!ok.length)return;
+   sh+='<div class="sgrp">'+g[0]+'</div>';
+   ok.forEach(function(n){sh+='<button class="snv'+(route===n[0]?' on':'')+'" onclick="go(\''+n[0]+'\')"><span class="i">'+n[1]+'</span> '+n[2]+'</button>'});
+  });
+  if(u.sup||u.super){
+   sh+='<div class="sgrp">پشتیبانی</div>';
+   sh+='<button class="snv'+(route==='sup'||route==='supf'?' on':'')+'" onclick="go(\'sup\')"><span class="i">🎧</span> پایش کارخانه‌ها</button>';
+   if(u.super)sh+='<button class="snv'+(route==='settings'?' on':'')+'" onclick="go(\'settings\')"><span class="i">🧑‍💼</span> تعریف پشتیبان و واگذاری</button>';
+  }
+ }
+ sh+='<div style="border-top:1px solid var(--ln);margin-top:12px;padding-top:8px"><button class="snv" onclick="logout()"><span class="i">🚪</span> خروج</button></div>';
+ q('side').innerHTML=sh;
+ var V=VIEWS[route];
+ if(V)V();
+}
+</script>
 </body>
 </html>
