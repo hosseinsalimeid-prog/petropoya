@@ -2543,5 +2543,514 @@ window.addcrow=function(){
 setInterval(agentWatch,90000);
 setTimeout(function(){if(U()){render();agentWatch()}},800);
 </script>
+ <script>
+"use strict";
+/* ═══════ PyroFlow Pro v2 — ⚙️ تنظیمات کارخانه + 📦 آماده‌سازی و تخلیه ═══════ */
+(function(){
+ if(!q('peModal')){
+  var m=document.createElement('div');
+  m.className='modal hid';m.id='peModal';
+  m.onclick=function(e){if(e.target===m){m.classList.add('hid')}};
+  m.innerHTML='<div class="box"><button class="mclose" onclick="q(\'peModal\').classList.add(\'hid\')">✕</button><div id="peMBody"></div></div>';
+  document.body.appendChild(m);
+ }
+})();
+function PE_closeM2(){q('peModal').classList.add('hid')}
+/* ═══ 📦 آماده‌سازی و تخلیه ═══ */
+var PREPT=[['cut','🔪 برش لاستیک / آماده‌سازی خوراک'],['load','📥 بارگیری راکتور'],['empt','🧹 خالی‌سازی و آماده‌سازی'],['dis_carb','⬛ تخلیه کربن بلک'],['dis_wire','🧵 جمع‌آوری سیم فولادی'],['pack','📦 بسته‌بندی و انتقال به انبار'],['other','🛠 کار جانبی']];
+function PREP_TN(k){for(var i=0;i<PREPT.length;i++){if(PREPT[i][0]===k)return PREPT[i][1]}return k}
+function vPrep(){
+ var u=U(),l=R('prep'),names=PE_whoNames(),opts='<option value="">— انتخاب —</option>';
+ names.forEach(function(n){opts+='<option>'+E(n)+'</option>'});
+ var bts=R('batch'),bopt='<option value="">— بدون اتصال به بچ —</option>';
+ bts.forEach(function(b){bopt+='<option>'+E(b.v.id)+'</option>'});
+ var inner='<div class="pan"><h3>➕ ثبت کار آماده‌سازی / تخلیه</h3><div class="fgrid">';
+ inner+='<div><label>نوع کار *</label><select id="pr_t">'+PREPT.map(function(p){return '<option value="'+p[0]+'">'+p[1]+'</option>'}).join('')+'</select></div>';
+ inner+='<div><label>مقدار برنامه (تن/کیلو/عدد)</label><input id="pr_q" type="number"></div>';
+ inner+='<div><label>واحد</label><select id="pr_u"><option>تن</option><option>کیلوگرم</option><option>عدد</option><option>لیتر</option></select></div>';
+ inner+='<div><label>اتصال به بچ</label><select id="pr_b">'+bopt+'</select></div>';
+ inner+='<div><label>مسئول / مجری</label><select id="pr_w">'+opts+'</select></div>';
+ inner+='<div><label>توضیح</label><input id="pr_n"></div></div>';
+ inner+='<button class="btn btn-pri sm" onclick="PR_add()">🧾 ثبت کاربرگ</button></div>';
+ var pend=[],act=[];
+ l.forEach(function(x){if(x.st==='new')pend.push(x);else if(x.st==='doing')act.push(x)});
+ inner+='<div class="pan" style="border-color:rgba(255,122,48,.4)"><h3>🔧 در حال انجام ('+F(act.length)+')</h3>';
+ if(!act.length)inner+='<div class="empty">کاری در جریان نیست</div>';
+ act.forEach(function(x){
+  inner+='<div class="al-row"><span class="al-ic ai-w">⏳</span><div style="flex:1;min-width:180px"><b>'+E(PREP_TN(x.v.type))+'</b> — '+E(x.v.qty||'—')+' '+E(x.v.unit||'')+(x.v.batch?' · بچ '+E(x.v.batch):'')+((x.v.who?' · 👤 '+E(x.v.who):''))+'<br><span class="s">شروع: '+E(x.stT||'—')+' — مدت: '+fmtDur(Date.now()-x.start)+'</span></div><button class="pill pi-ok" onclick="PR_fin('+x.t+')">✅ اتمام + ثبت خروجی</button></div>';
+ });
+ inner+='</div><div class="pan"><h3>🧾 در انتظار شروع ('+F(pend.length)+')</h3>';
+ if(!pend.length)inner+='<div class="empty">—</div>';
+ pend.forEach(function(x){
+  inner+='<div class="al-row"><span class="al-ic ai-i">🧾</span><div style="flex:1;min-width:180px"><b>'+E(PREP_TN(x.v.type))+'</b> — '+E(x.v.qty||'—')+' '+E(x.v.unit||'')+(x.v.batch?' · بچ '+E(x.v.batch):'')+((x.v.who?' · 👤 '+E(x.v.who):''))+'<br><span class="s">'+E(x.by)+' · '+E(x.at)+'</span></div><button class="pill pi-w" onclick="PR_start('+x.t+')">▶️ شروع کار</button> <button class="pill pi-r" onclick="PR_del('+x.t+')">🗑</button></div>';
+ });
+ inner+='</div><div class="pan"><h3>✅ تاریخچهٔ کارهای آماده‌سازی (با مدت و هزینه)</h3><div class="tbl-wrap"><table class="tb" style="min-width:560px"><thead><tr><th>نوع</th><th>مقدار</th><th>بچ</th><th>مجری</th><th>مدت</th><th>هزینه (تومان)</th><th>خروجی</th><th></th></tr></thead><tbody>';
+ var hist=l.filter(function(x){return x.st==='verified'||x.st==='done'});
+ if(!hist.length)inner+='<tr><td colspan="8" class="empty">—</td></tr>';
+ hist.slice(0,25).forEach(function(x){
+  inner+='<tr><td class="tx">'+E(PREP_TN(x.v.type))+'</td><td>'+E(x.finQ||'—')+'</td><td>'+E(x.v.batch||'—')+'</td><td class="tx">'+E(x.v.who||x.by)+'</td><td class="ok2">'+(x.ms?fmtDur(x.ms):'—')+'</td><td>'+(x.cost?F(x.cost):'—')+'</td><td class="tx">'+E(x.outNote||'—')+'</td><td>'+(x.st==='done'&&ADM()?'<button class="pill pi-ok" onclick="PR_ver('+x.t+')">تایید نهایی</button>':'<span class="bdg-pill bd-ok">تایید</span>')+'</td></tr>';
+ });
+ inner+='</tbody></table></div></div>';
+ q('view').innerHTML='<div class="page-head"><h2>📦 آماده‌سازی مواد و تخلیه محصولات</h2><span class="sub">تیم پشتیبانی آماده‌سازی — بارگیری تا تخلیه</span></div>'+inner;
+}
+function PR_add(){
+ var u=U();if(!u)return;
+ var v={type:q('pr_t').value,qty:q('pr_q').value.trim(),unit:q('pr_u').value,batch:q('pr_b').value,who:q('pr_w').value,note:q('pr_n').value.trim()};
+ var l=R('prep');
+ l.unshift({t:Date.now(),v:v,st:'new',by:u.name,at:hj()});
+ W('pv_prep',l.slice(0,200));
+ var al=R('agentlog');al.unshift({t:Date.now(),txt:'📦 کاربرگ «'+PREP_TN(v.type)+'» ثبت شد ('+(v.who||u.name)+')'});W('pv_agentlog',al.slice(0,100));
+ toast('✅ کاربرگ ثبت شد','ok');view();
+}
+function PR_start(t){
+ var u=U();if(!u)return;
+ var l=R('prep'),r=null;
+ for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
+ if(!r||r.st!=='new')return;
+ r.st='doing';r.start=Date.now();r.stT=hhm();r.startBy=u.name;
+ W('pv_prep',l);
+ smsSend('task','📦 شروع: '+PREP_TN(r.v.type)+' — '+u.name+' — '+hhm());
+ toast('▶️ شروع شد — مدت‌سنج فعال است','ok');view();
+}
+function PR_fin(t){
+ var u=U();if(!u)return;
+ var l=R('prep'),r=null;
+ for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
+ if(!r||r.st!=='doing')return;
+ var defq=(r.v.type==='dis_carb'||r.v.type==='dis_wire')?prompt('مقدار خروجی برداشته‌شده (عدد):'):(r.v.qty||'');
+ if(defq===null)return;
+ var cost=prompt('هزینه دستمزد این کار (تومان — خالی بگذار اگر ندارد):');
+ cost=(cost&&!isNaN(+cost))?+cost:0;
+ r.finQ=String(defq);
+ r.st='done';r.fin=Date.now();r.ms=r.fin-(r.start||r.t);r.finT=hhm();r.cost=cost;r.finBy=u.name;
+ var outNote='—';
+ if(r.v.type==='dis_carb'&&+defq>0){
+  var o=R('out');o.unshift({t:Date.now(),v:{prod:'کربن بلک',qty:+defq,unit:'کیلوگرم',batch:r.v.batch||''},st:'ok',by:u.name,at:hj()});W('pv_out',o);
+  var inv=R('inv'),ex=null;
+  for(var i2=0;i2<inv.length;i2++){if(inv[i2].v.item==='کربن بلک'){ex=inv[i2];break}}
+  if(ex)ex.v.qty=(+ex.v.qty||0)+(+defq);
+  else inv.unshift({t:Date.now(),v:{item:'کربن بلک',qty:+defq,unit:'کیلوگرم'},st:'ok',by:u.name,at:hj()});
+  W('pv_inv',inv);
+  outNote='⬛ '+F(defq)+' kg کربن → انبار';
+ }
+ if(r.v.type==='dis_wire'&&+defq>0){
+  var o2=R('out');o2.unshift({t:Date.now(),v:{prod:'سیم فولادی',qty:+defq,unit:'کیلوگرم',batch:r.v.batch||''},st:'ok',by:u.name,at:hj()});W('pv_out',o2);
+  var inv2=R('inv'),ex2=null;
+  for(var i3=0;i3<inv2.length;i3++){if(inv2[i3].v.item==='سیم فولادی'){ex2=inv2[i3];break}}
+  if(ex2)ex2.v.qty=(+ex2.v.qty||0)+(+defq);
+  else inv2.unshift({t:Date.now(),v:{item:'سیم فولادی',qty:+defq,unit:'کیلوگرم'},st:'ok',by:u.name,at:hj()});
+  W('pv_inv',inv2);
+  outNote='🧵 '+F(defq)+' kg سیم → انبار';
+ }
+ if(r.v.type==='cut'&&+defq>0){outNote='🔪 '+F(defq)+' '+r.v.unit+' خوراک آماده شد'}
+ if(cost>0){
+  var f=R('fin');f.unshift({t:Date.now(),v:{ft:'out',title:'دستمزد '+PREP_TN(r.v.type),amt:cost},st:'ok',by:u.name,at:hj()});W('pv_fin',f);
+  if(r.v.batch){var bc=R('bcost');bc.unshift({t:Date.now(),v:{b:r.v.batch,cat:'کارگر / دستمزد',amt:cost,note:PREP_TN(r.v.type)},st:'ok',by:u.name,at:hj()});W('pv_bcost',bc)}
+ }
+ r.outNote=outNote;
+ W('pv_prep',l);
+ _mgrNote('📦 '+u.name+' «'+PREP_TN(r.v.type)+'» را تمام کرد — مدت '+fmtDur(r.ms)+(cost?' — دستمزد '+F(cost):''));
+ smsSend('task','✅ پایان: '+PREP_TN(r.v.type)+' — مدت '+fmtDur(r.ms)+' — '+u.name);
+ toast('✅ پایان کار — مدت '+fmtDur(r.ms)+(cost?' · دستمزد ثبت شد':'')+' '+outNote,'ok');
+ view();
+}
+function PR_ver(t){
+ var l=R('prep'),r=null;
+ for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
+ if(!r)return;
+ r.st='verified';W('pv_prep',l);toast('✅ تایید نهایی شد','ok');view();
+}
+function PR_del(t){
+ var l=R('prep'),n=[];
+ for(var i=0;i<l.length;i++){if(String(l[i].t)!==String(t))n.push(l[i])}
+ W('pv_prep',n);view();
+}
+/* ═══ ⚙️ تنظیمات کارخانه ═══ */
+function FSET_tab(k){TABS.fset=k;view()}
+function vFSet(){
+ var u=U();
+ if(!u.admin&&!u.super){q('view').innerHTML='<div class="pan"><div class="lock">فقط مدیر</div></div>';return}
+ var cur=TABS.fset||'mat';
+ var inner=tabsUI('fset',[{k:'mat',n:'📦 مواد انبار (±)'},{k:'staff',n:'👥 پرسنل (استخدام/پایان)'},{k:'raws',n:'🧱 مواد اولیه'},{k:'hist',n:'🕓 سوابق تغییرات'}]);
+ if(cur==='mat'){
+  var inv=R('inv');
+  inner+='<div class="pan"><h3>📦 تنظیم دستی موجودی — خودکار به مالی و گزارش مدیر</h3><div class="note"><span>ℹ️</span><div>دکمهٔ «±» را بزن: افزایش = خرید (هزینه به مالی)، کاهش با «مصرف در تولید» = مصرف انبار ثبت و به بچ/مالی اعلام می‌شود. همهٔ تغییرات در «سوابق تغییرات» و گزارش مخفی مدیر می‌آید.</div></div><div class="tbl-wrap"><table class="tb" style="min-width:520px"><thead><tr><th>کالا</th><th>موجودی</th><th>واحد</th><th>وضعیت</th><th></th></tr></thead><tbody>';
+  if(!inv.length)inner+='<tr><td colspan="5" class="empty">از انبار اول قلم اضافه کنید</td></tr>';
+  inv.forEach(function(x){
+   var lowx=+x.v.qty<=10;
+   inner+='<tr><td class="tx">'+E(x.v.item)+'</td><td class="'+(lowx?'hot':'ok2')+'">'+F(x.v.qty)+'</td><td>'+E(x.v.unit||'—')+'</td><td>'+(lowx?'⚠️ کم':'✅')+'</td><td style="white-space:nowrap"><button class="pill pi-b" onclick="FS_adj(\''+E(x.v.item)+'\')">± تغییر</button></td></tr>';
+  });
+  inner+='</tbody></table></div></div>';
+  var hrm2=R('hrm').filter(function(p){return p.st!=='arch'});
+  inner+='<div class="pan"><h3>🛡 تخصیص مسئولیت تجهیزات (اختیاری — اتصال انبار به تعمیرات)</h3><div class="fgrid">';
+  inner+='<div><label>کالا/قطعه</label><select id="eq_it">'+inv.map(function(x){return '<option>'+E(x.v.item)+'</option>'}).join('')+'</select></div>';
+  inner+='<div><label>تعمیرکار / مسئول</label><select id="eq_wh">'+hrm2.map(function(p){return '<option>'+E(p.v.n)+'</option>'}).join('')+'</select></div>';
+  inner+='<div><label>حد هشدار (زیر این عدد پیامک)</label><input id="eq_min" type="number" placeholder="مثلاً 5"></div></div>';
+  inner+='<button class="btn btn-gh sm" onclick="FS_eqSave()">🛡 اتصال مسئول</button></div>';
+ }
+ if(cur==='staff'){
+  var act2=R('hrm').filter(function(p){return p.st==='arch'});
+  inner+='<div class="pan"><h3>➕ استخدام نیروی جدید</h3><div class="fgrid">';
+  inner+='<div><label>نام *</label><input id="hs_n"></div>';
+  inner+='<div><label>سمت</label><input id="hs_r"></div>';
+  inner+='<div><label>شیفت</label><select id="hs_sh"><option>صبح</option><option>عصر</option><option>شب</option><option>روتاری</option></select></div></div>';
+  inner+='<button class="btn btn-pri sm" onclick="FS_hire()">✍️ استخدام (سابقه از امروز)</button></div>';
+  inner+='<div class="pan"><h3>👥 پرسنل فعال</h3><div class="tbl-wrap"><table class="tb" style="min-width:560px"><thead><tr><th>نام</th><th>سمت</th><th>شیفت</th><th>سابقه (از)</th><th></th></tr></thead><tbody>';
+  var on'=0';
+  R('hrm').forEach(function(p){
+   if(p.st==='arch')return;
+   inner+='<tr><td class="tx"><b>'+E(p.v.n)+'</b></td><td>'+E(p.v.r||'—')+'</td><td>'+E(p.v.sh||'—')+'</td><td style="font-size:9.5px">'+E(p.at||'—')+'</td><td><button class="pill pi-r" onclick="FS_retire('+p.t+')">🏁 پایان همکاری (با حفظ سابقه)</button></td></tr>';
+  });
+  inner+='</tbody></table></div></div>';
+  inner+='<div class="pan" style="border-color:rgba(180,138,255,.4)"><h3>🗄 پرسنل گذشته — سابقه حفظ‌شده ('+F(act2.length)+')</h3><div class="tbl-wrap"><table class="tb" style="min-width:520px"><thead><tr><th>نام</th><th>سمت</th><th>از</th><th>تا</th><th>مجموع حضور ثبت‌شده</th><th></th></tr></thead><tbody>';
+  if(!act2.length)inner+='<tr><td colspan="6" class="empty">—</td></tr>';
+  act2.forEach(function(p){
+   var g=R('guard'),tot=0;
+   g.forEach(function(x){if(x.who===p.v.n&&x.hrs)tot+=x.hrs});
+   inner+='<tr><td class="tx">'+E(p.v.n)+'</td><td>'+E(p.v.r||'—')+'</td><td style="font-size:9.5px">'+E(p.at||'—')+'</td><td style="font-size:9.5px">'+E(p.leaveAt||'—')+'</td><td class="ok2">'+(tot?fmtDur(tot):'—')+'</td><td><button class="pill pi-ok" onclick="FS_rehire('+p.t+')">↩️ بازگشت به کار</button></td></tr>';
+  });
+  inner+='</tbody></table></div></div>';
+ }
+ if(cur==='raws'){
+  var raws=R('raws');
+  inner+='<div class="pan"><h3>🧱 مواد اولیهٔ کارخانه (نوع خوراک مجاز در بچ‌ها)</h3><div class="fgrid">';
+  inner+='<div><label>نام مادهٔ اولیه *</label><input id="rw_n" placeholder="مثلاً پلاستیک نایلون"></div>';
+  inner+='<div><label>واحد</label><input id="rw_u" value="تن"></div></div>';
+  inner+='<button class="btn btn-pri sm" onclick="FS_rawAdd()">➕ افزودن</button></div>';
+  inner+='<div class="pan"><h3>📋 فهرست مواد اولیه</h3><div class="tbl-wrap"><table class="tb" style="min-width:420px"><thead><tr><th>ماده</th><th>واحد</th><th>وضعیت</th><th></th></tr></thead><tbody>';
+  if(!raws.length)inner+='<tr><td colspan="4" class="empty">همهٔ خاموش — یکی اضافه کن</td></tr>';
+  raws.forEach(function(r){
+   inner+='<tr><td class="tx">'+E(r.v.name)+'</td><td>'+E(r.v.unit||'تن')+'</td><td>'+(r.st==='arch'?'<span class="bdg-pill bd-warn">غیرفعال</span>':'<span class="bdg-pill bd-ok">فعال</span>')+'</td><td>'+(r.st!=='arch'?'<button class="pill pi-g" onclick="FS_rawOff('+r.t+')">غیرفعال</button>':'<button class="pill pi-ok" onclick="FS_rawOn('+r.t+')">فعال</button>')+'</td></tr>';
+  });
+  inner+='</tbody></table></div></div>';
+ }
+ if(cur==='hist'){
+  var ih=S('pv_invhist',[]);
+  inner+='<div class="pan"><h3>🕓 سوابق تغییرات انبار و پرسنل</h3><div class="tbl-wrap"><table class="tb" style="min-width:560px"><thead><tr><th>زمان</th><th>نوع</th><th>موضوع</th><th>تغییر</th><th>دلیل</th><th>توسط</th></tr></thead><tbody>';
+  var au=S('pv_auditm',[]),rows=[];
+  ih.forEach(function(x){rows.push({t:x.t,k:'📦 انبار',s:x.item,c:(x.qty>0?'+':'')+F(x.qty),r:x.reason,by:x.by})});
+  R('hrm').forEach(function(p){
+   if(p.hiredLog)rows.push({t:p.hiredLog,k:'👥 استخدام',s:p.v.n,c:'—',r:'استخدام',by:p.hiredBy||'—'});
+   if(p.leaveLog)rows.push({t:p.leaveLog,k:'👥 پایان کار',s:p.v.n,c:'—',r:'خروج',by:p.leaveBy||'—'});
+  });
+  rows.sort(function(a,b){return b.t-a.t});
+  if(!rows.length)inner+='<tr><td colspan="6" class="empty">—</td></tr>';
+  rows.slice(0,40).forEach(function(x){
+   inner+='<tr><td style="font-size:9.5px">'+ago(x.t)+'</td><td class="tx">'+x.k+'</td><td class="tx">'+E(x.s)+'</td><td class="'+(String(x.c).indexOf('-')===0?'hot':'ok2')+'">'+x.c+'</td><td class="tx">'+E(x.r||'—')+'</td><td class="tx">'+E(x.by)+'</td></tr>';
+  });
+  inner+='</tbody></table></div></div>';
+ }
+ q('view').innerHTML='<div class="page-head"><h2>⚙️ تنظیمات اختصاصی کارخانه</h2><span class="sub">'+E(u.cname||'—')+' — مجزا برای هر کارخانه</span></div>'+inner;
+}
+function FS_adj(item){
+ q('peMBody').innerHTML='<h3 style="font-size:14px;margin-bottom:9px">± تنظیم موجودی: '+E(item)+'</h3>'+
+ '<div class="fgrid">'+
+ '<div><label>مقدار (+ افزایش / − کاهش)</label><input id="fa_qty" type="number"></div>'+
+ '<div><label>دلیل</label><select id="fa_r"><option>خرید جدید</option><option>مصرف در تولید</option><option>اتلاف / معیوب</option><option>اصلاح شمارش انبار</option></select></div>'+
+ '<div><label>در صورت خرید: مبلغ کل (تومان)</label><input id="fa_amt" type="number" placeholder="اختیاری"></div></div>'+
+ '<button class="btn btn-pri full" style="margin-top:10px" onclick="FS_adjSave(\''+E(item)+'\')">💾 اعمال به انبار + مالی</button>';
+ q('peModal').classList.remove('hid');
+}
+function FS_adjSave(item){
+ var u=U();if(!u)return;
+ var qty=+q('fa_qty').value||0,rs=q('fa_r').value,amt=+q('fa_amt').value||0;
+ if(!qty){toast('مقدار لازم است','er');return}
+ var inv=R('inv'),ex=null;
+ for(var i=0;i<inv.length;i++){if(inv[i].v.item===item){ex=inv[i];break}}
+ if(!ex){toast('قلم پیدا نشد','er');return}
+ ex.v.qty=(+ex.v.qty||0)+qty;
+ if(ex.v.qty<0)ex.v.qty=0;
+ W('pv_inv',inv);
+ var ih=S('pv_invhist',[]);
+ ih.unshift({t:Date.now(),item:item,qty:qty,reason:rs,by:u.name});
+ W('pv_invhist',ih.slice(0,200));
+ if(amt>0){var f=R('fin');f.unshift({t:Date.now(),v:{ft:'out',title:'خرید '+item,amt:amt},st:'ok',by:u.name,at:hj()});W('pv_fin',f)}
+ if(rs==='اتلاف / معیوب'){var f2=R('fin');f2.unshift({t:Date.now(),v:{ft:'out',title:'اتلاف انبار — '+item,amt:0},st:'ok',by:u.name,at:hj()});W('pv_fin',f2)}
+ _mgrNote('📦 انبار: '+item+' '+(qty>0?'+':'')+qty+' ('+rs+') — توسط '+u.name);
+ smsSend('edit','📦 تغییر انبار: '+item+' '+(qty>0?'+':'')+qty+' — '+rs+' — '+u.name);
+ q('peModal').classList.add('hid');
+ toast('✅ اعمال شد'+(amt>0?' — هزینه به مالی ثبت شد':''),'ok');view();
+}
+function FS_eqSave(){
+ var it=q('eq_it').value,wh2=q('eq_wh').value,mn=+q('eq_min').value||5;
+ var l=R('eqresp');
+ l.unshift({t:Date.now(),item:it,who:wh2,min:mn,by:U().name});
+ W('pv_eqresp',l.slice(0,100));
+ _mgrNote('🛡 مسئولیت '+it+' به '+wh2+' (حد هشدار '+mn+')');
+ toast('✅ مسئول تخصیص یافت — کم‌موجودی به او و مدیر گزارش می‌شود','ok');view();
+}
+function FS_hire(){
+ var u=U();if(!u||!u.admin)return;
+ var n=q('hs_n').value.trim();
+ if(!n){toast('نام لازم است','er');return}
+ var l=R('hrm');
+ l.unshift({t:Date.now(),v:{n:n,r:q('hs_r').value.trim(),sh:q('hs_sh').value},st:'ok',by:u.name,at:hj(),hiredLog:Date.now(),hiredBy:u.name});
+ W('pv_hrm',l);
+ _mgrNote('👥 استخدام '+n+' — توسط '+u.name);
+ smsSend('task','👥 استخدام: '+n+' — '+hhm());
+ toast('✅ نیرو اضافه شد — سابقه از امروز','ok');view();
+}
+function FS_retire(t){
+ var u=U();if(!u||!u.admin)return;
+ var l=R('hrm'),r=null;
+ for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
+ if(!r)return;
+ if(!confirm('پایان همکاری «'+r.v.n+'»؟ سابقه‌اش حفظ می‌شود و در گذشته‌ها باقی می‌ماند.'))return;
+ r.st='arch';r.leaveAt=hj();r.leaveLog=Date.now();r.leaveBy=u.name;
+ W('pv_hrm',l);
+ _mgrNote('👥 پایان همکاری '+r.v.n+' — توسط '+u.name);
+ smsSend('task','🏁 پایان همکاری: '+r.v.n);
+ toast('✅ خارج شد — سوابق در تب «پرسنل گذشته» حفظ شد','ok');view();
+}
+function FS_rehire(t){
+ var u=U();if(!u||!u.admin)return;
+ var l=R('hrm'),r=null;
+ for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
+ if(!r)return;
+ r.st='ok';r.at=hj();r.reHired=1;
+ W('pv_hrm',l);
+ _mgrNote('👥 بازگشت به کار '+r.v.n);
+ toast('✅ '+r.v.n+' دوباره فعال شد — سوابق قبلی دست‌نخورده','ok');view();
+}
+function FS_rawAdd(){
+ var u=U();if(!u||!u.admin)return;
+ var n=q('rw_n').value.trim();
+ if(!n){toast('نام ماده لازم است','er');return}
+ var l=R('raws');
+ l.unshift({t:Date.now(),v:{name:n,unit:q('rw_u').value.trim()||'تن'},st:'ok',by:u.name,at:hj()});
+ W('pv_raws',l);
+ _mgrNote('🧱 مادهٔ اولیه جدید: '+n);
+ toast('✅ اضافه شد — در بچ‌های جدید قابل انتخاب','ok');view();
+}
+function FS_rawOff(t){
+ var l=R('raws'),r=null;
+ for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
+ if(r){r.st='arch';W('pv_raws',l);toast('غیرفعال شد (سابقه می‌ماند)');view()}
+}
+function FS_rawOn(t){
+ var l=R('raws'),r=null;
+ for(var i=0;i<l.length;i++){if(String(l[i].t)===String(t))r=l[i]}
+ if(r){r.st='ok';W('pv_raws',l);toast('فعال شد','ok');view()}
+}
+/* ═══ جدول بچ: انتخاب مواد اولیه از کاتالوگ (override فرم بچ) ═══ */
+var _oldFormHTML=formHTML;
+formHTML=function(sec){
+ var h=_oldFormHTML(sec);
+ if(sec==='batch'){
+  var raws=R('raws').filter(function(r){return r.st!=='arch'});
+  if(raws.length){
+   var opts='';raws.forEach(function(r){opts+='<option>'+E(r.v.name)+'</option>'});
+   h=h.replace(id_expired_hack_placeholder,'');
+   /* جایگزینی فیلد feed متنی با select کاتالوگ */
+   h=h.replace(/<div><label>نوع خوراک<\/label><input id="if_batch_1"[^<]*<\/div>/,'<div><label>نوع خوراک (از کاتالوگ)</label><select id="if_batch_1">'+opts+'</select></div>');
+  }
+ }
+ return h;
+};
+/* ═══ هشدار مسئول تجهیزات + ایجنت ═══ */
+var _oldAgent=window.agentWatch||agentWatch;
+agentWatch=function(){
+ _oldAgent();
+ var u=U();if(!u)return;
+ var er=R('eqresp'),f2=[];
+ er.forEach(function(e){
+  var inv=R('inv');
+  inv.forEach(function(x){
+   if(x.v.item===e.item&&+x.v.qty<=e.min)f2.push(e.item+' زیر حد هشدار ('+x.v.qty+') — مسئول: '+e.who);
+  });
+ });
+ if(f2.length){
+  var nf=S('pv_agentfind',[]);
+  f2.forEach(function(x){nf.unshift({t:Date.now(),txt:'⚠️ '+x})});
+  W('pv_agentfind',nf.slice(0,80));
+  smsSend('agent','⚠️ PyroFlow: '+f2[0]);
+ }
+};
+/* ═══ صفحات + منو + رندر v3 ═══ */
+VIEWS.fset=vFSet;VIEWS.prep=vPrep;
+NAVG.push(['آماده‌سازی',[['prep','📦','آماده‌سازی و تخلیه']]]);
+NAVG.push(['تنظیمات',[['fset','⚙️','تنظیمات کارخانه']]]);
+function render(){
+ var u=U();
+ var appS=q('appShell'),land2=q('landing');
+ if(!u){appS.classList.add('hid');land2.classList.remove('hid');window.scrollTo(0,0);return}
+ appS.classList.remove('hid');land2.classList.add('hid');
+ if(route==='home')route=(u.sup&&!u.admin)?'sup':'dash';
+ if(q('hFactory'))q('hFactory').innerHTML='🏭 <b>'+E(u.cname||'—')+'</b>';
+ if(q('uAvat'))q('uAvat').textContent=u.name.trim().split(' ').map(function(w){return w[0]}).slice(0,2).join('');
+ var al=computeAlerts();
+ var bd=q('bellBadge');
+ if(bd){var n3=al.filter(function(x){return x.lv!=='t'}).length;bd.textContent=F(n3);bd.style.display=n3?'flex':'none'}
+ var sh='';
+ if(u.sup&&!u.admin){
+  sh+='<div class="sgrp">پشتیبانی</div><button class="snv'+(route==='sup'||route==='supf'?' on':'')+'" onclick="go(\'sup\')"><span class="i">🎧</span> پایش کارخانه‌ها</button>';
+  sh+='<div class="sgrp">حساب</div><button class="snv'+(route==='settings'?' on':'')+'" onclick="go(\'settings\')"><span class="i">⚙️</span> حساب من</button>';
+ }else{
+  NAVG.forEach(function(g){
+   var ok=g[1].filter(function(n){return u.admin||u.super||(u.perms||[]).indexOf(n[0])>=0||(n[0]==='dash'||n[0]==='ai'||n[0]==='pay'||n[0]==='guard'||n[0]==='tasks'||n[0]==='prep')});
+   if(!ok.length)return;
+   sh+='<div class="sgrp">'+g[0]+'</div>';
+   ok.forEach(function(n){sh+='<button class="snv'+(route===n[0]?' on':'')+'" onclick="go(\''+n[0]+'\')"><span class="i">'+n[1]+'</span> '+n[2]+'</button>'});
+  });
+  if(u.sup||u.super)sh+='<div class="sgrp">پشتیبانی</div><button class="snv'+(route==='sup'||route==='supf'?' on':'')+'" onclick="go(\'sup\')"><span class="i">🎧</span> پایش کارخانه‌ها</button>';
+ }
+ sh+='<div style="border-top:1px solid var(--ln);margin-top:12px;padding-top:8px"><button class="snv" onclick="logout()"><span class="i">🚪</span> خروج</button></div>';
+ q('side').innerHTML=sh;
+ var V=VIEWS[route];
+ if(V)V();
+}
+/* ═══ بذر اولیهٔ مواد اگر خالی ═══ */
+setTimeout(function(){
+ if(U()&&!R('raws').length){
+  W('pv_raws',[
+   {t:Date.now()-3000,v:{name:'لاستیک ضایعاتی',unit:'تن'},st:'ok',by:'سیستم',at:hj()},
+   {t:Date.now()-2000,v:{name:'پلاستیک نایلون',unit:'تن'},st:'ok',by:'سیستم',at:hj()},
+   {t:Date.now()-1000,v:{name:'لاستیک کامیون',unit:'تن'},st:'ok',by:'سیستم',at:hj()}
+  ]);
+ }
+ if(U()){
+  var p=getProc(),prep=R('prep');
+  if(prep.length){/*тіпS existencia*/}
+ }
+},400);
+setTimeout(function(){if(U())render()},900);
+</script>
+ <script>
+"use strict";
+/* ═══════ PyroFlow Pro v3 — 📍 ویرایش آدرس و موقعیت دمای محیط ═══════ */
+function vLoc(){
+ var u=U();
+ if(!u){return}
+ var inner='<div class="pan"><h3>📍 آدرس و موقعیت ثبت دمای محیط</h3>';
+ inner+='<div class="note bl"><span>ℹ️</span><div>دمای محیط هر رکورد پخت/غیره از همین موقعیت گرفته می‌شود.<br><b>راه ۱:</b> دکمهٔ GPS در محل کارخانه بزن (دقیق‌ترین).<br><b>راه ۲:</b> آدرس و مختصات را دستی وارد کن (مثلاً برای کارخانهٔ دیگر یا ثبت از راه دور).</div></div>';
+ /* وضعیت فعلی */
+ inner+='<div class="pan"><h3>📄 موقعیت ثبت‌شدهٔ فعلی</h3><div class="meta-bar">';
+ inner+='<span>🏭 آدرس: <b>'+(u.addr?E(u.addr):'— ثبت نشده')+'</b></span>';
+ inner+='<span>🏙 شهر: <b>'+(u.city?E(u.city):'—')+'</b></span>';
+ inner+='<span>📍 مختصات: <b>'+(u.lat?E((+u.lat).toFixed(4))+', '+E((+u.lon).toFixed(4)):'—')+'</b></span>';
+ inner+='</div>';
+ if(!u.lat)inner+='<div class="lkb">⚠️ موقعیتی ثبت نشده — دمای محیط یا از GPS لحظه‌ای می‌آید یا «—» ثبت می‌شود. برای دقت، موقعیت را ثبت کن.</div>';
+ inner+='</div>';
+ /* GPS */
+ inner+='<div class="pan"><h3>📍 راه ۱ — گرفتن موقعیت با GPS (در محل کارخانه)</h3>';
+ inner+='<button class="btn btn-pri full" onclick="LOC_gps()">📍 الان موقعیت من را بگیر و ذخیره کن</button></div>';
+ /* دستی */
+ inner+='<div class="pan"><h3>✍️ راه ۲ — ویرایش دستی</h3><div class="fgrid">';
+ inner+='<div><label>آدرس دقیق کارخانه</label><input id="lc_addr" value="'+E(u.addr||'')+'" placeholder="مثلاً: مشهد، شهرک صنعتی توس، بلوک ۷"></div>';
+ inner+='<div><label>نام شهر</label><input id="lc_city" value="'+E(u.city||'')+'" placeholder="مثلاً: مشهد"></div>';
+ inner+='<div><label>عرض جغرافیایی (lat)</label><input id="lc_lat" type="number" step="any" value="'+(u.lat?E((+u.lat).toFixed(6)):'')+'" placeholder="مثلاً 36.32"></div>';
+ inner+='<div><label>طول جغرافیایی (lon)</label><input id="lc_lon" type="number" step="any" value="'+(u.lon?E((+u.lon).toFixed(6)):'')+'" placeholder="مثلاً 59.55"></div>';
+ inner+='</div>';
+ inner+='<button class="btn btn-pri full" onclick="LOC_save()">💾 ذخیره آدرس و موقعیت</button></div>';
+ /* تست */
+ inner+='<div class="pan"><h3>🌡 تست دمای محیط</h3>';
+ inner+='<p style="font-size:11.5px;color:var(--mut);line-height:1.9">با این دکمه همین الان ببین دما از کدام نقطه می‌آید — نتیجه در تاریخچهٔ شرایط محیطی هم ثبت می‌شود.</p>';
+ inner+='<button class="btn btn-gh full sm" onclick="LOC_test()">🌡 دریافت دمای محیط الان</button>';
+ inner+='<div id="locTest" style="margin-top:9px"></div></div>';
+ q('view').innerHTML='<div class="page-head"><h2>📍 موقعیت و دمای محیط</h2><span class="sub">مجزا برای هر حساب/کارخانه</span></div>'+inner;
+}
+function LOC_gps(){
+ var u=U();if(!u)return;
+ if(!navigator.geolocation){toast('مرورگر GPS را پشتیبانی نمی‌کند','er');return}
+ toast('📍 در حال گرفتن موقعیت…');
+ navigator.geolocation.getCurrentPosition(function(pos){
+  var la=pos.coords.latitude,lo=pos.coords.longitude;
+  var l=US();
+  for(var i=0;i<l.length;i++){
+   if(l[i].email===u.email){l[i].lat=la;l[i].lon=lo;break}
+  }
+  W('pv_users',l);
+  LOC_syncFirm(l.filter(function(x){return x.email===u.email})[0]);
+  toast('✅ موقعیت ذخیره شد — از این به بعد دما از این نقطه می‌آید','ok');
+  setTimeout(function(){LOC_test()},400);
+ },function(){
+  toast('دسترسی موقعیت داده نشد — آدرس را دستی وارد کن','er');
+ },{timeout:9000,enableHighAccuracy:true});
+}
+function LOC_save(){
+ var u=U();if(!u)return;
+ var addr=q('lc_addr').value.trim(),city=q('lc_city').value.trim();
+ var la=q('lc_lat').value.trim(),lo=q('lc_lon').value.trim();
+ var latF=parseFloat(fa2en(la)),lonF=parseFloat(fa2en(lo));
+ var l=US();
+ for(var i=0;i<l.length;i++){
+  if(l[i].email===u.email){
+   l[i].addr=addr;
+   if(city)l[i].city=city;
+   if(!isNaN(latF)&&!isNaN(lonF)){l[i].lat=latF;l[i].lon=lonF}
+   else{l[i].lat=null;l[i].lon=null}
+   break;
+  }
+ }
+ W('pv_users',l);
+ LOC_syncFirm(l.filter(function(x){return x.email===u.email})[0]);
+ toast('✅ ذخیره شد'+(!isNaN(latF)&&!isNaN(lonF)?' — دما از مختصات دستی':''),'ok');
+ view();
+ if(!isNaN(latF)&&!isNaN(lonF))setTimeout(function(){LOC_test()},400);
+}
+function LOC_syncFirm(u){
+ if(!u||!u.admin)return;
+ var f=S('pv_firms',[]);
+ for(var i=0;i<f.length;i++){
+  if(f[i].em===u.email){
+   if(u.addr)f[i].addr=u.addr;
+   if(u.city)f[i].city=u.city;
+   if(u.lat)f[i].lat=u.lat;
+   if(u.lon)f[i].lon=u.lon;
+   W('pv_firms',f);
+   return;
+  }
+ }
+ pushFirm(u);
+}
+function LOC_test(){
+ var u=U();if(!u)return;
+ var box=q('locTest');
+ if(!box)return;
+ box.innerHTML='<span class="spin"></span> <span style="font-size:11.5px;color:var(--mut)">در حال دریافت…</span>';
+ fetchAmbient(u,function(t,city,wind){
+  var src=u.lat?'موقعیت ثبت‌شده شما':'GPS/شبکه لحظه‌ای';
+  box.innerHTML='<div class="'+(t==='—'?'lkb':'gbox')+'">'+
+   '🌡 دما: <b style="font-family:var(--mono)">'+E(String(t))+'°C</b>'+
+   (t!=='—'&&wind&&wind!=='—'?' · 💨 باد: '+E(String(wind))+' km/h':'')+
+   '<br>🏙 '+E(city||u.city||'نامشخص')+' — منبع: '+src+
+   '<br><span style="font-size:10px;color:var(--mut2)">✅ در تاریخچهٔ شرایط محیطی ثبت شد</span></div>';
+  var l=R('env');l.unshift({t:Date.now(),at:hj(),city:city||u.city||'—',temp:t,wind:wind||'—',by:u.name});W('pv_env',l.slice(0,50));
+ });
+}
+VIEWS.loc=vLoc;
+NAVG.push(['موقعیت',[['loc','📍','آدرس و دمای محیط']]]);
+/* رندر v4 (شامل همهٔ مجوزهای بلاک‌های قبلی) */
+function render(){
+ var u=U();
+ var appS=q('appShell'),land=vLoc?q('landing'):null;
+ if(!u){appS.classList.add('hid');if(land)land.classList.remove('hid');window.scrollTo(0,0);return}
+ appS.classList.remove('hid');if(land)land.classList.add('hid');
+ if(route==='home')route=(u.sup&&!u.admin)?'sup':'dash';
+ if(q('hFactory'))q('hFactory').innerHTML='🏭 <b>'+E(u.cname||'—')+'</b>';
+ if(q('uAvat'))q('uAvat').textContent=u.name.trim().split(' ').map(function(w){return w[0]}).slice(0,2).join('');
+ var al=computeAlerts();
+ var bd=q('bellBadge');
+ if(bd){var n4=al.filter(function(x){return x.lv!=='t'}).length;bd.textContent=F(n4);bd.style.display=n4?'flex':'none'}
+ var sh='';
+ if(u.sup&&!u.admin){
+  sh+='<div class="sgrp">پشتیبانی</div><button class="snv'+(route==='sup'||route==='supf'?' on':'')+'" onclick="go(\'sup\')"><span class="i">🎧</span> پایش کارخانه‌ها</button>';
+  sh+='<div class="sgrp">حساب</div><button class="snv'+(route==='loc'?' on':'')+'" onclick="go(\'loc\')"><span class="i">📍</span> آدرس و دمای محیط</button><button class="snv'+(route==='settings'?' on':'')+'" onclick="go(\'settings\')"><span class="i">⚙️</span> حساب من</button>';
+ }else{
+  NAVG.forEach(function(g){
+   var ok=g[1].filter(function(n){return u.admin||u.super||(u.perms||[]).indexOf(n[0])>=0||(n[0]==='dash'||n[0]==='ai'||n[0]==='pay'||n[0]==='guard'||n[0]==='tasks'||n[0]==='prep'||n[0]==='loc')});
+   if(!ok.length)return;
+   sh+='<div class="sgrp">'+g[0]+'</div>';
+   ok.forEach(function(n){sh+='<button class="snv'+(route===n[0]?' on':'')+'" onclick="go(\''+n[0]+'\')"><span class="i">'+n[1]+'</span> '+n[2]+'</button>'});
+  });
+  if(u.sup||u.super)sh+='<div class="sgrp">پشتیبانی</div><button class="snv'+(route==='sup'||route==='supf'?' on':'')+'" onclick="go(\'sup\')"><span class="i">🎧</span> پایش کارخانه‌ها</button>';
+ }
+ sh+='<div style="border-top:1px solid var(--ln);margin-top:12px;padding-top:8px"><button class="snv" onclick="logout()"><span class="i">🚪</span> خروج</button></div>';
+ q('side').innerHTML=sh;
+ var V=VIEWS[route];
+ if(V)V();
+}
+setTimeout(function(){if(U())render()},1000);
+</script>
 </body>
 </html>
