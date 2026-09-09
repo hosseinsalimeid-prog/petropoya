@@ -3252,5 +3252,278 @@ window.LOC_save=function(){
 };
 })();
 </script>
+ <script>
+"use strict";
+/* ═══ پچ v7 — مجوز استارت + ایجنت + باسکول + صوت + تیم پایش ═══ */
+(function(){
+ORGK.cok=1;ORGK.tix=1;
+var UFA={mon:'📊 پایش تولید',maint:'🔧 تامین/نگهداری',biz:'💼 بازرگانی'};
+
+/* ── ۱) مجوز استارت ── */
+window.CK_approve=function(){
+ var u=U();if(!u)return;
+ if(!u.admin&&!u.super){toast('فقط مسئول شیفت/مدیر می‌تواند تایید کند','er');return}
+ var ck=S(OK('ck'),{}),dn=0;
+ CKL.forEach(function(t,i){var c=ck[String(i)];if(c&&c.d)dn++});
+ if(dn<CKL.length){toast('چک‌لیست کامل نیست ('+F(dn)+'/'+F(CKL.length)+')','er');return}
+ W('pv_cok',{ok:1,by:u.name,at:hhm(),day:hj()});
+ var al=R('agentlog');al.unshift({t:Date.now(),txt:'🛡 چک‌لیست توسط '+u.name+' تایید شد — مجوز استارت صادر شد'});W('pv_agentlog',al.slice(0,100));
+ toast('✅ مجوز استارت صادر شد — اپراتور می‌تواند شروع کند','ok');view();
+};
+var _sp7=window.startProc;
+window.startProc=function(){
+ var u=U();if(!u)return;
+ if(!u.admin&&!u.super){
+  var ap=R('cok');
+  if(!ap||!ap.ok||ap.day!==hj()){toast('⛔ اجازه استارت ندارید — اول مسئول شیفت چک‌لیست را تایید کند','er');return}
+ }
+ _sp7();
+ W('pv_cok',{ok:0,by:'',at:'',day:''});
+};
+var _ep7=window.endProc;
+window.endProc=function(){_ep7();W('pv_cok',{ok:0,by:'',at:'',day:''})};
+
+/* ── ۴) تعمیر فرمان صوتی (iOS سازگار) ── */
+window.cookVoice=function(){
+ var WS=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!WS){toast('مرورگر تشخیص گفتار ندارد — iOS Safari حداقل ۱۴.۵ لازم است','er');return}
+ try{if(window.SRC){try{window.SRC.abort()}catch(e){}}}catch(e){}
+ var rec=new WS();
+ window.SRC=rec;
+ rec.lang='fa-IR';rec.interimResults=false;rec.maxAlternatives=1;
+ var b=q('vbt'),s=q('vst'),got=false;
+ if(b)b.classList.add('rec');
+ if(s)s.textContent='🔴 گوش می‌دهم… بگو: «دمای راکتور ۳۴۰»';
+ rec.onresult=function(e){
+  got=true;
+  var txt='';
+  for(var i=e.results.length-1;i>=0;i--){if(e.results[i].isFinal){txt=e.results[i][0].transcript;break}}
+  if(!txt)txt=e.results[e.results.length-1][0].transcript;
+  if(s)s.textContent='«'+txt+'»';
+  try{rec.stop()}catch(e){}
+  cookVoiceRow(txt);
+ };
+ rec.onend=function(){if(b)b.classList.remove('rec');if(!got&&s)s.textContent='❌ شنیده نشد — دوباره بزن'};
+ rec.onerror=function(ev){if(b)b.classList.remove('rec');if(s)s.textContent='⚠️ خطا: '+((ev&&ev.error)||'')+' — دوباره تلاش کن'};
+ setTimeout(function(){
+  try{rec.start()}catch(e){
+   setTimeout(function(){try{rec.start()}catch(e2){toast('تشخیص گفتار آماده نشد — دکمه را دوباره بزن','er');if(b)b.classList.remove('rec')}},400);
+  }
+ },80);
+};
+
+/* ── ۲) پرکردن خودکار خلاصه پخت ── */
+window.AI_csumFill=function(){
+ function set(id,val){var e=q(id);if(e)e.value=val}
+ var b=R('batch')[0],p=getProc(),u=U();
+ if(b){set('cs_bid',b.v.id||'');if(b.v.raw)set('cs_rawq',b.v.raw);if(b.v.feed)set('cs_feed',b.v.feed)}
+ else set('cs_feed',(R('raws')[0]&&R('raws')[0].v.name)||'لاستیک');
+ var carb=0,sim2=0;
+ R('out').forEach(function(o){
+  var pr=String(o.v.prod||'');
+  if(pr.indexOf('کربن')>=0)carb+=+o.v.qty||0;
+  if(pr.indexOf('سیم')>=0)sim2+=+o.v.qty||0;
+ });
+ set('cs_carb',carb||'');set('cs_sim',sim2||'');
+ if(p){var ms=(p.st==='run')?(Date.now()-p.s):((p.e||Date.now())-p.s);set('cs_tck',p2(Math.floor(ms/3600000))+':'+p2(Math.floor(ms%3600000/60000)))}
+ set('cs_sup',(US().filter(function(x){return x.admin&&!x.sup})[0]||{}).name||u.name);
+ set('cs_op',u.name);
+ toast('🤖 ایجنت پر کرد — چک کن و «ثبت خلاصه پخت» را بزن','ok');
+};
+
+/* ── ۳) قبض باسکول ── */
+var CARIMG=null;
+window.pickCarImg=function(){var f=q('car_file');if(f)f.click()};
+window.carImgFile=function(inp){
+ var f=inp.files[0];if(!f)return;
+ if(f.size>8388608){toast('عکس حداکثر ۸MB','er');inp.value='';return}
+ var r=new FileReader();
+ r.onload=function(){
+  var img=new Image();
+  img.onload=function(){
+   var mw=900,sc=Math.min(1,mw/img.width);
+   var cv=document.createElement('canvas');cv.width=Math.round(img.width*sc);cv.height=Math.round(img.height*sc);
+   cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+   CARIMG=cv.toDataURL('image/jpeg',0.65);
+   var pv=q('car_prev');if(pv)pv.innerHTML='<img src="'+CARIMG+'" style="max-width:100%;max-height:150px;border-radius:10px;margin-top:8px;border:1px solid var(--ln)">';
+   toast('📷 قبض آماده شد','ok');
+  };
+  img.src=r.result;
+ };
+ r.readAsDataURL(f);inp.value='';
+};
+window.PE_showCarImg=function(t){
+ var l=R('cars'),r=null;
+ for(var i=0;i<l.length;i++)if(String(l[i].t)===String(t))r=l[i];
+ if(!r||!r.img)return;
+ q('peMBody').innerHTML='<h3 style="font-size:14px;margin-bottom:9px">🧾 قبض باسکول — '+E(r.v.plate)+'</h3><img src="'+r.img+'" style="width:100%;border-radius:12px;border:1px solid var(--ln)">';
+ q('peModal').classList.remove('hid');
+};
+window.PE_carSave=function(){
+ var u=U();if(!u)return;
+ var v={plate:q('c_plate').value.trim(),driver:q('c_drv').value.trim(),tel:q('c_tel').value.trim(),dir:q('c_dir').value,cargo:q('c_cargo').value.trim()};
+ if(!v.plate||!v.driver){toast('پلاک و نام راننده الزامی است','er');return}
+ if(!CARIMG){toast('🧾 عکس قبض باسکول الزامی است','er');return}
+ var l=R('cars');
+ l.unshift({t:Date.now(),v:v,img:CARIMG,by:u.name,at:hj()});
+ W('pv_cars',l.slice(0,200));
+ var txt=(v.dir==='ورود بار'?'🚚 ورود بار':(v.dir==='خروج بار'?'📤 خروج بار':'🚙 تردد'))+' — '+v.plate+' (با قبض ✓)';
+ var al=R('agentlog');al.unshift({t:Date.now(),txt:'🛡 '+txt+' — قبض ثبت شد'});W('pv_agentlog',al.slice(0,100));
+ _mgrNote('🛡 '+txt);
+ smsSend('vehicle',txt+' — '+hhm());
+ CARIMG=null;
+ toast('✅ ثبت شد — قبض باسکول پیوست است','ok');view();
+};
+
+/* ── ۵) تیم پایش مستقل ── */
+window.PX_send=function(){
+ var u=U();if(!u)return;
+ var txt=q('px_txt')?q('px_txt').value.trim():'';
+ if(!txt){toast('شرح مشکل را بنویس','er');return}
+ var l=R('tix');
+ l.unshift({t:Date.now(),by:u.name,unit:q('px_u')?q('px_u').value:'mon',txt:String(txt).slice(0,500),st:'open'});
+ W('pv_tix',l.slice(0,100));
+ var al=R('agentlog');al.unshift({t:Date.now(),txt:'🛰 تیکت به تیم پایش — واحد '+(UFA[q('px_u')?q('px_u').value:'mon']||'')});W('pv_agentlog',al.slice(0,100));
+ toast('✅ ارسال شد — تیم پایش بررسی و راهکار می‌دهد','ok');view();
+};
+window.PX_reply=function(t,closeIt){
+ var u=U();if(!u)return;
+ if(!u.super&&!u.sup&&!u.admin)return;
+ var rp=prompt('💬 راهکار / پاسخ تیم:');if(!rp)return;
+ var l=R('tix'),r=null;
+ for(var i=0;i<l.length;i++)if(String(l[i].t)===String(t))r=l[i];
+ if(!r)return;
+ r.reply=String(rp).slice(0,500);r.replyBy=u.name;r.replyAt=hj();r.st=closeIt?'closed':'answered';
+ W('pv_tix',l);
+ smsSend('task','🛰 پاسخ تیم پایش به تیکت شما ثبت شد');
+ toast('✅ پاسخ ثبت شد','ok');view();
+};
+window.vPDesk=function(){
+ var u=U(),l=R('tix');
+ var inner='<div class="note bl"><span>🛰</span><div><b>تیم پایش PyroFlow — دفتر مرکزی: اصفهان</b><br>پایش تولید، تیم تامین/نگهداری و مشاوره بازرگانی. مشکل را بنویس تا تیم مربوطه تماس بگیرد و راهکار بدهد.</div></div>';
+ inner+='<div class="pan"><h3>✉️ ارسال مشکل / درخواست کمک</h3><div class="fgrid"><div><label>برای کدام تیم؟</label><select id="px_u"><option value="mon">📊 پایش تولید</option><option value="maint">🔧 تامین و نگهداری</option><option value="biz">💼 بازرگانی و فروش</option></select></div></div>';
+ inner+='<textarea id="px_txt" rows="3" placeholder="شرح مشکل، چه زمانی شروع شد، چه کمکی می‌خواهی؟"></textarea><button class="btn btn-pri full sm" style="margin-top:9px" onclick="PX_send()">📤 ارسال به تیم پایش</button></div>';
+ inner+='<div class="pan"><h3>📨 تیکت‌ها و پاسخ‌ها</h3>';
+ if(!l.length)inner+='<div class="empty">هنوز تیکتی نفرستاده‌ای</div>';
+ l.slice(0,25).forEach(function(x){
+  inner+='<div class="permrow"><div class="al-row" style="border:none"><span class="al-ic '+(x.st==='open'?'ai-w':'ai-t')+'">🛰</span>';
+  inner+='<div style="flex:1;min-width:160px"><span class="bdg-pill bd-info">'+(UFA[x.unit]||x.unit)+'</span> '+E(x.txt)+'<br><span style="font-size:10px;color:var(--mut2)">'+E(x.by)+' · '+ago(x.t)+'</span>';
+  if(x.reply)inner+='<div class="gbox" style="margin-top:7px;text-align:right">💬 <b>راهکار تیم ('+E(x.replyBy)+'):</b> '+E(x.reply)+'</div>';
+  inner+='</div>';
+  if((u.super||u.sup)&&!x.reply)inner+='<button class="pill pi-ok" onclick="PX_reply('+x.t+')">💬 پاسخ</button>';
+  inner+='<span class="bdg-pill '+(x.st==='open'?'bd-warn':'bd-ok')+'">'+(x.st==='open'?'در بررسی':(x.st==='answered'?'پاسخ داده شد':'بسته'))+'</span></div></div>';
+ });
+ inner+='</div>';
+ q('view').innerHTML='<div class="page-head"><h2>🛰 تیم پایش</h2></div>'+inner;
+};
+VIEWS.pdesk=window.vPDesk;
+
+/* واحد پشتیبان‌ها — فقط مدیرکل */
+window.PF_setUnit=function(e,unit){
+ var u=U();if(!u||!u.super)return;
+ var l=US();for(var i=0;i<l.length;i++)if(l[i].email===e){l[i].unit=unit;break}
+ W('pv_users',l);toast('✅ واحد ثبت شد','ok');view();
+};
+var _vset7=VIEWS.settings;
+VIEWS.settings=function(){
+ _vset7();
+ var u=U();if(!u||!u.super)return;
+ var sups=US().filter(function(x){return x.sup});
+ if(!sups.length)return;
+ var h='<div class="pan" style="border-color:rgba(180,138,255,.4)"><h3>🧩 واحد هر عضو تیم پایش</h3>';
+ sups.forEach(function(s){
+  h+='<div class="ai-it"><span class="al-ic ai-i">🎧</span><div style="flex:1;min-width:140px"><b>'+E(s.name)+'</b></div>';
+  h+='<select onchange="PF_setUnit(\''+E(s.email)+'\',this.value)" style="width:auto;font-size:11px"><option value="mon"'+(!s.unit||s.unit==='mon'?' selected':'')+'>📊 پایش</option><option value="maint"'+(s.unit==='maint'?' selected':'')+'>🔧 تامین</option><option value="biz"'+(s.unit==='biz'?' selected':'')+'>💼 بازرگانی</option></select></div>';
+ });
+ h+='</div>';
+ q('view').insertAdjacentHTML('beforeend',h);
+};
+
+/* آرایش صفحهٔ گزارش پخت: پانل مجوز + دکمهٔ ایجنت + قفل استارت */
+var _vc7=VIEWS.cook;
+VIEWS.cook=function(){
+ _vc7();
+ var v=q('view');if(!v)return;
+ var u=U(),ap=R('cok');
+ var licm=document.createElement('div');
+ licm.innerHTML='<div class="pan"><h3>🛡 مجوز استارت</h3>';
+ if(ap&&ap.ok&&ap.day===hj())licm.innerHTML+='<div class="gbox">✅ تایید مسئول شیفت: <b>'+E(ap.by)+'</b> — '+E(ap.at)+' — اپراتور مجاز به استارت</div>';
+ else licm.innerHTML+='<div class="lock">⛔ استارت فقط پس از تایید چک‌لیست توسط مسئول شیفت مجاز است</div>';
+ if(u.admin||u.super)licm.innerHTML+='<button class="btn btn-pri full sm" onclick="CK_approve()">✅ تایید چک‌لیست و صدور مجوز (مسئول شیفت)</button>';
+ licm.innerHTML+='</div>';
+ v.insertBefore(licm.firstChild,v.firstChild);
+ var stBtn=v.querySelector('button[onclick*="startProc"]');
+ if(stBtn&&!(u.admin||u.super)&&(!ap||!ap.ok||ap.day!==hj())){stBtn.disabled=true;stBtn.style.opacity='.45';stBtn.textContent='⛔ استارت — نیازمند تایید مسئول شیفت'}
+ var cs=q('cs_op');
+ if(cs&&!q('btn_ai_fill')){
+  var pan=cs.closest('.pan'),btn=pan?pan.querySelector('button'):null;
+  if(btn){
+   var b2=document.createElement('button');
+   b2.className='btn btn-gh sm';b2.id='btn_ai_fill';b2.style.marginInlineEnd='7px';
+   b2.textContent='🤖 پرکردن خودکار توسط ایجنت';
+   b2.onclick=AI_csumFill;
+   btn.parentNode.insertBefore(b2,btn);
+  }
+ }
+};
+
+/* صفحهٔ نگهبانی: آپلود قبض + آرشیو قبض‌ها */
+var _vg7=VIEWS.guard;
+VIEWS.guard=function(){
+ _vg7();
+ var v=q('view');if(!v)return;
+ var b=q('c_cargo');
+ if(b&&!q('car_file')){
+  var pan=b.closest('.pan');
+  var div=document.createElement('div');
+  div.innerHTML='<input type="file" id="car_file" accept="image/*" style="display:none" onchange="carImgFile(this)"><div class="up-box" style="margin:10px 0" onclick="pickCarImg()">🧾 عکس قبض باسکول (الزامی — بدون قبض ثبت نمی‌شود)</div><div id="car_prev"></div>';
+  var btn=pan.querySelector('button[onclick*="PE_carSave"]');
+  if(btn)pan.insertBefore(div,btn);else pan.appendChild(div);
+ }
+ var rc=R('cars').filter(function(c){return c.img}).slice(0,8);
+ if(rc.length){
+  var h='<div class="pan"><h3>🧾 قبض‌های باسکول (آخرین‌ها)</h3><div class="cg">';
+  rc.forEach(function(c){h+='<div style="text-align:center"><img src="'+c.img+'" onclick="PE_showCarImg('+c.t+')" style="width:100%;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--ln);cursor:pointer"><div style="font-size:9.5px;color:var(--mut);margin-top:3px">'+E(c.v.plate)+' · '+E(c.at||'')+'</div></div>'});
+  h+='</div></div>';
+  v.insertAdjacentHTML('beforeend',h);
+ }
+};
+
+/* تیکت‌ها در صفحهٔ پایش کارخانه (برای پشتیبان) */
+var _vsf7=VIEWS.supf;
+VIEWS.supf=function(){
+ _vsf7();
+ var u=U();if(!u||(!u.sup&&!u.super))return;
+ var org=SUPOrg;if(!org)return;
+ var tix=orgL(org,'tix');
+ var h='<div class="pan" style="border-color:rgba(180,138,255,.4)"><h3>🛰 تیکت‌ها و مشکلات این کارخانه ('+F(tix.length)+')</h3>';
+ if(!tix.length)h+='<div class="empty">تیکتی نیست</div>';
+ tix.slice(0,12).forEach(function(x){
+  h+='<div class="permrow"><div class="al-row" style="border:none"><span class="al-ic '+(x.st==='open'?'ai-w':'ai-t')+'">🛰</span><div style="flex:1;min-width:160px"><span class="bdg-pill bd-info">'+(UFA[x.unit]||x.unit||'—')+'</span> '+E(x.txt)+'<br><span style="font-size:10px;color:var(--mut2)">'+E(x.by)+' · '+ago(x.t)+'</span>';
+  if(x.reply)h+='<div class="gbox" style="margin-top:7px;text-align:right">💬 <b>پاسخ شما:</b> '+E(x.reply)+'</div>';
+  h+='</div>';
+  if(!x.reply)h+='<button class="pill pi-ok" onclick="PX_reply('+x.t+')">💬 راهکار</button>';
+  h+='<span class="bdg-pill '+(x.st==='open'?'bd-warn':'bd-ok')+'">'+(x.st==='open'?'در انتظار':'پاسخ داده شد')+'</span></div></div>';
+ });
+ h+='</div>';
+ q('view').insertAdjacentHTML('beforeend',h);
+};
+
+/* منو: 🛰 تیم پایش (برای همه به‌جز پشتیبانِ خالص) */
+var _r7=window.render;
+window.render=function(){
+ _r7();
+ var u=U();if(!u||(u.sup&&!u.admin))return;
+ var s=q('side');if(!s||q('m_pdesk'))return;
+ var btn=document.createElement('button');
+ btn.id='m_pdesk';
+ btn.className='snv'+(route==='pdesk'?' on':'');
+ btn.innerHTML='<span class="i">🛰</span> تیم پایش';
+ btn.onclick=function(){go('pdesk')};
+ var hr=s.querySelector('div[style*="border-top"]');
+ if(hr)s.insertBefore(btn,hr);else s.appendChild(btn);
+};
+})();
+</script>
 </body>
 </html>
