@@ -3683,5 +3683,58 @@ window.render=function(){
 };
 })();
 </script>
+ <script>
+"use strict";
+/* ═══ پچ v10 — بازیابی دسترسی مدیرکل ═══ */
+(function(){
+var RC='PYRO-1404'; /* 🔑 کد بازیابی — بعداً عوضش کن */
+function hardLogin(u){
+ window.__forceUser=u;
+ if(!window.__uWrapped){
+  window.__uWrapped=1;
+  var _U=window.U;
+  window.U=function(){return window.__forceUser||_U()};
+ }
+ try{W('pv_sess',u.email)}catch(e){}
+ toast('👑 خوش آمدی '+(u.name||'مدیر'),'ok');
+ setTimeout(function(){go('home')},60);
+}
+window.REC_start=function(){
+ var c=prompt('🔑 کد بازیابی:');if(c===null)return;
+ if(c.trim()!==RC){toast('کد اشتباه است','er');return}
+ var em=prompt('📧 ایمیل مدیرکل:');if(!em)return;
+ em=em.trim().toLowerCase();
+ var pw=prompt('🔐 رمز جدید (حداقل ۴ کاراکتر):');if(!pw||pw.length<4){toast('رمز کوتاه است','er');return}
+ var nm=prompt('👤 نام نمایشی:','مدیرکل');nm=(nm||'مدیرکل').trim();
+ var l=US(),f=null,i;
+ for(i=0;i<l.length;i++){if(String(l[i].email).toLowerCase()===em){f=l[i];break}}
+ if(f){
+  f.pass=pw;f.pw=pw;f.admin=true;f.super=true;W('pv_users',l);
+  toast('♻️ رمز ریست شد — وارد می‌کنم…','ok');
+  setTimeout(function(){hardLogin(f)},400);
+ }else{
+  f={email:em,pass:pw,pw:pw,name:nm,admin:true,super:true,sup:false,org:'',lat:36.32,lon:59.55,city:'مشهد'};
+  l.push(f);W('pv_users',l);
+  toast('👑 حساب مدیرکل ساخته شد — وارد می‌کنم…','ok');
+  setTimeout(function(){hardLogin(f)},400);
+ }
+};
+var _r10=window.render;
+window.render=function(){
+ _r10();
+ var u=null;try{u=U()}catch(e){}
+ var b=q('rec_btn');
+ if(u){if(b)b.remove();return}
+ if(!b){
+  b=document.createElement('button');
+  b.id='rec_btn';
+  b.textContent='🔑 بازیابی دسترسی مدیرکل';
+  b.style.cssText='position:fixed;top:12px;left:12px;z-index:9999;background:rgba(60,40,120,.55);border:1px solid rgba(170,130,255,.5);color:#e9e2ff;border-radius:12px;padding:8px 12px;font-size:11px;font-family:inherit';
+  b.onclick=REC_start;
+  document.body.appendChild(b);
+ }
+};
+})();
+</script>
 </body>
 </html>
