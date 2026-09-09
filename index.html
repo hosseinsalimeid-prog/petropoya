@@ -3775,5 +3775,89 @@ setInterval(ensureBtn,700);
 ensureBtn();
 })();
 </script>
+ <script>
+"use strict";
+/* ═══ پچ v12 — بازیابی با پنجرهٔ داخلی (بدون prompt) + ورود پایدار ═══ */
+(function(){
+var CODE='PYRO1404', TTL=24*36e5;
+function norm(s){return String(s||'').replace(/[۰-۹]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)}).replace(/[٠-٩]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'.indexOf(d)}).replace(/[\s\-_]/g,'').toUpperCase()}
+
+window.REC_open=function(){
+ var old=q('recModal');if(old)old.remove();
+ var m=document.createElement('div');
+ m.id='recModal';
+ m.style.cssText='position:fixed;inset:0;z-index:2147483600;background:rgba(5,5,15,.78);display:flex;align-items:center;justify-content:center;padding:18px';
+ m.onclick=function(e){if(e.target===m)m.remove()};
+ m.innerHTML='<div style="width:100%;max-width:340px;background:#171427;border:1px solid rgba(170,130,255,.45);border-radius:18px;padding:18px;font-family:inherit">'+
+ '<h3 style="margin:0 0 4px;font-size:15px">🔑 بازیابی دسترسی مدیرکل</h3>'+
+ '<div style="font-size:10.5px;color:#9a92b8;line-height:1.8;margin-bottom:10px">کد، ایمیل و رمز جدید را وارد کنید. کد باید انگلیسی باشد.</div>'+
+ '<input id="rc_code" placeholder="کد بازیابی" style="width:100%;box-sizing:border-box;margin-bottom:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:#eee;border-radius:10px;padding:10px;font-size:13px;direction:ltr;text-align:left">'+
+ '<input id="rc_mail" placeholder="ایمیل مدیرکل" style="width:100%;box-sizing:border-box;margin-bottom:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:#eee;border-radius:10px;padding:10px;font-size:13px;direction:ltr;text-align:left">'+
+ '<input id="rc_pass" placeholder="رمز جدید (۴+ کاراکتر)" style="width:100%;box-sizing:border-box;margin-bottom:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:#eee;border-radius:10px;padding:10px;font-size:13px;direction:ltr;text-align:left">'+
+ '<input id="rc_name" placeholder="نام نمایشی" value="مدیرکل" style="width:100%;box-sizing:border-box;margin-bottom:11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:#eee;border-radius:10px;padding:10px;font-size:13px">'+
+ '<button id="rc_go" style="width:100%;background:linear-gradient(135deg,#7c5cff,#4f34c7);color:#fff;border:none;border-radius:12px;padding:12px;font-size:13.5px;font-weight:700;font-family:inherit">♻️ بازسازی و ورود</button>'+
+ '<button onclick="document.getElementById(\'recModal\').remove()" style="width:100%;margin-top:7px;background:none;border:none;color:#9a92b8;font-size:11.5px;font-family:inherit;padding:6px">انصراف</button></div>';
+ document.body.appendChild(m);
+ q('rc_go').onclick=REC_submit;
+ setTimeout(function(){try{q('rc_code').focus()}catch(e){}},80);
+};
+
+function fatal(msg){toast(msg,'er')}
+window.REC_submit=function(){
+ if(norm(q('rc_code').value)!==CODE){fatal('کد اشتباه است — با کیبورد انگلیسی بزن');return}
+ var em=q('rc_mail').value.trim().toLowerCase();
+ if(!em||em.indexOf('@')<1){fatal('ایمیل را درست وارد کن');return}
+ var pw=q('rc_pass').value;
+ if(pw.length<4){fatal('رمز باید حداقل ۴ کاراکتر باشد');return}
+ var nm=q('rc_name').value.trim()||'مدیرکل';
+ var l=[],f=null;
+ try{l=US()}catch(e){l=JSON.parse(localStorage.getItem('pv_users')||'[]')}
+ for(var i=0;i<l.length;i++){if(String(l[i].email).toLowerCase()===em){f=l[i];break}}
+ if(f){f.pass=pw;f.pw=pw;f.password=pw;f.admin=true;f.super=true}
+ else{f={email:em,pass:pw,pw:pw,password:pw,name:nm,admin:true,super:true,sup:false,org:'',city:'مشهد'};l.push(f)}
+ try{W('pv_users',l)}catch(e){localStorage.setItem('pv_users',JSON.stringify(l))}
+ try{localStorage.setItem('pv_rec',JSON.stringify({email:em,ts:Date.now()}))}catch(e){}
+ forceLogin(f);
+};
+
+function forceLogin(f){
+ window.__forceUser=f;
+ if(!window.__uWrapped&&typeof window.U==='function'){window.__uWrapped=1;var _U=window.U;window.U=function(){return window.__forceUser||_U()}}
+ try{W('pv_sess',f.email)}catch(e){}
+ var m=q('recModal');if(m)m.remove();
+ var b=document.getElementById('rec_btn');if(b)b.remove();
+ toast('👑 خوش آمدی '+(f.name||'مدیر'),'ok');
+ setTimeout(function(){try{go('home');view()}catch(e){try{location.reload()}catch(e2){}}},250);
+}
+function bootRelogin(){
+ try{
+  var raw=localStorage.getItem('pv_rec');if(!raw)return;
+  var o=JSON.parse(raw);if(!o||!o.email)return;
+  if(Date.now()-(o.ts||0)>TTL){localStorage.removeItem('pv_rec');return}
+  var u=null;try{u=U()}catch(e){}
+  if(u&&u.email)return;
+  var l=US(),f=null;
+  for(var i=0;i<l.length;i++)if(String(l[i].email).toLowerCase()===o.email){f=l[i];break}
+  if(!f)return;f.super=true;f.admin=true;
+  forceLogin(f);
+ }catch(e){}
+}
+function ensureBtn(){
+ var b=document.getElementById('rec_btn');
+ var inn=false;try{var uu=U();inn=!!(uu&&uu.email)}catch(e){}
+ if(inn){if(b)b.remove();return}
+ if(!b){
+  b=document.createElement('button');b.id='rec_btn';b.type='button';
+  b.textContent='🔑 بازیابی مدیرکل';
+  b.style.cssText='position:fixed;bottom:100px;left:14px;z-index:2147483000;background:linear-gradient(135deg,#7c5cff,#4f34c7);color:#fff;border:none;border-radius:14px;padding:12px 16px;font-size:13px;font-weight:700;font-family:inherit;box-shadow:0 6px 20px rgba(0,0,0,.45)';
+  document.body.appendChild(b);
+ }
+ b.onclick=function(){REC_open()};
+}
+window.REC_boot=bootRelogin;
+setTimeout(bootRelogin,50);setInterval(bootRelogin,1500);
+setTimeout(ensureBtn,80);setInterval(ensureBtn,900);
+})();
+</script>
 </body>
 </html>
