@@ -3525,5 +3525,135 @@ window.render=function(){
 };
 })();
 </script>
+ <script>
+"use strict";
+/* ═══ پچ v8 — HQ مشهد + منوی پایش محدود + تقسیم کارخانه + گزارش ماهانه ═══ */
+(function(){
+/* ── ۱) دفتر مرکزی: مشهد ── */
+var _vp8=window.vPDesk;
+window.vPDesk=function(){
+ _vp8();
+ var v=q('view');
+ if(v&&v.innerHTML.indexOf('اصفهان')>=0)v.innerHTML=v.innerHTML.split('اصفهان').join('مشهد');
+};
+
+/* ── ۲+۳) منو: پایش فقط پشتیبان + دکمه گزارش ماهانه ── */
+var _r8=window.render;
+window.render=function(){
+ _r8();
+ var u=U();if(!u)return;
+ var s=q('side');if(!s)return;
+ Array.prototype.forEach.call(s.querySelectorAll('button'),function(b){
+  var oc='';try{oc=b.getAttribute('onclick')||''}catch(e){}
+  var src='';try{if(b.onclick)src=b.onclick.toString()}catch(e){}
+  var txt=b.textContent||'';
+  if(oc.indexOf('supf')>=0||src.indexOf('supf')>=0||txt.indexOf('پایش کارخانه')>=0)
+   b.style.display=(u.sup||u.super)?'':'none';
+ });
+ if(!q('m_mrep')&&u.admin){
+  var btn=document.createElement('button');
+  btn.id='m_mrep';btn.className='snv'+(route==='mrep'?' on':'');
+  btn.innerHTML='<span class="i">📊</span> گزارش ماهانه';
+  btn.onclick=function(){go('mrep')};
+  var a=q('m_pdesk');
+  if(a&&a.parentNode)s.insertBefore(btn,a.nextSibling);else s.appendChild(btn);
+ }
+};
+
+/* ── ۴) تقسیم کارخانه‌ها بین پشتیبان‌ها (مدیرکل) ── */
+window.PF_setOwner=function(org,em){
+ var a=R('asg')||{};
+ if(em)a[org]=em;else delete a[org];
+ W('pv_asg',a);toast('✅ ثبت شد','ok');view();
+};
+var _vset8=VIEWS.settings;
+VIEWS.settings=function(){
+ _vset8();
+ var u=U();if(!u||!u.super)return;
+ var sups=US().filter(function(x){return x.sup});
+ var orgs=[];US().forEach(function(x){if(!x.sup&&x.org&&orgs.indexOf(x.org)<0)orgs.push(x.org)});
+ var asg=R('asg')||{},cnt={};
+ sups.forEach(function(s){cnt[s.email]='\u200F0'});
+ orgs.forEach(function(o){var e=asg[o];if(e&&cnt[e]!=null)cnt[e]=(parseInt(cnt[e].replace(/\u200F/g,''))||0)+1,cnt[e]='\u200F'+String(cnt[e]).replace(/\u200F/g,'')});
+ sups.forEach(function(s){var n=0;orgs.forEach(function(o){if(asg[o]===s.email)n++});cnt[s.email]=n});
+ var h='<div class="pan" style="border-color:rgba(255,170,60,.4)"><h3>🏭 تقسیم کارخانه‌ها بین پشتیبان‌ها</h3>';
+ if(!orgs.length)h+='<div class="empty">هنوز کارخانه‌ای ثبت نشده</div>';
+ orgs.forEach(function(o){
+  h+='<div class="ai-it"><span class="al-ic ai-i">🏭</span><div style="flex:1;min-width:120px"><b style="font-size:12px;direction:ltr">'+E(o)+'</b></div><select onchange="PF_setOwner(\''+E(o)+'\',this.value)" style="width:auto;font-size:11px"><option value="">— انتخاب —</option>';
+  sups.forEach(function(s){h+='<option value="'+E(s.email)+'"'+(asg[o]===s.email?' selected':'')+'>'+E(s.name)+'</option>'});
+  h+='</select></div>';
+ });
+ h+='<div style="font-size:10.5px;color:var(--mut);margin-top:7px">⚖️ بار کاری: ';
+ sups.forEach(function(s){h+=E(s.name)+': '+F(cnt[s.email]||0)+' · '});
+ h+='(هدف: هر پشتیبان ~۱۰ کارخانه)</div></div>';
+ q('view').insertAdjacentHTML('beforeend',h);
+};
+var _vsf8=VIEWS.supf;
+VIEWS.supf=function(){
+ _vsf8();
+ var u=U();if(!u||(!u.sup&&!u.super))return;
+ var asg=R('asg')||{},mine=0,all=0;
+ US().forEach(function(x){if(!x.sup&&x.org){all++;if(asg[x.org]===u.email)mine++}});
+ var v=q('view');
+ if(v)v.insertAdjacentHTML('afterbegin','<div class="note bl"><span>🎯</span><div>کارخانه‌های تحت پوشش شما: <b>'+F(mine)+'</b> از '+F(all)+' کارخانه</div></div>');
+};
+
+/* ── ۵) گزارش ماهانه مدیر کارخانه ── */
+window.vMrep=function(){
+ var u=U();
+ if(!u||(!u.admin&&!u.super)){toast('فقط مدیر کارخانه','er');return}
+ var now=Date.now(),W30=now-30*864e5;
+ function inW(t){return +t>=W30&&+t<=now+36e5}
+ var bts=R('batch').filter(function(b){return inW(b.t)});
+ var outs=R('out').filter(function(o){return inW(o.t)});
+ var tot={};outs.forEach(function(o){if(!o.v)return;var p=String(o.v.prod||'—');tot[p]=(tot[p]||0)+(+o.v.qty||0)});
+ var cars=R('cars').filter(function(c){return inW(c.t)}).length;
+ var tix=R('tix'),opn=tix.filter(function(x){return x.st==='open'}).length,rep=tix.filter(function(x){return x.reply}).length;
+ var app=0;R('agentlog').forEach(function(a){if(inW(a.t)&&String(a.txt).indexOf('تایید')>=0)app++});
+ var days={};function dy(t){var d=new Date(+t);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+ bts.forEach(function(b){days[dy(b.t)]=1});outs.forEach(function(o){days[dy(o.t)]=1});
+ var act=Object.keys(days).length,pct=Math.min(100,Math.round(act/30*100));
+ function kpi(ic,val,lab,col){return '<div style="background:rgba(255,255,255,.03);border:1px solid var(--ln);border-radius:14px;padding:11px 6px;text-align:center"><div style="font-size:19px">'+ic+'</div><div style="font-size:20px;font-weight:800;color:'+(col||'var(--tx)')+'">'+val+'</div><div style="font-size:10px;color:var(--mut)">'+lab+'</div></div>'}
+ var ml=(typeof hj==='function')?hj().slice(0,7):'';
+ var h='<div class="page-head"><h2>📊 گزارش ماهانه' + (ml?' <span class="bdg-pill bd-info">'+F(ml)+'</span>':'') + '</h2></div>';
+ h+='<div class="note bl"><span>📈</span><div><b>سند ارزش اشتراک</b> — عملکرد ۳۰ روز اخیر کارخانه در PyroFlow. با دکمهٔ پایین کپی و برای مالک/مدیر ارسال کنید.</div></div>';
+ h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">';
+ h+=kpi('🏭',F(bts.length),'بچ پخت');
+ h+=kpi('📦',F(outs.length),'ردیف فرآورده');
+ h+=kpi('🚚',F(cars),'تردد خودرو');
+ h+=kpi('🛰',F(tix.length),'تیکت پایش',rep?'#4ade80':'#fbbf24');
+ h+=kpi('🛡',F(app),'تایید چک‌لیست');
+ h+=kpi('📅',pct+'%','روزهای فعال ثبت',pct>=70?'#4ade80':(pct>=40?'#fbbf24':'#f87171'));
+ h+='</div>';
+ h+='<div class="pan" style="margin-top:10px"><h3>📦 فرآورده‌های تولیدشده</h3>';
+ var ks=Object.keys(tot);
+ if(!ks.length)h+='<div class="empty">در این دوره فرآورده‌ای ثبت نشده</div>';
+ else ks.forEach(function(k){h+='<div class="permrow" style="padding:8px 10px"><span>'+E(k)+'</span><b>'+F(tot[k])+'</b> <span style="font-size:10px;color:var(--mut)">kg</span></div>'});
+ h+='</div>';
+ h+='<div class="pan"><h3>ℹ️ وضعیت</h3>';
+ h+='<div class="permrow" style="padding:8px 10px"><span>تیکت در انتظار پاسخ</span><span class="bdg-pill '+(opn?'bd-warn':'bd-ok')+'">'+F(opn)+'</span></div>';
+ h+='<div class="permrow" style="padding:8px 10px"><span>تیکت پاسخ‌داده تیم پایش</span><span class="bdg-pill bd-ok">'+F(rep)+'</span></div>';
+ if(pct<40)h+='<div class="lock">⚠️ ثبت روزانه کم است ('+pct+'%) — اپراتورها را تشویق به ثبت کنید تا گزارش دقیق شود</div>';
+ h+='</div>';
+ h+='<button class="btn btn-pri full sm" onclick="MREP_copy()">📋 کپی گزارش برای مدیر / مالک</button>';
+ q('view').innerHTML=h;
+ var lines=['📊 گزارش ماهانه PyroFlow — '+ml];
+ lines.push('• بچ‌های پخت: '+bts.length);
+ lines.push('• ردیف‌های فرآورده: '+outs.length);
+ ks.forEach(function(k){lines.push('   - '+k+': '+tot[k]+' kg')});
+ lines.push('• تردد خودرو (نگهبانی): '+cars);
+ lines.push('• تاییدهای چک‌لیست مسئول شیفت: '+app);
+ lines.push('• روزهای فعال ثبت: '+act+' از ۳۰ ('+pct+'%)');
+ lines.push('• تیکت به تیم پایش: '+tix.length+' — پاسخ‌داده: '+rep);
+ window.__mrepTxt=lines.join('\n');
+};
+VIEWS.mrep=window.vMrep;
+window.MREP_copy=function(){
+ var txt=window.__mrepTxt||'';if(!txt)return;
+ function fb(){var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');toast('📋 کپی شد — برای مدیر بفرست','ok')}catch(e){toast('کپی نشد','er')}document.body.removeChild(ta)}
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(function(){toast('📋 کپی شد — برای مدیر بفرست','ok')},fb);else fb();
+};
+})();
+</script>
 </body>
 </html>
