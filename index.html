@@ -3206,5 +3206,51 @@ setInterval(function(){cloudLoad(true,function(){})},45000);
 setInterval(agentWatch,90000);
 })();
 </script>
+ <script>
+"use strict";
+/* ═══ پچ دما — ذخیرهٔ مطمئن مختصات + محافظت از تغییرات محلی ═══ */
+(function(){
+window.__pfLast={};
+var _supaUp=window.supaUp;
+window.supaUp=function(k,v){window.__pfLast[k]=Date.now();_supaUp(k,v)};
+window.cloudLoad=function(silent,cb){
+ if(!window.PF_TOKEN){if(cb)cb(true);return}
+ var done=false,to=setTimeout(function(){if(!done){done=true;if(cb)cb(false)}},8000);
+ pfPull(window.PF_TOKEN).then(function(j){
+  if(done)return;done=true;clearTimeout(to);
+  var d=(j&&j.data)?j.data:((j&&j.entries)?j.entries:j);
+  function fresh(id){return window.__pfLast[id]&&(Date.now()-window.__pfLast[id]<120000)}
+  if(Array.isArray(d))d.forEach(function(r){var id=r.id||r.key||r.k;if(id&&!fresh(id))DATA[id]=(r.val!==undefined?r.val:r.v)});
+  else if(d&&typeof d==='object')for(var k in d){if(!fresh(k))DATA[k]=d[k]}
+  if(cb)cb(true);
+ }).catch(function(){if(done)return;done=true;clearTimeout(to);if(cb)cb(false)});
+};
+window.LOC_save=function(){
+ var u=U();if(!u){toast('اول وارد شو','er');return}
+ var addr=q('lc_addr')?q('lc_addr').value.trim():'';
+ var city=q('lc_city')?q('lc_city').value.trim():'';
+ var latS=q('lc_lat')?String(fa2en(q('lc_lat').value)).trim():'';
+ var lonS=q('lc_lon')?String(fa2en(q('lc_lon').value)).trim():'';
+ if(!latS)latS='36.32';
+ if(!lonS)lonS='59.55';
+ var latF=parseFloat(latS),lonF=parseFloat(lonS);
+ if(isNaN(latF)||isNaN(lonF)){toast('مختصات نامعتبر','er');return}
+ var l=US(),i,fnd=false;
+ for(i=0;i<l.length;i++){
+  if(l[i].email===u.email){
+   if(addr)l[i].addr=addr;
+   if(city)l[i].city=city;
+   l[i].lat=latF;l[i].lon=lonF;fnd=true;break;
+  }
+ }
+ if(!fnd){toast('حساب یافت نشد','er');return}
+ W('pv_users',l);
+ try{LOC_syncFirm(l.filter(function(x){return x.email===u.email})[0])}catch(e){}
+ toast('📍 ذخیره شد: '+latF+' , '+lonF,'ok');
+ view();
+ setTimeout(LOC_test,800);
+};
+})();
+</script>
 </body>
 </html>
