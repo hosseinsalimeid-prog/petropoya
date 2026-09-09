@@ -3736,5 +3736,44 @@ window.render=function(){
 };
 })();
 </script>
+ <script>
+"use strict";
+/* ═══ پچ v11 — دکمهٔ بازیابی همیشه‌مرئی ═══ */
+(function(){
+var RC='PYRO-1404';
+function loggedIn(){try{var u=U();return !!(u&&u.email)}catch(e){return false}}
+window.REC_start=function(){
+ var c=prompt('🔑 کد بازیابی:');if(c===null)return;
+ if(c.trim()!==RC){toast('کد اشتباه است','er');return}
+ var em=prompt('📧 ایمیل مدیرکل:');if(!em)return;
+ em=em.trim().toLowerCase();
+ var pw=prompt('🔐 رمز جدید (حداقل ۴ کاراکتر):');if(!pw||pw.length<4){toast('رمز کوتاه است','er');return}
+ var nm=prompt('👤 نام نمایشی:','مدیرکل');nm=(nm||'مدیرکل').trim();
+ var l=US(),f=null,i;
+ for(i=0;i<l.length;i++){if(String(l[i].email).toLowerCase()===em){f=l[i];break}}
+ if(f){f.pass=pw;f.pw=pw;f.admin=true;f.super=true;W('pv_users',l)}
+ else{f={email:em,pass:pw,pw:pw,name:nm,admin:true,super:true,sup:false,org:'',city:'مشهد'};l.push(f);W('pv_users',l)}
+ window.__forceUser=f;
+ if(!window.__uWrapped&&typeof window.U==='function'){window.__uWrapped=1;var _U=window.U;window.U=function(){return window.__forceUser||_U()}}
+ try{W('pv_sess',em)}catch(e){}
+ var b=document.getElementById('rec_btn');if(b)b.remove();
+ toast('👑 خوش آمدی '+nm,'ok');
+ setTimeout(function(){try{go('home');view()}catch(e){try{location.reload()}catch(e2){}}},300);
+};
+function ensureBtn(){
+ var b=document.getElementById('rec_btn');
+ if(loggedIn()){if(b)b.remove();return}
+ if(b)return;
+ b=document.createElement('button');
+ b.id='rec_btn';
+ b.textContent='🔑 بازیابی مدیرکل';
+ b.style.cssText='position:fixed;bottom:86px;left:14px;z-index:2147483000;background:linear-gradient(135deg,#7c5cff,#4f34c7);color:#fff;border:none;border-radius:14px;padding:12px 16px;font-size:13px;font-weight:700;font-family:inherit;box-shadow:0 6px 20px rgba(0,0,0,.45)';
+ b.onclick=function(){REC_start()};
+ document.body.appendChild(b);
+}
+setInterval(ensureBtn,700);
+ensureBtn();
+})();
+</script>
 </body>
 </html>
