@@ -3655,5 +3655,33 @@ window.MREP_copy=function(){
 };
 })();
 </script>
+ <script>
+"use strict";
+/* ═══ پچ v9 — ورود تیم پشتیبان دفتر مرکزی (مشهد) ═══ */
+(function(){
+var DENY=['','','home','cook','guard','store','raws','out','csum','batch','agent','maint','sale','buy','acc','perm','mission','mrep','dash','rep','notifs','plan','task','sms'];
+var _r9=window.render;
+window.render=function(){
+ _r9();
+ var u=U();
+ var bn=q('sup_login_banner');
+ if(!u){
+  if(!bn){
+   bn=document.createElement('div');
+   bn.id='sup_login_banner';
+   bn.style.cssText='position:fixed;bottom:12px;right:12px;left:12px;z-index:9999;background:linear-gradient(135deg,rgba(160,120,255,.18),rgba(70,50,140,.18));border:1px solid rgba(170,130,255,.5);border-radius:14px;padding:11px 13px;font-size:11.5px;line-height:1.9;box-shadow:0 8px 26px rgba(0,0,0,.5)';
+   bn.innerHTML='🎧 <b>ورود تیم پشتیبان — دفتر مرکزی مشهد</b><br><span style="opacity:.75;font-size:10.5px">همکاران دفتر مرکزی با ایمیل سازمانی از همان فرم بالا وارد می‌شوند و مستقیم به «پایش کارخانه‌ها» می‌روند. کارخانه‌ها از دروازهٔ ثبت‌نام کارخانه استفاده کنند.</span>';
+   document.body.appendChild(bn);
+  }
+ } else if(bn) bn.remove();
+ if(u&&u.sup&&!u.admin&&!u.super){
+  var r=(typeof route!=='undefined'&&route)?route:'';
+  if(r!=='supf'&&r!=='pdesk'&&r!=='settings'&&(DENY.indexOf(r)>=0||r==='')){
+   go('supf');
+  }
+ }
+};
+})();
+</script>
 </body>
 </html>
