@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+ <script>
+// ===== PyroFlow — اتصال به دروازه pf-gate =====
+const PF_URL = 'https://ccrbetnfrkiqarxvrcuv.supabase.co/functions/v1/pf-gate';
+const PF_KEY = 'sb_publishable_LhGKdHbNqb6NWxteVEkYvw_XOX57XOf';
+
+async function pfCall(body) {
+  const r = await fetch(PF_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': PF_KEY,
+      'Authorization': 'Bearer ' + PF_KEY
+    },
+    body: JSON.stringify(body)
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || j.err || ('خطای ' + r.status));
+  return j;
+}
+const pfAuth = (email, pass, mode, profile) => pfCall({ action: 'auth', email, pass, mode, profile });
+const pfPull = (token) => pfCall({ action: 'pull', token });
+const pfPush = (token, entries) => pfCall({ action: 'push', token, entries });
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PyroFlow — سیستم‌عامل صنعت پیرولیز</title>
