@@ -3105,5 +3105,106 @@ function render(){
  if(V)V();
 }
 </script>
+ <script>
+"use strict";
+/* ═══ پچ نهایی — همه رفت‌وآمد از دروازه pf-gate ═══ */
+(function(){
+window.PF_TOKEN=null;window.PF_QUEUE={};window.PF_TMR=null;
+try{window.PF_TOKEN=localStorage.getItem('pf_token')||null}catch(e){}
+function setTok(t){window.PF_TOKEN=t;try{if(t)localStorage.setItem('pf_token',t);else localStorage.removeItem('pf_token')}catch(e){}}
+function tok(j){return (j&&(j.token||j.t||(j.data&&j.data.token)))||null}
+function pfSave(k,v){
+ if(!window.PF_TOKEN)return;
+ window.PF_QUEUE[k]=v;clearTimeout(window.PF_TMR);
+ window.PF_TMR=setTimeout(pfFlush,1500);
+}
+function pfFlush(){
+ var ents=window.PF_QUEUE;window.PF_QUEUE={};
+ var n=0;for(var k in ents)n++;
+ if(!n||!window.PF_TOKEN)return;
+ pfPush(window.PF_TOKEN,ents).catch(function(){for(var k2 in ents)window.PF_QUEUE[k2]=ents[k2]});
+}
+/* لایه ابر */
+window.supaUp=function(k,v){pfSave(k,v)};
+window.cloudLoad=function(silent,cb){
+ if(!window.PF_TOKEN){if(cb)cb(true);return}
+ var done=false,to=setTimeout(function(){if(!done){done=true;if(!silent)toast('کند بود — آفلاین ادامه می‌دهیم','er');if(cb)cb(false)}},8000);
+ pfPull(window.PF_TOKEN).then(function(j){
+  if(done)return;done=true;clearTimeout(to);
+  var d=(j&&j.data)?j.data:((j&&j.entries)?j.entries:j);
+  if(Array.isArray(d))d.forEach(function(r){DATA[r.id||r.key||r.k]=(r.val!==undefined?r.val:r.v)});
+  else if(d&&typeof d==='object')for(var k in d)DATA[k]=d[k];
+  if(cb)cb(true);
+ }).catch(function(){if(done)return;done=true;clearTimeout(to);if(!silent)toast('⚠️ اتصال برقرار نشد','er');if(cb)cb(false)});
+};
+window.pushAll=function(){pfFlush();toast('⬆️ ارسال شد','ok')};
+window.pullAll=function(){toast('🔄 در حال دریافت…');cloudLoad(false,function(ok){if(ok){toast('✅ همگام شد','ok');render()}})};
+window.logout=function(){try{localStorage.removeItem('pv_sess');localStorage.removeItem('pf_token')}catch(e){}window.PF_TOKEN=null;route='home';render()};
+/* ورود با دروازه */
+window.doLogin=function(){
+ var e=q('le').value.trim().toLowerCase(),p=q('lp').value;
+ if(!e||!p){toast('ایمیل و رمز را وارد کنید','er');return}
+ toast('… در حال ورود');
+ pfAuth(e,p,'login').then(function(j){
+  setTok(tok(j));if(!window.PF_TOKEN)throw new Error('توکن دریافت نشد');
+  firstSyncDone=true;
+  cloudLoad(true,function(){
+   var l=US(),u=null,i;
+   for(i=0;i<l.length;i++)if(l[i].email===e)u=l[i];
+   if(!u){
+    var anyA=l.filter(function(x){return x.admin&&!x.sup});
+    if(anyA.length){u={email:e,pass:'',name:e.split('@')[0],org:anyA[0].email,admin:0,st:'pend',plan:0,perms:['dash','cook','req','ai']}}
+    else{u={email:e,pass:'',name:e.split('@')[0],org:e,admin:1,super:1,st:'ok',plan:2,perms:[]}}
+    l.push(u);W('pv_users',l);
+   }
+   fixUsers();
+   if(u.st==='pend'){toast('حساب شما منتظر تایید مدیر است ⏳','er');return}
+   W('pv_sess',e);q('lp').value='';closeAuth();
+   route=(u.sup&&!u.admin)?'sup':'dash';render();
+   toast('خوش آمدی '+u.name+' 👋','ok');
+  });
+ }).catch(function(er){toast((er&&er.message)||'ورود ناموفق','er')});
+};
+/* ثبت‌نام با دروازه */
+window.doReg=function(){
+ var n=q('rn').value.trim(),e=q('re').value.trim().toLowerCase(),p=q('rp').value;
+ var cn=q('rc').value.trim(),ad=q('ra').value.trim(),bn=q('rb').value.trim();
+ var isMgr=q('rm').checked;
+ if(!n||!e||!p){toast('نام، ایمیل و رمز لازم است','er');return}
+ if(p.length<6){toast('رمز حداقل ۶ کاراکتر','er');return}
+ var mg='';if(!isMgr){mg=q('rmg').value.trim().toLowerCase();if(!mg){toast('ایمیل مدیر کارخانه لازم است','er');return}}
+ toast('… در حال ثبت');
+ pfAuth(e,p,'register',{name:n,company:cn,org:isMgr?e:mg}).then(function(j){
+  setTok(tok(j));if(!window.PF_TOKEN)throw new Error('توکن دریافت نشد');
+  firstSyncDone=true;
+  cloudLoad(true,function(){
+   var l=US(),i;
+   for(i=0;i<l.length;i++)if(l[i].email===e){W('pv_sess',e);closeAuth();route='dash';render();toast('خوش برگشتی 👋','ok');return}
+   hs(p).then(function(h){
+    var obj={email:e,pass:h,name:n,cname:cn,addr:ad,bno:bn,city:REGLOC?REGLOC.city:'',lat:REGLOC?REGLOC.lat:null,lon:REGLOC?REGLOC.lon:null};
+    if(isMgr){
+     var anyA=l.filter(function(x){return x.admin&&!x.sup}).length>0;
+     obj.admin=1;obj.super=anyA?0:1;obj.org=e;obj.st='ok';obj.plan=anyA?1:2;obj.perms=[];
+     l.push(obj);W('pv_users',l);pushFirm(obj);
+     W('pv_sess',e);closeAuth();route='dash';render();
+     toast('خوش آمدید مدیر کارخانه 👑'+(anyA?'':' (مدیر کل 🌟)'),'ok');
+    }else{
+     obj.admin=0;obj.st='pend';obj.plan=0;obj.org=mg;obj.perms=['dash','cook','req','ai'];
+     l.push(obj);W('pv_users',l);pfFlush();
+     toast('ثبت شد — مدیر باید تایید کند ⏳','ok');closeAuth();authTab(0);
+    }
+   });
+  });
+ }).catch(function(er){toast((er&&er.message)||'ثبت‌نام ناموفق','er')});
+};
+/* بوت دروازه‌ای */
+window.SB_OK=true;
+seedGlobal();firstSyncDone=true;fixUsers();
+if(window.PF_TOKEN)cloudLoad(true,function(){fixUsers();render()});
+render();
+setInterval(function(){cloudLoad(true,function(){})},45000);
+setInterval(agentWatch,90000);
+})();
+</script>
 </body>
 </html>
