@@ -4188,5 +4188,111 @@ setTimeout(ensureBtn,80);setInterval(ensureBtn,900);
 })();
 </script>
 <!-- ===== PF-WAC v2 END ===== -->
+ <!-- ===== PF-EXP v1 BEGIN ===== -->
+<section id="pf-exp" dir="rtl" style="max-width:520px;margin:12px auto;padding:14px;border:1px solid #2a2f3a;border-radius:14px;background:#11151c;color:#e8ecf1;font-size:14px">
+  <h3 style="margin:0 0 10px;font-size:16px">📒 دفتر هزینه‌ها (مالی)</h3>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button id="exTabDaily" style="flex:1;padding:8px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700">📅 روزانه (پرسنل/تعمیرات)</button>
+    <button id="exTabBill" style="flex:1;padding:8px;border:0;border-radius:8px;background:#21262d;color:#e8ecf1;font-weight:700">🧾 قبض‌های ماهانه</button>
+  </div>
+
+  <div id="exDaily">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+      <select id="exType" style="flex:1;min-width:110px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+        <option>پرسنل</option><option>تعمیرات</option><option>متفرقه</option>
+      </select>
+      <input id="exAmt" type="number" placeholder="مبلغ (ریال)" style="flex:1;min-width:120px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+      <input id="exDate" type="date" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    </div>
+    <button id="exAdd" style="width:100%;padding:9px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700;margin-bottom:10px">➕ ثبت هزینهٔ روزانه</button>
+    <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <div style="flex:1;min-width:130px;background:#161b24;border-radius:10px;padding:10px"><div style="opacity:.7;font-size:12px">جمع امروز</div><div id="exToday" style="font-size:17px;font-weight:800;color:#3fb950;margin-top:4px">0</div></div>
+      <div style="flex:1;min-width:130px;background:#161b24;border-radius:10px;padding:10px"><div style="opacity:.7;font-size:12px">جمع این ماه</div><div id="exMonth" style="font-size:17px;font-weight:800;color:#f0883e;margin-top:4px">0</div></div>
+    </div>
+    <button id="exApply" style="width:100%;padding:8px;border:0;border-radius:8px;background:#1f6feb;color:#fff;font-weight:700;margin-bottom:10px">📥 اعمال «جمع امروز» در محاسبهٔ بچ</button>
+    <div id="exList" style="font-size:13px;line-height:2"></div>
+  </div>
+
+  <div id="exBills" style="display:none">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+      <select id="blType" style="flex:1;min-width:100px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+        <option>برق</option><option>آب</option><option>گاز</option><option>گازوییل</option><option>سایر</option>
+      </select>
+      <input id="blMonth" type="text" placeholder="ماه (مثلاً 1405/06)" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+      <input id="blAmt" type="number" placeholder="مبلغ کل قبض (ریال)" style="flex:1;min-width:140px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+      <input id="blKg" type="number" placeholder="تولید همان ماه (kg)" style="flex:1;min-width:140px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    </div>
+    <button id="blAdd" style="width:100%;padding:9px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700;margin-bottom:6px">➕ ثبت قبض</button>
+    <div id="blHint" style="background:#161b24;border-radius:10px;padding:10px;margin-bottom:10px;font-size:13px;line-height:1.9">💡 برآورد مصرف اینجا نشان داده می‌شود</div>
+    <div id="blList" style="font-size:13px;line-height:2"></div>
+  </div>
+</section>
+<script>
+(function(){
+  var DK='pf_exp_daily_v1',BK='pf_bills_v1',L=function(i){return document.getElementById(i)};
+  function ld(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}}
+  function sv(k,a){localStorage.setItem(k,JSON.stringify(a))}
+  function fmt(n){return Math.round(+n||0).toLocaleString('fa-IR')}
+  function dayKey(t){var d=new Date(t);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+  function monthKey(t){var d=new Date(t);return d.getFullYear()+'-'+(d.getMonth()+1)}
+  L('exDate').value=new Date().toISOString().slice(0,10);
+  function tab(d,b){L('exDaily').style.display=d;L('exBills').style.display=b;
+    L('exTabDaily').style.background=d?'#2ea043':'#21262d';
+    L('exTabBill').style.background=b?'#2ea043':'#21262d'}
+  L('exTabDaily').onclick=function(){tab('block','none')};
+  L('exTabBill').onclick=function(){tab('none','block')};
+  function renderDaily(){
+    var a=ld(DK),tk=dayKey(Date.now()),mk=monthKey(Date.now()),t=0,m=0,h='';
+    a.forEach(function(p){if(dayKey(p.d)===tk)t+=+p.amt;if(monthKey(p.d)===mk)m+=+p.amt});
+    L('exToday').textContent=fmt(t)+' ریال';L('exMonth').textContent=fmt(m)+' ریال';
+    for(var i=a.length-1;i>=0&&i>a.length-21;i--){
+      var p=a[i];
+      h+='<div style="display:flex;justify-content:space-between;border-bottom:1px solid #2a2f3a;padding:4px 0"><span>'+new Date(p.d).toLocaleDateString('fa-IR')+' — '+p.type+(p.note?' ('+p.note+')':'')+'</span><span>'+fmt(p.amt)+' <button data-i="'+i+'" class="exDel" style="background:none;border:0;color:#f85149;font-size:15px;cursor:pointer">🗑</button></span></div>';
+    }
+    L('exList').innerHTML=h||'<span style="opacity:.6">هنوز هزینه‌ای ثبت نشده</span>';
+    Array.prototype.forEach.call(document.querySelectorAll('.exDel'),function(b){
+      b.onclick=function(){var x=ld(DK);x.splice(+b.getAttribute('data-i'),1);sv(DK,x);renderDaily()}});
+  }
+  L('exAdd').onclick=function(){
+    var amt=+L('exAmt').value,dt=L('exDate').value;
+    if(!(amt>0)||!dt){alert('مبلغ و تاریخ را درست وارد کن');return}
+    var a=ld(DK);a.push({d:new Date(dt).getTime(),type:L('exType').value,amt:amt,note:''});sv(DK,a);
+    L('exAmt').value='';renderDaily();
+  };
+  L('exApply').onclick=function(){
+    var a=ld(DK),tk=dayKey(Date.now()),t=0;
+    a.forEach(function(p){if(dayKey(p.d)===tk)t+=+p.amt});
+    var w=document.getElementById('wacExtra');
+    if(!w){alert('بخش محاسبهٔ بچ پیدا نشد');return}
+    w.value=t;w.dispatchEvent(new Event('input'));
+    alert('جمع امروز ('+fmt(t)+' ریال) در «سایر هزینه‌ها» گذاشته شد');
+  };
+  function hintBills(){
+    var ty=L('blType').value,a=ld(BK).filter(function(p){return p.type===ty});
+    if(!a.length){L('blHint').innerHTML='💡 هنوز قبضی از «'+ty+'» نداریم — اولی را ثبت کن تا از دفعهٔ بعد برآورد بسازم';return}
+    var s=0;a.forEach(function(p){s+=+p.amt});
+    var avg=s/a.length;
+    L('blHint').innerHTML='💡 میانگین '+a.length+' قبض «'+ty+'» = <b>'+fmt(avg)+'</b> ریال/ماه ≈ <b>'+fmt(avg/30)+'</b> ریال/روز<br>وقتی قبض جدید نرسیده، همین برآورد را مبنای هزینهٔ روز بگذار';
+  }
+  L('blType').onchange=hintBills;
+  L('blAdd').onclick=function(){
+    var m=L('blMonth').value.trim(),amt=+L('blAmt').value,kg=+L('blKg').value;
+    if(!/^\d{4}\/\d{1,2}$/.test(m)){alert('ماه را مثل 1405/06 بنویس');return}
+    if(!(amt>0)){alert('مبلغ قبض را وارد کن');return}
+    var a=ld(BK);a.push({m:m,type:L('blType').value,amt:amt,kg:kg});sv(BK,a);
+    L('blAmt').value='';L('blKg').value='';renderBills();
+  };
+  function renderBills(){
+    var a=ld(BK),h='';
+    a.slice().reverse().forEach(function(p){
+      h+='<div style="display:flex;justify-content:space-between;border-bottom:1px solid #2a2f3a;padding:4px 0"><span>'+p.m+' — '+p.type+'</span><span>'+fmt(p.amt)+' ریال'+(p.kg>0?' — '+fmt(p.amt/p.kg)+' ریال/kg':'')+'</span></div>';
+    });
+    L('blList').innerHTML=h||'<span style="opacity:.6">هنوز قبضی ثبت نشده</span>';
+    hintBills();
+  }
+  renderDaily();renderBills();
+})();
+</script>
+<!-- ===== PF-EXP v1 END ===== -->
 </body>
 </html>
