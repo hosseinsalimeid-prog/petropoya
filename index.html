@@ -3859,5 +3859,73 @@ setTimeout(bootRelogin,50);setInterval(bootRelogin,1500);
 setTimeout(ensureBtn,80);setInterval(ensureBtn,900);
 })();
 </script>
+ <!-- ============ 📊 هزینهٔ واقعی و سود واقعی ============ -->
+<section id="pf-wac" dir="rtl" style="max-width:520px;margin:12px auto;padding:14px;border:1px solid #2a2f3a;border-radius:14px;background:#11151c;color:#e8ecf1;font-size:14px">
+  <h3 style="margin:0 0 12px;font-size:16px">📊 هزینهٔ واقعی و سود واقعی بچ</h3>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <input id="wacKg" type="number" placeholder="وزن خرید (kg)" style="flex:1;min-width:110px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacTot" type="number" placeholder="قیمت کل خرید (ریال)" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <button id="wacAdd" style="padding:8px 14px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700">➕ ثبت</button>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <div style="flex:1;min-width:140px;background:#161b24;border-radius:10px;padding:10px">
+      <div style="opacity:.7;font-size:12px">میانگین موزون هر کیلو</div>
+      <div id="wacAvg" style="font-size:18px;font-weight:800;color:#58a6ff;margin-top:4px">—</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:#161b24;border-radius:10px;padding:10px">
+      <div style="opacity:.7;font-size:12px">مجموع خوراک</div>
+      <div id="wacSum" style="font-size:18px;font-weight:800;color:#f0883e;margin-top:4px">0 kg</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+    <input id="wacUse" type="number" placeholder="خوراک مصرفی بچ (kg)" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacRev" type="number" placeholder="فروش کل بچ (ریال)" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+  </div>
+  <button id="wacCalc" style="width:100%;padding:10px;border:0;border-radius:8px;background:#1f6feb;color:#fff;font-weight:700;margin-bottom:10px">🧮 محاسبهٔ هزینه و سود واقعی</button>
+  <div id="wacOut" style="display:none;background:#161b24;border-radius:10px;padding:12px;margin-bottom:12px;line-height:2">
+    هزینهٔ واقعی خوراک: <b id="wacCost" style="color:#f0883e"></b><br>
+    سود ناخالص: <b id="wacProfit"></b><br>
+    حاشیهٔ سود: <b id="wacMargin" style="color:#3fb950"></b>
+  </div>
+  <details><summary style="cursor:pointer;opacity:.8">لیست خریدها</summary><div id="wacList" style="font-size:13px;line-height:2"></div></details>
+</section>
+<script>
+(function(){
+  var KEY='pf_wac_v1', L=function(i){return document.getElementById(i)};
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+  function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+  function fmt(n){return Math.round(+n||0).toLocaleString('fa-IR')}
+  function render(){
+    var a=load(),kg=0,tot=0,h='';
+    a.forEach(function(p){kg+=+p.kg;tot+=+p.tot});
+    L('wacAvg').textContent=kg>0?fmt(tot/kg)+' ریال':'—';
+    L('wacSum').textContent=fmt(kg)+' kg';
+    a.slice().reverse().forEach(function(p){
+      h+='<div style="display:flex;justify-content:space-between;border-bottom:1px solid #2a2f3a;padding:4px 0"><span>'+new Date(p.d).toLocaleDateString('fa-IR')+' — '+fmt(p.kg)+' kg</span><span>'+fmt(p.tot/p.kg)+' ریال/kg</span></div>';
+    });
+    L('wacList').innerHTML=h||'<span style="opacity:.6">هنوز خریدی ثبت نشده</span>';
+  }
+  L('wacAdd').onclick=function(){
+    var kg=+L('wacKg').value,tot=+L('wacTot').value;
+    if(!(kg>0)||!(tot>0)){alert('وزن و قیمت کل را درست وارد کن');return}
+    var a=load();a.push({d:Date.now(),kg:kg,tot:tot});save(a);
+    L('wacKg').value='';L('wacTot').value='';render();
+  };
+  L('wacCalc').onclick=function(){
+    var a=load(),kg=0,tot=0;
+    a.forEach(function(p){kg+=+p.kg;tot+=+p.tot});
+    if(kg<=0){alert('اول حداقل یک خرید ثبت کن');return}
+    var use=+L('wacUse').value,rev=+L('wacRev').value;
+    if(!(use>0)){alert('خوراک مصرفی بچ را وارد کن');return}
+    var cost=(tot/kg)*use,profit=rev-cost;
+    L('wacCost').textContent=fmt(cost)+' ریال';
+    L('wacProfit').textContent=fmt(profit)+' ریال';
+    L('wacProfit').style.color=profit>=0?'#3fb950':'#f85149';
+    L('wacMargin').textContent=rev>0?Math.round(profit/rev*100)+'٪':'—';
+    L('wacOut').style.display='block';
+  };
+  render();
+})();
+</script>
 </body>
 </html>
