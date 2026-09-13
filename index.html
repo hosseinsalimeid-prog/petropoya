@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+ <script>
+// ===== PyroFlow — اتصال به دروازه pf-gate =====
+const PF_URL = 'https://ccrbetnfrkiqarxvrcuv.supabase.co/functions/v1/pf-gate';
+const PF_KEY = 'sb_publishable_LhGKdHbNqb6NWxteVEkYvw_XOX57XOf';
+
+async function pfCall(body) {
+  const r = await fetch(PF_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': PF_KEY,
+      'Authorization': 'Bearer ' + PF_KEY
+    },
+    body: JSON.stringify(body)
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || j.err || ('خطای ' + r.status));
+  return j;
+}
+const pfAuth = (email, pass, mode, profile) => pfCall({ action: 'auth', email, pass, mode, profile });
+const pfPull = (token) => pfCall({ action: 'pull', token });
+const pfPush = (token, entries) => pfCall({ action: 'push', token, entries });
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PyroFlow — سیستم‌عامل صنعت پیرولیز</title>
@@ -3081,6 +3104,1202 @@ function render(){
  var V=VIEWS[route];
  if(V)V();
 }
+</script>
+ <script>
+"use strict";
+/* ═══ پچ نهایی — همه رفت‌وآمد از دروازه pf-gate ═══ */
+(function(){
+window.PF_TOKEN=null;window.PF_QUEUE={};window.PF_TMR=null;
+try{window.PF_TOKEN=localStorage.getItem('pf_token')||null}catch(e){}
+function setTok(t){window.PF_TOKEN=t;try{if(t)localStorage.setItem('pf_token',t);else localStorage.removeItem('pf_token')}catch(e){}}
+function tok(j){return (j&&(j.token||j.t||(j.data&&j.data.token)))||null}
+function pfSave(k,v){
+ if(!window.PF_TOKEN)return;
+ window.PF_QUEUE[k]=v;clearTimeout(window.PF_TMR);
+ window.PF_TMR=setTimeout(pfFlush,1500);
+}
+function pfFlush(){
+ var ents=window.PF_QUEUE;window.PF_QUEUE={};
+ var n=0;for(var k in ents)n++;
+ if(!n||!window.PF_TOKEN)return;
+ pfPush(window.PF_TOKEN,ents).catch(function(){for(var k2 in ents)window.PF_QUEUE[k2]=ents[k2]});
+}
+/* لایه ابر */
+window.supaUp=function(k,v){pfSave(k,v)};
+window.cloudLoad=function(silent,cb){
+ if(!window.PF_TOKEN){if(cb)cb(true);return}
+ var done=false,to=setTimeout(function(){if(!done){done=true;if(!silent)toast('کند بود — آفلاین ادامه می‌دهیم','er');if(cb)cb(false)}},8000);
+ pfPull(window.PF_TOKEN).then(function(j){
+  if(done)return;done=true;clearTimeout(to);
+  var d=(j&&j.data)?j.data:((j&&j.entries)?j.entries:j);
+  if(Array.isArray(d))d.forEach(function(r){DATA[r.id||r.key||r.k]=(r.val!==undefined?r.val:r.v)});
+  else if(d&&typeof d==='object')for(var k in d)DATA[k]=d[k];
+  if(cb)cb(true);
+ }).catch(function(){if(done)return;done=true;clearTimeout(to);if(!silent)toast('⚠️ اتصال برقرار نشد','er');if(cb)cb(false)});
+};
+window.pushAll=function(){pfFlush();toast('⬆️ ارسال شد','ok')};
+window.pullAll=function(){toast('🔄 در حال دریافت…');cloudLoad(false,function(ok){if(ok){toast('✅ همگام شد','ok');render()}})};
+window.logout=function(){try{localStorage.removeItem('pv_sess');localStorage.removeItem('pf_token')}catch(e){}window.PF_TOKEN=null;route='home';render()};
+/* ورود با دروازه */
+window.doLogin=function(){
+ var e=q('le').value.trim().toLowerCase(),p=q('lp').value;
+ if(!e||!p){toast('ایمیل و رمز را وارد کنید','er');return}
+ toast('… در حال ورود');
+ pfAuth(e,p,'login').then(function(j){
+  setTok(tok(j));if(!window.PF_TOKEN)throw new Error('توکن دریافت نشد');
+  firstSyncDone=true;
+  cloudLoad(true,function(){
+   var l=US(),u=null,i;
+   for(i=0;i<l.length;i++)if(l[i].email===e)u=l[i];
+   if(!u){
+    var anyA=l.filter(function(x){return x.admin&&!x.sup});
+    if(anyA.length){u={email:e,pass:'',name:e.split('@')[0],org:anyA[0].email,admin:0,st:'pend',plan:0,perms:['dash','cook','req','ai']}}
+    else{u={email:e,pass:'',name:e.split('@')[0],org:e,admin:1,super:1,st:'ok',plan:2,perms:[]}}
+    l.push(u);W('pv_users',l);
+   }
+   fixUsers();
+   if(u.st==='pend'){toast('حساب شما منتظر تایید مدیر است ⏳','er');return}
+   W('pv_sess',e);q('lp').value='';closeAuth();
+   route=(u.sup&&!u.admin)?'sup':'dash';render();
+   toast('خوش آمدی '+u.name+' 👋','ok');
+  });
+ }).catch(function(er){toast((er&&er.message)||'ورود ناموفق','er')});
+};
+/* ثبت‌نام با دروازه */
+window.doReg=function(){
+ var n=q('rn').value.trim(),e=q('re').value.trim().toLowerCase(),p=q('rp').value;
+ var cn=q('rc').value.trim(),ad=q('ra').value.trim(),bn=q('rb').value.trim();
+ var isMgr=q('rm').checked;
+ if(!n||!e||!p){toast('نام، ایمیل و رمز لازم است','er');return}
+ if(p.length<6){toast('رمز حداقل ۶ کاراکتر','er');return}
+ var mg='';if(!isMgr){mg=q('rmg').value.trim().toLowerCase();if(!mg){toast('ایمیل مدیر کارخانه لازم است','er');return}}
+ toast('… در حال ثبت');
+ pfAuth(e,p,'register',{name:n,company:cn,org:isMgr?e:mg}).then(function(j){
+  setTok(tok(j));if(!window.PF_TOKEN)throw new Error('توکن دریافت نشد');
+  firstSyncDone=true;
+  cloudLoad(true,function(){
+   var l=US(),i;
+   for(i=0;i<l.length;i++)if(l[i].email===e){W('pv_sess',e);closeAuth();route='dash';render();toast('خوش برگشتی 👋','ok');return}
+   hs(p).then(function(h){
+    var obj={email:e,pass:h,name:n,cname:cn,addr:ad,bno:bn,city:REGLOC?REGLOC.city:'',lat:REGLOC?REGLOC.lat:null,lon:REGLOC?REGLOC.lon:null};
+    if(isMgr){
+     var anyA=l.filter(function(x){return x.admin&&!x.sup}).length>0;
+     obj.admin=1;obj.super=anyA?0:1;obj.org=e;obj.st='ok';obj.plan=anyA?1:2;obj.perms=[];
+     l.push(obj);W('pv_users',l);pushFirm(obj);
+     W('pv_sess',e);closeAuth();route='dash';render();
+     toast('خوش آمدید مدیر کارخانه 👑'+(anyA?'':' (مدیر کل 🌟)'),'ok');
+    }else{
+     obj.admin=0;obj.st='pend';obj.plan=0;obj.org=mg;obj.perms=['dash','cook','req','ai'];
+     l.push(obj);W('pv_users',l);pfFlush();
+     toast('ثبت شد — مدیر باید تایید کند ⏳','ok');closeAuth();authTab(0);
+    }
+   });
+  });
+ }).catch(function(er){toast((er&&er.message)||'ثبت‌نام ناموفق','er')});
+};
+/* بوت دروازه‌ای */
+window.SB_OK=true;
+seedGlobal();firstSyncDone=true;fixUsers();
+if(window.PF_TOKEN)cloudLoad(true,function(){fixUsers();render()});
+render();
+setInterval(function(){cloudLoad(true,function(){})},45000);
+setInterval(agentWatch,90000);
+})();
+</script>
+ <script>
+"use strict";
+/* ═══ پچ دما — ذخیرهٔ مطمئن مختصات + محافظت از تغییرات محلی ═══ */
+(function(){
+window.__pfLast={};
+var _supaUp=window.supaUp;
+window.supaUp=function(k,v){window.__pfLast[k]=Date.now();_supaUp(k,v)};
+window.cloudLoad=function(silent,cb){
+ if(!window.PF_TOKEN){if(cb)cb(true);return}
+ var done=false,to=setTimeout(function(){if(!done){done=true;if(cb)cb(false)}},8000);
+ pfPull(window.PF_TOKEN).then(function(j){
+  if(done)return;done=true;clearTimeout(to);
+  var d=(j&&j.data)?j.data:((j&&j.entries)?j.entries:j);
+  function fresh(id){return window.__pfLast[id]&&(Date.now()-window.__pfLast[id]<120000)}
+  if(Array.isArray(d))d.forEach(function(r){var id=r.id||r.key||r.k;if(id&&!fresh(id))DATA[id]=(r.val!==undefined?r.val:r.v)});
+  else if(d&&typeof d==='object')for(var k in d){if(!fresh(k))DATA[k]=d[k]}
+  if(cb)cb(true);
+ }).catch(function(){if(done)return;done=true;clearTimeout(to);if(cb)cb(false)});
+};
+window.LOC_save=function(){
+ var u=U();if(!u){toast('اول وارد شو','er');return}
+ var addr=q('lc_addr')?q('lc_addr').value.trim():'';
+ var city=q('lc_city')?q('lc_city').value.trim():'';
+ var latS=q('lc_lat')?String(fa2en(q('lc_lat').value)).trim():'';
+ var lonS=q('lc_lon')?String(fa2en(q('lc_lon').value)).trim():'';
+ if(!latS)latS='36.32';
+ if(!lonS)lonS='59.55';
+ var latF=parseFloat(latS),lonF=parseFloat(lonS);
+ if(isNaN(latF)||isNaN(lonF)){toast('مختصات نامعتبر','er');return}
+ var l=US(),i,fnd=false;
+ for(i=0;i<l.length;i++){
+  if(l[i].email===u.email){
+   if(addr)l[i].addr=addr;
+   if(city)l[i].city=city;
+   l[i].lat=latF;l[i].lon=lonF;fnd=true;break;
+  }
+ }
+ if(!fnd){toast('حساب یافت نشد','er');return}
+ W('pv_users',l);
+ try{LOC_syncFirm(l.filter(function(x){return x.email===u.email})[0])}catch(e){}
+ toast('📍 ذخیره شد: '+latF+' , '+lonF,'ok');
+ view();
+ setTimeout(LOC_test,800);
+};
+})();
+</script>
+ <script>
+"use strict";
+/* ═══ پچ v7 — مجوز استارت + ایجنت + باسکول + صوت + تیم پایش ═══ */
+(function(){
+ORGK.cok=1;ORGK.tix=1;
+var UFA={mon:'📊 پایش تولید',maint:'🔧 تامین/نگهداری',biz:'💼 بازرگانی'};
+
+/* ── ۱) مجوز استارت ── */
+window.CK_approve=function(){
+ var u=U();if(!u)return;
+ if(!u.admin&&!u.super){toast('فقط مسئول شیفت/مدیر می‌تواند تایید کند','er');return}
+ var ck=S(OK('ck'),{}),dn=0;
+ CKL.forEach(function(t,i){var c=ck[String(i)];if(c&&c.d)dn++});
+ if(dn<CKL.length){toast('چک‌لیست کامل نیست ('+F(dn)+'/'+F(CKL.length)+')','er');return}
+ W('pv_cok',{ok:1,by:u.name,at:hhm(),day:hj()});
+ var al=R('agentlog');al.unshift({t:Date.now(),txt:'🛡 چک‌لیست توسط '+u.name+' تایید شد — مجوز استارت صادر شد'});W('pv_agentlog',al.slice(0,100));
+ toast('✅ مجوز استارت صادر شد — اپراتور می‌تواند شروع کند','ok');view();
+};
+var _sp7=window.startProc;
+window.startProc=function(){
+ var u=U();if(!u)return;
+ if(!u.admin&&!u.super){
+  var ap=R('cok');
+  if(!ap||!ap.ok||ap.day!==hj()){toast('⛔ اجازه استارت ندارید — اول مسئول شیفت چک‌لیست را تایید کند','er');return}
+ }
+ _sp7();
+ W('pv_cok',{ok:0,by:'',at:'',day:''});
+};
+var _ep7=window.endProc;
+window.endProc=function(){_ep7();W('pv_cok',{ok:0,by:'',at:'',day:''})};
+
+/* ── ۴) تعمیر فرمان صوتی (iOS سازگار) ── */
+window.cookVoice=function(){
+ var WS=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!WS){toast('مرورگر تشخیص گفتار ندارد — iOS Safari حداقل ۱۴.۵ لازم است','er');return}
+ try{if(window.SRC){try{window.SRC.abort()}catch(e){}}}catch(e){}
+ var rec=new WS();
+ window.SRC=rec;
+ rec.lang='fa-IR';rec.interimResults=false;rec.maxAlternatives=1;
+ var b=q('vbt'),s=q('vst'),got=false;
+ if(b)b.classList.add('rec');
+ if(s)s.textContent='🔴 گوش می‌دهم… بگو: «دمای راکتور ۳۴۰»';
+ rec.onresult=function(e){
+  got=true;
+  var txt='';
+  for(var i=e.results.length-1;i>=0;i--){if(e.results[i].isFinal){txt=e.results[i][0].transcript;break}}
+  if(!txt)txt=e.results[e.results.length-1][0].transcript;
+  if(s)s.textContent='«'+txt+'»';
+  try{rec.stop()}catch(e){}
+  cookVoiceRow(txt);
+ };
+ rec.onend=function(){if(b)b.classList.remove('rec');if(!got&&s)s.textContent='❌ شنیده نشد — دوباره بزن'};
+ rec.onerror=function(ev){if(b)b.classList.remove('rec');if(s)s.textContent='⚠️ خطا: '+((ev&&ev.error)||'')+' — دوباره تلاش کن'};
+ setTimeout(function(){
+  try{rec.start()}catch(e){
+   setTimeout(function(){try{rec.start()}catch(e2){toast('تشخیص گفتار آماده نشد — دکمه را دوباره بزن','er');if(b)b.classList.remove('rec')}},400);
+  }
+ },80);
+};
+
+/* ── ۲) پرکردن خودکار خلاصه پخت ── */
+window.AI_csumFill=function(){
+ function set(id,val){var e=q(id);if(e)e.value=val}
+ var b=R('batch')[0],p=getProc(),u=U();
+ if(b){set('cs_bid',b.v.id||'');if(b.v.raw)set('cs_rawq',b.v.raw);if(b.v.feed)set('cs_feed',b.v.feed)}
+ else set('cs_feed',(R('raws')[0]&&R('raws')[0].v.name)||'لاستیک');
+ var carb=0,sim2=0;
+ R('out').forEach(function(o){
+  var pr=String(o.v.prod||'');
+  if(pr.indexOf('کربن')>=0)carb+=+o.v.qty||0;
+  if(pr.indexOf('سیم')>=0)sim2+=+o.v.qty||0;
+ });
+ set('cs_carb',carb||'');set('cs_sim',sim2||'');
+ if(p){var ms=(p.st==='run')?(Date.now()-p.s):((p.e||Date.now())-p.s);set('cs_tck',p2(Math.floor(ms/3600000))+':'+p2(Math.floor(ms%3600000/60000)))}
+ set('cs_sup',(US().filter(function(x){return x.admin&&!x.sup})[0]||{}).name||u.name);
+ set('cs_op',u.name);
+ toast('🤖 ایجنت پر کرد — چک کن و «ثبت خلاصه پخت» را بزن','ok');
+};
+
+/* ── ۳) قبض باسکول ── */
+var CARIMG=null;
+window.pickCarImg=function(){var f=q('car_file');if(f)f.click()};
+window.carImgFile=function(inp){
+ var f=inp.files[0];if(!f)return;
+ if(f.size>8388608){toast('عکس حداکثر ۸MB','er');inp.value='';return}
+ var r=new FileReader();
+ r.onload=function(){
+  var img=new Image();
+  img.onload=function(){
+   var mw=900,sc=Math.min(1,mw/img.width);
+   var cv=document.createElement('canvas');cv.width=Math.round(img.width*sc);cv.height=Math.round(img.height*sc);
+   cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+   CARIMG=cv.toDataURL('image/jpeg',0.65);
+   var pv=q('car_prev');if(pv)pv.innerHTML='<img src="'+CARIMG+'" style="max-width:100%;max-height:150px;border-radius:10px;margin-top:8px;border:1px solid var(--ln)">';
+   toast('📷 قبض آماده شد','ok');
+  };
+  img.src=r.result;
+ };
+ r.readAsDataURL(f);inp.value='';
+};
+window.PE_showCarImg=function(t){
+ var l=R('cars'),r=null;
+ for(var i=0;i<l.length;i++)if(String(l[i].t)===String(t))r=l[i];
+ if(!r||!r.img)return;
+ q('peMBody').innerHTML='<h3 style="font-size:14px;margin-bottom:9px">🧾 قبض باسکول — '+E(r.v.plate)+'</h3><img src="'+r.img+'" style="width:100%;border-radius:12px;border:1px solid var(--ln)">';
+ q('peModal').classList.remove('hid');
+};
+window.PE_carSave=function(){
+ var u=U();if(!u)return;
+ var v={plate:q('c_plate').value.trim(),driver:q('c_drv').value.trim(),tel:q('c_tel').value.trim(),dir:q('c_dir').value,cargo:q('c_cargo').value.trim()};
+ if(!v.plate||!v.driver){toast('پلاک و نام راننده الزامی است','er');return}
+ if(!CARIMG){toast('🧾 عکس قبض باسکول الزامی است','er');return}
+ var l=R('cars');
+ l.unshift({t:Date.now(),v:v,img:CARIMG,by:u.name,at:hj()});
+ W('pv_cars',l.slice(0,200));
+ var txt=(v.dir==='ورود بار'?'🚚 ورود بار':(v.dir==='خروج بار'?'📤 خروج بار':'🚙 تردد'))+' — '+v.plate+' (با قبض ✓)';
+ var al=R('agentlog');al.unshift({t:Date.now(),txt:'🛡 '+txt+' — قبض ثبت شد'});W('pv_agentlog',al.slice(0,100));
+ _mgrNote('🛡 '+txt);
+ smsSend('vehicle',txt+' — '+hhm());
+ CARIMG=null;
+ toast('✅ ثبت شد — قبض باسکول پیوست است','ok');view();
+};
+
+/* ── ۵) تیم پایش مستقل ── */
+window.PX_send=function(){
+ var u=U();if(!u)return;
+ var txt=q('px_txt')?q('px_txt').value.trim():'';
+ if(!txt){toast('شرح مشکل را بنویس','er');return}
+ var l=R('tix');
+ l.unshift({t:Date.now(),by:u.name,unit:q('px_u')?q('px_u').value:'mon',txt:String(txt).slice(0,500),st:'open'});
+ W('pv_tix',l.slice(0,100));
+ var al=R('agentlog');al.unshift({t:Date.now(),txt:'🛰 تیکت به تیم پایش — واحد '+(UFA[q('px_u')?q('px_u').value:'mon']||'')});W('pv_agentlog',al.slice(0,100));
+ toast('✅ ارسال شد — تیم پایش بررسی و راهکار می‌دهد','ok');view();
+};
+window.PX_reply=function(t,closeIt){
+ var u=U();if(!u)return;
+ if(!u.super&&!u.sup&&!u.admin)return;
+ var rp=prompt('💬 راهکار / پاسخ تیم:');if(!rp)return;
+ var l=R('tix'),r=null;
+ for(var i=0;i<l.length;i++)if(String(l[i].t)===String(t))r=l[i];
+ if(!r)return;
+ r.reply=String(rp).slice(0,500);r.replyBy=u.name;r.replyAt=hj();r.st=closeIt?'closed':'answered';
+ W('pv_tix',l);
+ smsSend('task','🛰 پاسخ تیم پایش به تیکت شما ثبت شد');
+ toast('✅ پاسخ ثبت شد','ok');view();
+};
+window.vPDesk=function(){
+ var u=U(),l=R('tix');
+ var inner='<div class="note bl"><span>🛰</span><div><b>تیم پایش PyroFlow — دفتر مرکزی: اصفهان</b><br>پایش تولید، تیم تامین/نگهداری و مشاوره بازرگانی. مشکل را بنویس تا تیم مربوطه تماس بگیرد و راهکار بدهد.</div></div>';
+ inner+='<div class="pan"><h3>✉️ ارسال مشکل / درخواست کمک</h3><div class="fgrid"><div><label>برای کدام تیم؟</label><select id="px_u"><option value="mon">📊 پایش تولید</option><option value="maint">🔧 تامین و نگهداری</option><option value="biz">💼 بازرگانی و فروش</option></select></div></div>';
+ inner+='<textarea id="px_txt" rows="3" placeholder="شرح مشکل، چه زمانی شروع شد، چه کمکی می‌خواهی؟"></textarea><button class="btn btn-pri full sm" style="margin-top:9px" onclick="PX_send()">📤 ارسال به تیم پایش</button></div>';
+ inner+='<div class="pan"><h3>📨 تیکت‌ها و پاسخ‌ها</h3>';
+ if(!l.length)inner+='<div class="empty">هنوز تیکتی نفرستاده‌ای</div>';
+ l.slice(0,25).forEach(function(x){
+  inner+='<div class="permrow"><div class="al-row" style="border:none"><span class="al-ic '+(x.st==='open'?'ai-w':'ai-t')+'">🛰</span>';
+  inner+='<div style="flex:1;min-width:160px"><span class="bdg-pill bd-info">'+(UFA[x.unit]||x.unit)+'</span> '+E(x.txt)+'<br><span style="font-size:10px;color:var(--mut2)">'+E(x.by)+' · '+ago(x.t)+'</span>';
+  if(x.reply)inner+='<div class="gbox" style="margin-top:7px;text-align:right">💬 <b>راهکار تیم ('+E(x.replyBy)+'):</b> '+E(x.reply)+'</div>';
+  inner+='</div>';
+  if((u.super||u.sup)&&!x.reply)inner+='<button class="pill pi-ok" onclick="PX_reply('+x.t+')">💬 پاسخ</button>';
+  inner+='<span class="bdg-pill '+(x.st==='open'?'bd-warn':'bd-ok')+'">'+(x.st==='open'?'در بررسی':(x.st==='answered'?'پاسخ داده شد':'بسته'))+'</span></div></div>';
+ });
+ inner+='</div>';
+ q('view').innerHTML='<div class="page-head"><h2>🛰 تیم پایش</h2></div>'+inner;
+};
+VIEWS.pdesk=window.vPDesk;
+
+/* واحد پشتیبان‌ها — فقط مدیرکل */
+window.PF_setUnit=function(e,unit){
+ var u=U();if(!u||!u.super)return;
+ var l=US();for(var i=0;i<l.length;i++)if(l[i].email===e){l[i].unit=unit;break}
+ W('pv_users',l);toast('✅ واحد ثبت شد','ok');view();
+};
+var _vset7=VIEWS.settings;
+VIEWS.settings=function(){
+ _vset7();
+ var u=U();if(!u||!u.super)return;
+ var sups=US().filter(function(x){return x.sup});
+ if(!sups.length)return;
+ var h='<div class="pan" style="border-color:rgba(180,138,255,.4)"><h3>🧩 واحد هر عضو تیم پایش</h3>';
+ sups.forEach(function(s){
+  h+='<div class="ai-it"><span class="al-ic ai-i">🎧</span><div style="flex:1;min-width:140px"><b>'+E(s.name)+'</b></div>';
+  h+='<select onchange="PF_setUnit(\''+E(s.email)+'\',this.value)" style="width:auto;font-size:11px"><option value="mon"'+(!s.unit||s.unit==='mon'?' selected':'')+'>📊 پایش</option><option value="maint"'+(s.unit==='maint'?' selected':'')+'>🔧 تامین</option><option value="biz"'+(s.unit==='biz'?' selected':'')+'>💼 بازرگانی</option></select></div>';
+ });
+ h+='</div>';
+ q('view').insertAdjacentHTML('beforeend',h);
+};
+
+/* آرایش صفحهٔ گزارش پخت: پانل مجوز + دکمهٔ ایجنت + قفل استارت */
+var _vc7=VIEWS.cook;
+VIEWS.cook=function(){
+ _vc7();
+ var v=q('view');if(!v)return;
+ var u=U(),ap=R('cok');
+ var licm=document.createElement('div');
+ licm.innerHTML='<div class="pan"><h3>🛡 مجوز استارت</h3>';
+ if(ap&&ap.ok&&ap.day===hj())licm.innerHTML+='<div class="gbox">✅ تایید مسئول شیفت: <b>'+E(ap.by)+'</b> — '+E(ap.at)+' — اپراتور مجاز به استارت</div>';
+ else licm.innerHTML+='<div class="lock">⛔ استارت فقط پس از تایید چک‌لیست توسط مسئول شیفت مجاز است</div>';
+ if(u.admin||u.super)licm.innerHTML+='<button class="btn btn-pri full sm" onclick="CK_approve()">✅ تایید چک‌لیست و صدور مجوز (مسئول شیفت)</button>';
+ licm.innerHTML+='</div>';
+ v.insertBefore(licm.firstChild,v.firstChild);
+ var stBtn=v.querySelector('button[onclick*="startProc"]');
+ if(stBtn&&!(u.admin||u.super)&&(!ap||!ap.ok||ap.day!==hj())){stBtn.disabled=true;stBtn.style.opacity='.45';stBtn.textContent='⛔ استارت — نیازمند تایید مسئول شیفت'}
+ var cs=q('cs_op');
+ if(cs&&!q('btn_ai_fill')){
+  var pan=cs.closest('.pan'),btn=pan?pan.querySelector('button'):null;
+  if(btn){
+   var b2=document.createElement('button');
+   b2.className='btn btn-gh sm';b2.id='btn_ai_fill';b2.style.marginInlineEnd='7px';
+   b2.textContent='🤖 پرکردن خودکار توسط ایجنت';
+   b2.onclick=AI_csumFill;
+   btn.parentNode.insertBefore(b2,btn);
+  }
+ }
+};
+
+/* صفحهٔ نگهبانی: آپلود قبض + آرشیو قبض‌ها */
+var _vg7=VIEWS.guard;
+VIEWS.guard=function(){
+ _vg7();
+ var v=q('view');if(!v)return;
+ var b=q('c_cargo');
+ if(b&&!q('car_file')){
+  var pan=b.closest('.pan');
+  var div=document.createElement('div');
+  div.innerHTML='<input type="file" id="car_file" accept="image/*" style="display:none" onchange="carImgFile(this)"><div class="up-box" style="margin:10px 0" onclick="pickCarImg()">🧾 عکس قبض باسکول (الزامی — بدون قبض ثبت نمی‌شود)</div><div id="car_prev"></div>';
+  var btn=pan.querySelector('button[onclick*="PE_carSave"]');
+  if(btn)pan.insertBefore(div,btn);else pan.appendChild(div);
+ }
+ var rc=R('cars').filter(function(c){return c.img}).slice(0,8);
+ if(rc.length){
+  var h='<div class="pan"><h3>🧾 قبض‌های باسکول (آخرین‌ها)</h3><div class="cg">';
+  rc.forEach(function(c){h+='<div style="text-align:center"><img src="'+c.img+'" onclick="PE_showCarImg('+c.t+')" style="width:100%;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--ln);cursor:pointer"><div style="font-size:9.5px;color:var(--mut);margin-top:3px">'+E(c.v.plate)+' · '+E(c.at||'')+'</div></div>'});
+  h+='</div></div>';
+  v.insertAdjacentHTML('beforeend',h);
+ }
+};
+
+/* تیکت‌ها در صفحهٔ پایش کارخانه (برای پشتیبان) */
+var _vsf7=VIEWS.supf;
+VIEWS.supf=function(){
+ _vsf7();
+ var u=U();if(!u||(!u.sup&&!u.super))return;
+ var org=SUPOrg;if(!org)return;
+ var tix=orgL(org,'tix');
+ var h='<div class="pan" style="border-color:rgba(180,138,255,.4)"><h3>🛰 تیکت‌ها و مشکلات این کارخانه ('+F(tix.length)+')</h3>';
+ if(!tix.length)h+='<div class="empty">تیکتی نیست</div>';
+ tix.slice(0,12).forEach(function(x){
+  h+='<div class="permrow"><div class="al-row" style="border:none"><span class="al-ic '+(x.st==='open'?'ai-w':'ai-t')+'">🛰</span><div style="flex:1;min-width:160px"><span class="bdg-pill bd-info">'+(UFA[x.unit]||x.unit||'—')+'</span> '+E(x.txt)+'<br><span style="font-size:10px;color:var(--mut2)">'+E(x.by)+' · '+ago(x.t)+'</span>';
+  if(x.reply)h+='<div class="gbox" style="margin-top:7px;text-align:right">💬 <b>پاسخ شما:</b> '+E(x.reply)+'</div>';
+  h+='</div>';
+  if(!x.reply)h+='<button class="pill pi-ok" onclick="PX_reply('+x.t+')">💬 راهکار</button>';
+  h+='<span class="bdg-pill '+(x.st==='open'?'bd-warn':'bd-ok')+'">'+(x.st==='open'?'در انتظار':'پاسخ داده شد')+'</span></div></div>';
+ });
+ h+='</div>';
+ q('view').insertAdjacentHTML('beforeend',h);
+};
+
+/* منو: 🛰 تیم پایش (برای همه به‌جز پشتیبانِ خالص) */
+var _r7=window.render;
+window.render=function(){
+ _r7();
+ var u=U();if(!u||(u.sup&&!u.admin))return;
+ var s=q('side');if(!s||q('m_pdesk'))return;
+ var btn=document.createElement('button');
+ btn.id='m_pdesk';
+ btn.className='snv'+(route==='pdesk'?' on':'');
+ btn.innerHTML='<span class="i">🛰</span> تیم پایش';
+ btn.onclick=function(){go('pdesk')};
+ var hr=s.querySelector('div[style*="border-top"]');
+ if(hr)s.insertBefore(btn,hr);else s.appendChild(btn);
+};
+})();
+</script>
+ <script>
+"use strict";
+/* ═══ پچ v8 — HQ مشهد + منوی پایش محدود + تقسیم کارخانه + گزارش ماهانه ═══ */
+(function(){
+/* ── ۱) دفتر مرکزی: مشهد ── */
+var _vp8=window.vPDesk;
+window.vPDesk=function(){
+ _vp8();
+ var v=q('view');
+ if(v&&v.innerHTML.indexOf('اصفهان')>=0)v.innerHTML=v.innerHTML.split('اصفهان').join('مشهد');
+};
+
+/* ── ۲+۳) منو: پایش فقط پشتیبان + دکمه گزارش ماهانه ── */
+var _r8=window.render;
+window.render=function(){
+ _r8();
+ var u=U();if(!u)return;
+ var s=q('side');if(!s)return;
+ Array.prototype.forEach.call(s.querySelectorAll('button'),function(b){
+  var oc='';try{oc=b.getAttribute('onclick')||''}catch(e){}
+  var src='';try{if(b.onclick)src=b.onclick.toString()}catch(e){}
+  var txt=b.textContent||'';
+  if(oc.indexOf('supf')>=0||src.indexOf('supf')>=0||txt.indexOf('پایش کارخانه')>=0)
+   b.style.display=(u.sup||u.super)?'':'none';
+ });
+ if(!q('m_mrep')&&u.admin){
+  var btn=document.createElement('button');
+  btn.id='m_mrep';btn.className='snv'+(route==='mrep'?' on':'');
+  btn.innerHTML='<span class="i">📊</span> گزارش ماهانه';
+  btn.onclick=function(){go('mrep')};
+  var a=q('m_pdesk');
+  if(a&&a.parentNode)s.insertBefore(btn,a.nextSibling);else s.appendChild(btn);
+ }
+};
+
+/* ── ۴) تقسیم کارخانه‌ها بین پشتیبان‌ها (مدیرکل) ── */
+window.PF_setOwner=function(org,em){
+ var a=R('asg')||{};
+ if(em)a[org]=em;else delete a[org];
+ W('pv_asg',a);toast('✅ ثبت شد','ok');view();
+};
+var _vset8=VIEWS.settings;
+VIEWS.settings=function(){
+ _vset8();
+ var u=U();if(!u||!u.super)return;
+ var sups=US().filter(function(x){return x.sup});
+ var orgs=[];US().forEach(function(x){if(!x.sup&&x.org&&orgs.indexOf(x.org)<0)orgs.push(x.org)});
+ var asg=R('asg')||{},cnt={};
+ sups.forEach(function(s){cnt[s.email]='\u200F0'});
+ orgs.forEach(function(o){var e=asg[o];if(e&&cnt[e]!=null)cnt[e]=(parseInt(cnt[e].replace(/\u200F/g,''))||0)+1,cnt[e]='\u200F'+String(cnt[e]).replace(/\u200F/g,'')});
+ sups.forEach(function(s){var n=0;orgs.forEach(function(o){if(asg[o]===s.email)n++});cnt[s.email]=n});
+ var h='<div class="pan" style="border-color:rgba(255,170,60,.4)"><h3>🏭 تقسیم کارخانه‌ها بین پشتیبان‌ها</h3>';
+ if(!orgs.length)h+='<div class="empty">هنوز کارخانه‌ای ثبت نشده</div>';
+ orgs.forEach(function(o){
+  h+='<div class="ai-it"><span class="al-ic ai-i">🏭</span><div style="flex:1;min-width:120px"><b style="font-size:12px;direction:ltr">'+E(o)+'</b></div><select onchange="PF_setOwner(\''+E(o)+'\',this.value)" style="width:auto;font-size:11px"><option value="">— انتخاب —</option>';
+  sups.forEach(function(s){h+='<option value="'+E(s.email)+'"'+(asg[o]===s.email?' selected':'')+'>'+E(s.name)+'</option>'});
+  h+='</select></div>';
+ });
+ h+='<div style="font-size:10.5px;color:var(--mut);margin-top:7px">⚖️ بار کاری: ';
+ sups.forEach(function(s){h+=E(s.name)+': '+F(cnt[s.email]||0)+' · '});
+ h+='(هدف: هر پشتیبان ~۱۰ کارخانه)</div></div>';
+ q('view').insertAdjacentHTML('beforeend',h);
+};
+var _vsf8=VIEWS.supf;
+VIEWS.supf=function(){
+ _vsf8();
+ var u=U();if(!u||(!u.sup&&!u.super))return;
+ var asg=R('asg')||{},mine=0,all=0;
+ US().forEach(function(x){if(!x.sup&&x.org){all++;if(asg[x.org]===u.email)mine++}});
+ var v=q('view');
+ if(v)v.insertAdjacentHTML('afterbegin','<div class="note bl"><span>🎯</span><div>کارخانه‌های تحت پوشش شما: <b>'+F(mine)+'</b> از '+F(all)+' کارخانه</div></div>');
+};
+
+/* ── ۵) گزارش ماهانه مدیر کارخانه ── */
+window.vMrep=function(){
+ var u=U();
+ if(!u||(!u.admin&&!u.super)){toast('فقط مدیر کارخانه','er');return}
+ var now=Date.now(),W30=now-30*864e5;
+ function inW(t){return +t>=W30&&+t<=now+36e5}
+ var bts=R('batch').filter(function(b){return inW(b.t)});
+ var outs=R('out').filter(function(o){return inW(o.t)});
+ var tot={};outs.forEach(function(o){if(!o.v)return;var p=String(o.v.prod||'—');tot[p]=(tot[p]||0)+(+o.v.qty||0)});
+ var cars=R('cars').filter(function(c){return inW(c.t)}).length;
+ var tix=R('tix'),opn=tix.filter(function(x){return x.st==='open'}).length,rep=tix.filter(function(x){return x.reply}).length;
+ var app=0;R('agentlog').forEach(function(a){if(inW(a.t)&&String(a.txt).indexOf('تایید')>=0)app++});
+ var days={};function dy(t){var d=new Date(+t);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+ bts.forEach(function(b){days[dy(b.t)]=1});outs.forEach(function(o){days[dy(o.t)]=1});
+ var act=Object.keys(days).length,pct=Math.min(100,Math.round(act/30*100));
+ function kpi(ic,val,lab,col){return '<div style="background:rgba(255,255,255,.03);border:1px solid var(--ln);border-radius:14px;padding:11px 6px;text-align:center"><div style="font-size:19px">'+ic+'</div><div style="font-size:20px;font-weight:800;color:'+(col||'var(--tx)')+'">'+val+'</div><div style="font-size:10px;color:var(--mut)">'+lab+'</div></div>'}
+ var ml=(typeof hj==='function')?hj().slice(0,7):'';
+ var h='<div class="page-head"><h2>📊 گزارش ماهانه' + (ml?' <span class="bdg-pill bd-info">'+F(ml)+'</span>':'') + '</h2></div>';
+ h+='<div class="note bl"><span>📈</span><div><b>سند ارزش اشتراک</b> — عملکرد ۳۰ روز اخیر کارخانه در PyroFlow. با دکمهٔ پایین کپی و برای مالک/مدیر ارسال کنید.</div></div>';
+ h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">';
+ h+=kpi('🏭',F(bts.length),'بچ پخت');
+ h+=kpi('📦',F(outs.length),'ردیف فرآورده');
+ h+=kpi('🚚',F(cars),'تردد خودرو');
+ h+=kpi('🛰',F(tix.length),'تیکت پایش',rep?'#4ade80':'#fbbf24');
+ h+=kpi('🛡',F(app),'تایید چک‌لیست');
+ h+=kpi('📅',pct+'%','روزهای فعال ثبت',pct>=70?'#4ade80':(pct>=40?'#fbbf24':'#f87171'));
+ h+='</div>';
+ h+='<div class="pan" style="margin-top:10px"><h3>📦 فرآورده‌های تولیدشده</h3>';
+ var ks=Object.keys(tot);
+ if(!ks.length)h+='<div class="empty">در این دوره فرآورده‌ای ثبت نشده</div>';
+ else ks.forEach(function(k){h+='<div class="permrow" style="padding:8px 10px"><span>'+E(k)+'</span><b>'+F(tot[k])+'</b> <span style="font-size:10px;color:var(--mut)">kg</span></div>'});
+ h+='</div>';
+ h+='<div class="pan"><h3>ℹ️ وضعیت</h3>';
+ h+='<div class="permrow" style="padding:8px 10px"><span>تیکت در انتظار پاسخ</span><span class="bdg-pill '+(opn?'bd-warn':'bd-ok')+'">'+F(opn)+'</span></div>';
+ h+='<div class="permrow" style="padding:8px 10px"><span>تیکت پاسخ‌داده تیم پایش</span><span class="bdg-pill bd-ok">'+F(rep)+'</span></div>';
+ if(pct<40)h+='<div class="lock">⚠️ ثبت روزانه کم است ('+pct+'%) — اپراتورها را تشویق به ثبت کنید تا گزارش دقیق شود</div>';
+ h+='</div>';
+ h+='<button class="btn btn-pri full sm" onclick="MREP_copy()">📋 کپی گزارش برای مدیر / مالک</button>';
+ q('view').innerHTML=h;
+ var lines=['📊 گزارش ماهانه PyroFlow — '+ml];
+ lines.push('• بچ‌های پخت: '+bts.length);
+ lines.push('• ردیف‌های فرآورده: '+outs.length);
+ ks.forEach(function(k){lines.push('   - '+k+': '+tot[k]+' kg')});
+ lines.push('• تردد خودرو (نگهبانی): '+cars);
+ lines.push('• تاییدهای چک‌لیست مسئول شیفت: '+app);
+ lines.push('• روزهای فعال ثبت: '+act+' از ۳۰ ('+pct+'%)');
+ lines.push('• تیکت به تیم پایش: '+tix.length+' — پاسخ‌داده: '+rep);
+ window.__mrepTxt=lines.join('\n');
+};
+VIEWS.mrep=window.vMrep;
+window.MREP_copy=function(){
+ var txt=window.__mrepTxt||'';if(!txt)return;
+ function fb(){var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');toast('📋 کپی شد — برای مدیر بفرست','ok')}catch(e){toast('کپی نشد','er')}document.body.removeChild(ta)}
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(function(){toast('📋 کپی شد — برای مدیر بفرست','ok')},fb);else fb();
+};
+})();
+</script>
+ <script>
+"use strict";
+/* ═══ پچ v9 — ورود تیم پشتیبان دفتر مرکزی (مشهد) ═══ */
+(function(){
+var DENY=['','','home','cook','guard','store','raws','out','csum','batch','agent','maint','sale','buy','acc','perm','mission','mrep','dash','rep','notifs','plan','task','sms'];
+var _r9=window.render;
+window.render=function(){
+ _r9();
+ var u=U();
+ var bn=q('sup_login_banner');
+ if(!u){
+  if(!bn){
+   bn=document.createElement('div');
+   bn.id='sup_login_banner';
+   bn.style.cssText='position:fixed;bottom:12px;right:12px;left:12px;z-index:9999;background:linear-gradient(135deg,rgba(160,120,255,.18),rgba(70,50,140,.18));border:1px solid rgba(170,130,255,.5);border-radius:14px;padding:11px 13px;font-size:11.5px;line-height:1.9;box-shadow:0 8px 26px rgba(0,0,0,.5)';
+   bn.innerHTML='🎧 <b>ورود تیم پشتیبان — دفتر مرکزی مشهد</b><br><span style="opacity:.75;font-size:10.5px">همکاران دفتر مرکزی با ایمیل سازمانی از همان فرم بالا وارد می‌شوند و مستقیم به «پایش کارخانه‌ها» می‌روند. کارخانه‌ها از دروازهٔ ثبت‌نام کارخانه استفاده کنند.</span>';
+   document.body.appendChild(bn);
+  }
+ } else if(bn) bn.remove();
+ if(u&&u.sup&&!u.admin&&!u.super){
+  var r=(typeof route!=='undefined'&&route)?route:'';
+  if(r!=='supf'&&r!=='pdesk'&&r!=='settings'&&(DENY.indexOf(r)>=0||r==='')){
+   go('supf');
+  }
+ }
+};
+})();
+</script>
+ <script>
+"use strict";
+/* ═══ پچ v10 — بازیابی دسترسی مدیرکل ═══ */
+(function(){
+var RC='PYRO-1404'; /* 🔑 کد بازیابی — بعداً عوضش کن */
+function hardLogin(u){
+ window.__forceUser=u;
+ if(!window.__uWrapped){
+  window.__uWrapped=1;
+  var _U=window.U;
+  window.U=function(){return window.__forceUser||_U()};
+ }
+ try{W('pv_sess',u.email)}catch(e){}
+ toast('👑 خوش آمدی '+(u.name||'مدیر'),'ok');
+ setTimeout(function(){go('home')},60);
+}
+window.REC_start=function(){
+ var c=prompt('🔑 کد بازیابی:');if(c===null)return;
+ if(c.trim()!==RC){toast('کد اشتباه است','er');return}
+ var em=prompt('📧 ایمیل مدیرکل:');if(!em)return;
+ em=em.trim().toLowerCase();
+ var pw=prompt('🔐 رمز جدید (حداقل ۴ کاراکتر):');if(!pw||pw.length<4){toast('رمز کوتاه است','er');return}
+ var nm=prompt('👤 نام نمایشی:','مدیرکل');nm=(nm||'مدیرکل').trim();
+ var l=US(),f=null,i;
+ for(i=0;i<l.length;i++){if(String(l[i].email).toLowerCase()===em){f=l[i];break}}
+ if(f){
+  f.pass=pw;f.pw=pw;f.admin=true;f.super=true;W('pv_users',l);
+  toast('♻️ رمز ریست شد — وارد می‌کنم…','ok');
+  setTimeout(function(){hardLogin(f)},400);
+ }else{
+  f={email:em,pass:pw,pw:pw,name:nm,admin:true,super:true,sup:false,org:'',lat:36.32,lon:59.55,city:'مشهد'};
+  l.push(f);W('pv_users',l);
+  toast('👑 حساب مدیرکل ساخته شد — وارد می‌کنم…','ok');
+  setTimeout(function(){hardLogin(f)},400);
+ }
+};
+var _r10=window.render;
+window.render=function(){
+ _r10();
+ var u=null;try{u=U()}catch(e){}
+ var b=q('rec_btn');
+ if(u){if(b)b.remove();return}
+ if(!b){
+  b=document.createElement('button');
+  b.id='rec_btn';
+  b.textContent='🔑 بازیابی دسترسی مدیرکل';
+  b.style.cssText='position:fixed;top:12px;left:12px;z-index:9999;background:rgba(60,40,120,.55);border:1px solid rgba(170,130,255,.5);color:#e9e2ff;border-radius:12px;padding:8px 12px;font-size:11px;font-family:inherit';
+  b.onclick=REC_start;
+  document.body.appendChild(b);
+ }
+};
+})();
+</script>
+ <script>
+"use strict";
+/* ═══ پچ v11 — دکمهٔ بازیابی همیشه‌مرئی ═══ */
+(function(){
+var RC='PYRO-1404';
+function loggedIn(){try{var u=U();return !!(u&&u.email)}catch(e){return false}}
+window.REC_start=function(){
+ var c=prompt('🔑 کد بازیابی:');if(c===null)return;
+ if(c.trim()!==RC){toast('کد اشتباه است','er');return}
+ var em=prompt('📧 ایمیل مدیرکل:');if(!em)return;
+ em=em.trim().toLowerCase();
+ var pw=prompt('🔐 رمز جدید (حداقل ۴ کاراکتر):');if(!pw||pw.length<4){toast('رمز کوتاه است','er');return}
+ var nm=prompt('👤 نام نمایشی:','مدیرکل');nm=(nm||'مدیرکل').trim();
+ var l=US(),f=null,i;
+ for(i=0;i<l.length;i++){if(String(l[i].email).toLowerCase()===em){f=l[i];break}}
+ if(f){f.pass=pw;f.pw=pw;f.admin=true;f.super=true;W('pv_users',l)}
+ else{f={email:em,pass:pw,pw:pw,name:nm,admin:true,super:true,sup:false,org:'',city:'مشهد'};l.push(f);W('pv_users',l)}
+ window.__forceUser=f;
+ if(!window.__uWrapped&&typeof window.U==='function'){window.__uWrapped=1;var _U=window.U;window.U=function(){return window.__forceUser||_U()}}
+ try{W('pv_sess',em)}catch(e){}
+ var b=document.getElementById('rec_btn');if(b)b.remove();
+ toast('👑 خوش آمدی '+nm,'ok');
+ setTimeout(function(){try{go('home');view()}catch(e){try{location.reload()}catch(e2){}}},300);
+};
+function ensureBtn(){
+ var b=document.getElementById('rec_btn');
+ if(loggedIn()){if(b)b.remove();return}
+ if(b)return;
+ b=document.createElement('button');
+ b.id='rec_btn';
+ b.textContent='🔑 بازیابی مدیرکل';
+ b.style.cssText='position:fixed;bottom:86px;left:14px;z-index:2147483000;background:linear-gradient(135deg,#7c5cff,#4f34c7);color:#fff;border:none;border-radius:14px;padding:12px 16px;font-size:13px;font-weight:700;font-family:inherit;box-shadow:0 6px 20px rgba(0,0,0,.45)';
+ b.onclick=function(){REC_start()};
+ document.body.appendChild(b);
+}
+setInterval(ensureBtn,700);
+ensureBtn();
+})();
+</script>
+ <script>
+"use strict";
+/* ═══ پچ v12 — بازیابی با پنجرهٔ داخلی (بدون prompt) + ورود پایدار ═══ */
+(function(){
+var CODE='PYRO1404', TTL=24*36e5;
+function norm(s){return String(s||'').replace(/[۰-۹]/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)}).replace(/[٠-٩]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'.indexOf(d)}).replace(/[\s\-_]/g,'').toUpperCase()}
+
+window.REC_open=function(){
+ var old=q('recModal');if(old)old.remove();
+ var m=document.createElement('div');
+ m.id='recModal';
+ m.style.cssText='position:fixed;inset:0;z-index:2147483600;background:rgba(5,5,15,.78);display:flex;align-items:center;justify-content:center;padding:18px';
+ m.onclick=function(e){if(e.target===m)m.remove()};
+ m.innerHTML='<div style="width:100%;max-width:340px;background:#171427;border:1px solid rgba(170,130,255,.45);border-radius:18px;padding:18px;font-family:inherit">'+
+ '<h3 style="margin:0 0 4px;font-size:15px">🔑 بازیابی دسترسی مدیرکل</h3>'+
+ '<div style="font-size:10.5px;color:#9a92b8;line-height:1.8;margin-bottom:10px">کد، ایمیل و رمز جدید را وارد کنید. کد باید انگلیسی باشد.</div>'+
+ '<input id="rc_code" placeholder="کد بازیابی" style="width:100%;box-sizing:border-box;margin-bottom:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:#eee;border-radius:10px;padding:10px;font-size:13px;direction:ltr;text-align:left">'+
+ '<input id="rc_mail" placeholder="ایمیل مدیرکل" style="width:100%;box-sizing:border-box;margin-bottom:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:#eee;border-radius:10px;padding:10px;font-size:13px;direction:ltr;text-align:left">'+
+ '<input id="rc_pass" placeholder="رمز جدید (۴+ کاراکتر)" style="width:100%;box-sizing:border-box;margin-bottom:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:#eee;border-radius:10px;padding:10px;font-size:13px;direction:ltr;text-align:left">'+
+ '<input id="rc_name" placeholder="نام نمایشی" value="مدیرکل" style="width:100%;box-sizing:border-box;margin-bottom:11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:#eee;border-radius:10px;padding:10px;font-size:13px">'+
+ '<button id="rc_go" style="width:100%;background:linear-gradient(135deg,#7c5cff,#4f34c7);color:#fff;border:none;border-radius:12px;padding:12px;font-size:13.5px;font-weight:700;font-family:inherit">♻️ بازسازی و ورود</button>'+
+ '<button onclick="document.getElementById(\'recModal\').remove()" style="width:100%;margin-top:7px;background:none;border:none;color:#9a92b8;font-size:11.5px;font-family:inherit;padding:6px">انصراف</button></div>';
+ document.body.appendChild(m);
+ q('rc_go').onclick=REC_submit;
+ setTimeout(function(){try{q('rc_code').focus()}catch(e){}},80);
+};
+
+function fatal(msg){toast(msg,'er')}
+window.REC_submit=function(){
+ if(norm(q('rc_code').value)!==CODE){fatal('کد اشتباه است — با کیبورد انگلیسی بزن');return}
+ var em=q('rc_mail').value.trim().toLowerCase();
+ if(!em||em.indexOf('@')<1){fatal('ایمیل را درست وارد کن');return}
+ var pw=q('rc_pass').value;
+ if(pw.length<4){fatal('رمز باید حداقل ۴ کاراکتر باشد');return}
+ var nm=q('rc_name').value.trim()||'مدیرکل';
+ var l=[],f=null;
+ try{l=US()}catch(e){l=JSON.parse(localStorage.getItem('pv_users')||'[]')}
+ for(var i=0;i<l.length;i++){if(String(l[i].email).toLowerCase()===em){f=l[i];break}}
+ if(f){f.pass=pw;f.pw=pw;f.password=pw;f.admin=true;f.super=true}
+ else{f={email:em,pass:pw,pw:pw,password:pw,name:nm,admin:true,super:true,sup:false,org:'',city:'مشهد'};l.push(f)}
+ try{W('pv_users',l)}catch(e){localStorage.setItem('pv_users',JSON.stringify(l))}
+ try{localStorage.setItem('pv_rec',JSON.stringify({email:em,ts:Date.now()}))}catch(e){}
+ forceLogin(f);
+};
+
+function forceLogin(f){
+ window.__forceUser=f;
+ if(!window.__uWrapped&&typeof window.U==='function'){window.__uWrapped=1;var _U=window.U;window.U=function(){return window.__forceUser||_U()}}
+ try{W('pv_sess',f.email)}catch(e){}
+ var m=q('recModal');if(m)m.remove();
+ var b=document.getElementById('rec_btn');if(b)b.remove();
+ toast('👑 خوش آمدی '+(f.name||'مدیر'),'ok');
+ setTimeout(function(){try{go('home');view()}catch(e){try{location.reload()}catch(e2){}}},250);
+}
+function bootRelogin(){
+ try{
+  var raw=localStorage.getItem('pv_rec');if(!raw)return;
+  var o=JSON.parse(raw);if(!o||!o.email)return;
+  if(Date.now()-(o.ts||0)>TTL){localStorage.removeItem('pv_rec');return}
+  var u=null;try{u=U()}catch(e){}
+  if(u&&u.email)return;
+  var l=US(),f=null;
+  for(var i=0;i<l.length;i++)if(String(l[i].email).toLowerCase()===o.email){f=l[i];break}
+  if(!f)return;f.super=true;f.admin=true;
+  forceLogin(f);
+ }catch(e){}
+}
+function ensureBtn(){
+ var b=document.getElementById('rec_btn');
+ var inn=false;try{var uu=U();inn=!!(uu&&uu.email)}catch(e){}
+ if(inn){if(b)b.remove();return}
+ if(!b){
+  b=document.createElement('button');b.id='rec_btn';b.type='button';
+  b.textContent='🔑 بازیابی مدیرکل';
+  b.style.cssText='position:fixed;bottom:100px;left:14px;z-index:2147483000;background:linear-gradient(135deg,#7c5cff,#4f34c7);color:#fff;border:none;border-radius:14px;padding:12px 16px;font-size:13px;font-weight:700;font-family:inherit;box-shadow:0 6px 20px rgba(0,0,0,.45)';
+  document.body.appendChild(b);
+ }
+ b.onclick=function(){REC_open()};
+}
+window.REC_boot=bootRelogin;
+setTimeout(bootRelogin,50);setInterval(bootRelogin,1500);
+setTimeout(ensureBtn,80);setInterval(ensureBtn,900);
+})();
+</script>
+ <!-- ===== PF-WAC v2 BEGIN ===== -->
+<section id="pf-wac" dir="rtl" style="max-width:520px;margin:12px auto;padding:14px;border:1px solid #2a2f3a;border-radius:14px;background:#11151c;color:#e8ecf1;font-size:14px">
+  <h3 style="margin:0 0 12px;font-size:16px">📊 هزینهٔ واقعی و سود واقعی بچ</h3>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <input id="wacKg" type="number" placeholder="وزن خرید (kg)" style="flex:1;min-width:110px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacTot" type="number" placeholder="قیمت کل خرید (ریال)" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <button id="wacAdd" style="padding:8px 14px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700">➕ ثبت</button>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <div style="flex:1;min-width:140px;background:#161b24;border-radius:10px;padding:10px">
+      <div style="opacity:.7;font-size:12px">میانگین موزون هر کیلو</div>
+      <div id="wacAvg" style="font-size:18px;font-weight:800;color:#58a6ff;margin-top:4px">—</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:#161b24;border-radius:10px;padding:10px">
+      <div style="opacity:.7;font-size:12px">مجموع خوراک</div>
+      <div id="wacSum" style="font-size:18px;font-weight:800;color:#f0883e;margin-top:4px">0 kg</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+    <input id="wacUse" type="number" placeholder="خوراک مصرفی بچ (kg)" style="flex:1;min-width:120px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacRev" type="number" placeholder="فروش کل بچ (ریال)" style="flex:1;min-width:120px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacExtra" type="number" placeholder="سایر هزینه‌ها (برق/دستمزد) ریال" style="flex:1;min-width:150px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+  </div>
+  <button id="wacCalc" style="width:100%;padding:10px;border:0;border-radius:8px;background:#1f6feb;color:#fff;font-weight:700;margin-bottom:10px">🧮 محاسبهٔ هزینه و سود واقعی</button>
+  <div id="wacOut" style="display:none;background:#161b24;border-radius:10px;padding:12px;margin-bottom:12px;line-height:2">
+    هزینهٔ واقعی (خوراک + سایر): <b id="wacCost" style="color:#f0883e"></b><br>
+    سود ناخالص: <b id="wacProfit"></b><br>
+    حاشیهٔ سود: <b id="wacMargin" style="color:#3fb950"></b>
+  </div>
+  <details><summary style="cursor:pointer;opacity:.8">لیست خریدها</summary>
+    <div id="wacList" style="font-size:13px;line-height:2"></div>
+    <button id="wacClear" style="margin-top:8px;padding:6px 12px;border:0;border-radius:8px;background:#b62324;color:#fff;font-weight:700">🗑 پاک کردن همهٔ خریدها</button>
+  </details>
+</section>
+<script>
+(function(){
+  var KEY='pf_wac_v1', EKEY='pf_wac_extra_v1', L=function(i){return document.getElementById(i)};
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+  function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+  function getExtra(){return +localStorage.getItem(EKEY)||0}
+  function fmt(n){return Math.round(+n||0).toLocaleString('fa-IR')}
+  function render(){
+    var a=load(),kg=0,tot=0,h='';
+    a.forEach(function(p){kg+=+p.kg;tot+=+p.tot});
+    L('wacAvg').textContent=kg>0?fmt(tot/kg)+' ریال':'—';
+    L('wacSum').textContent=fmt(kg)+' kg';
+    for(var i=a.length-1;i>=0;i--){
+      var p=a[i];
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2a2f3a;padding:4px 0"><span>'+new Date(p.d).toLocaleDateString('fa-IR')+' — '+fmt(p.kg)+' kg</span><span>'+fmt(p.tot/p.kg)+' ریال/kg <button data-i="'+i+'" class="wacDel" style="background:none;border:0;color:#f85149;font-size:15px;cursor:pointer">🗑</button></span></div>';
+    }
+    L('wacList').innerHTML=h||'<span style="opacity:.6">هنوز خریدی ثبت نشده</span>';
+    Array.prototype.forEach.call(document.querySelectorAll('.wacDel'),function(b){
+      b.onclick=function(){var a2=load();a2.splice(+b.getAttribute('data-i'),1);save(a2);render();};
+    });
+    L('wacExtra').value=localStorage.getItem(EKEY)||'';
+  }
+  L('wacAdd').onclick=function(){
+    var kg=+L('wacKg').value,tot=+L('wacTot').value;
+    if(!(kg>0)||!(tot>0)){alert('وزن و قیمت کل را درست وارد کن');return}
+    var a=load();a.push({d:Date.now(),kg:kg,tot:tot});save(a);
+    L('wacKg').value='';L('wacTot').value='';render();
+  };
+  L('wacExtra').oninput=function(){localStorage.setItem(EKEY,String(+this.value||0))};
+  L('wacClear').onclick=function(){
+    if(confirm('همهٔ خریدها پاک شود؟')){save([]);L('wacOut').style.display='none';render();}
+  };
+  L('wacCalc').onclick=function(){
+    var a=load(),kg=0,tot=0;
+    a.forEach(function(p){kg+=+p.kg;tot+=+p.tot});
+    if(kg<=0){alert('اول حداقل یک خرید ثبت کن');return}
+    var use=+L('wacUse').value,rev=+L('wacRev').value,ex=getExtra();
+    if(!(use>0)){alert('خوراک مصرفی بچ را وارد کن');return}
+    var cost=(tot/kg)*use+ex,profit=rev-cost;
+    L('wacCost').textContent=fmt(cost)+' ریال';
+    L('wacProfit').textContent=fmt(profit)+' ریال';
+    L('wacProfit').style.color=profit>=0?'#3fb950':'#f85149';
+    L('wacMargin').textContent=rev>0?Math.round(profit/rev*100)+'٪':'—';
+    L('wacOut').style.display='block';
+  };
+  render();
+})();
+</script>
+<!-- ===== PF-WAC v2 BEGIN ===== -->
+<section id="pf-wac" dir="rtl" style="max-width:520px;margin:12px auto;padding:14px;border:1px solid #2a2f3a;border-radius:14px;background:#11151c;color:#e8ecf1;font-size:14px">
+  <h3 style="margin:0 0 12px;font-size:16px">📊 هزینهٔ واقعی و سود واقعی بچ</h3>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <input id="wacKg" type="number" placeholder="وزن خرید (kg)" style="flex:1;min-width:110px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacTot" type="number" placeholder="قیمت کل خرید (ریال)" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <button id="wacAdd" style="padding:8px 14px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700">➕ ثبت</button>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <div style="flex:1;min-width:140px;background:#161b24;border-radius:10px;padding:10px">
+      <div style="opacity:.7;font-size:12px">میانگین موزون هر کیلو</div>
+      <div id="wacAvg" style="font-size:18px;font-weight:800;color:#58a6ff;margin-top:4px">—</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:#161b24;border-radius:10px;padding:10px">
+      <div style="opacity:.7;font-size:12px">مجموع خوراک</div>
+      <div id="wacSum" style="font-size:18px;font-weight:800;color:#f0883e;margin-top:4px">0 kg</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+    <input id="wacUse" type="number" placeholder="خوراک مصرفی بچ (kg)" style="flex:1;min-width:120px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacRev" type="number" placeholder="فروش کل بچ (ریال)" style="flex:1;min-width:120px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacExtra" type="number" placeholder="سایر هزینه‌ها (برق/دستمزد) ریال" style="flex:1;min-width:150px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+  </div>
+  <button id="wacCalc" style="width:100%;padding:10px;border:0;border-radius:8px;background:#1f6feb;color:#fff;font-weight:700;margin-bottom:10px">🧮 محاسبهٔ هزینه و سود واقعی</button>
+  <div id="wacOut" style="display:none;background:#161b24;border-radius:10px;padding:12px;margin-bottom:12px;line-height:2">
+    هزینهٔ واقعی (خوراک + سایر): <b id="wacCost" style="color:#f0883e"></b><br>
+    سود ناخالص: <b id="wacProfit"></b><br>
+    حاشیهٔ سود: <b id="wacMargin" style="color:#3fb950"></b>
+  </div>
+  <details><summary style="cursor:pointer;opacity:.8">لیست خریدها</summary>
+    <div id="wacList" style="font-size:13px;line-height:2"></div>
+    <button id="wacClear" style="margin-top:8px;padding:6px 12px;border:0;border-radius:8px;background:#b62324;color:#fff;font-weight:700">🗑 پاک کردن همهٔ خریدها</button>
+  </details>
+</section>
+<script>
+(function(){
+  var KEY='pf_wac_v1', EKEY='pf_wac_extra_v1', L=function(i){return document.getElementById(i)};
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+  function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+  function getExtra(){return +localStorage.getItem(EKEY)||0}
+  function fmt(n){return Math.round(+n||0).toLocaleString('fa-IR')}
+  function render(){
+    var a=load(),kg=0,tot=0,h='';
+    a.forEach(function(p){kg+=+p.kg;tot+=+p.tot});
+    L('wacAvg').textContent=kg>0?fmt(tot/kg)+' ریال':'—';
+    L('wacSum').textContent=fmt(kg)+' kg';
+    for(var i=a.length-1;i>=0;i--){
+      var p=a[i];
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2a2f3a;padding:4px 0"><span>'+new Date(p.d).toLocaleDateString('fa-IR')+' — '+fmt(p.kg)+' kg</span><span>'+fmt(p.tot/p.kg)+' ریال/kg <button data-i="'+i+'" class="wacDel" style="background:none;border:0;color:#f85149;font-size:15px;cursor:pointer">🗑</button></span></div>';
+    }
+    L('wacList').innerHTML=h||'<span style="opacity:.6">هنوز خریدی ثبت نشده</span>';
+    Array.prototype.forEach.call(document.querySelectorAll('.wacDel'),function(b){
+      b.onclick=function(){var a2=load();a2.splice(+b.getAttribute('data-i'),1);save(a2);render();};
+    });
+    L('wacExtra').value=localStorage.getItem(EKEY)||'';
+  }
+  L('wacAdd').onclick=function(){
+    var kg=+L('wacKg').value,tot=+L('wacTot').value;
+    if(!(kg>0)||!(tot>0)){alert('وزن و قیمت کل را درست وارد کن');return}
+    var a=load();a.push({d:Date.now(),kg:kg,tot:tot});save(a);
+    L('wacKg').value='';L('wacTot').value='';render();
+  };
+  L('wacExtra').oninput=function(){localStorage.setItem(EKEY,String(+this.value||0))};
+  L('wacClear').onclick=function(){
+    if(confirm('همهٔ خریدها پاک شود؟')){save([]);L('wacOut').style.display='none';render();}
+  };
+  L('wacCalc').onclick=function(){
+    var a=load(),kg=0,tot=0;
+    a.forEach(function(p){kg+=+p.kg;tot+=+p.tot});
+    if(kg<=0){alert('اول حداقل یک خرید ثبت کن');return}
+    var use=+L('wacUse').value,rev=+L('wacRev').value,ex=getExtra();
+    if(!(use>0)){alert('خوراک مصرفی بچ را وارد کن');return}
+    var cost=(tot/kg)*use+ex,profit=rev-cost;
+    L('wacCost').textContent=fmt(cost)+' ریال';
+    L('wacProfit').textContent=fmt(profit)+' ریال';
+    L('wacProfit').style.color=profit>=0?'#3fb950':'#f85149';
+    L('wacMargin').textContent=rev>0?Math.round(profit/rev*100)+'٪':'—';
+    L('wacOut').style.display='block';
+  };
+  render();
+})();
+</script>
+<!-- ===== PF-WAC v2 BEGIN ===== -->
+<section id="pf-wac" dir="rtl" style="max-width:520px;margin:12px auto;padding:14px;border:1px solid #2a2f3a;border-radius:14px;background:#11151c;color:#e8ecf1;font-size:14px">
+  <h3 style="margin:0 0 12px;font-size:16px">📊 هزینهٔ واقعی و سود واقعی بچ</h3>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <input id="wacKg" type="number" placeholder="وزن خرید (kg)" style="flex:1;min-width:110px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacTot" type="number" placeholder="قیمت کل خرید (ریال)" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <button id="wacAdd" style="padding:8px 14px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700">➕ ثبت</button>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <div style="flex:1;min-width:140px;background:#161b24;border-radius:10px;padding:10px">
+      <div style="opacity:.7;font-size:12px">میانگین موزون هر کیلو</div>
+      <div id="wacAvg" style="font-size:18px;font-weight:800;color:#58a6ff;margin-top:4px">—</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:#161b24;border-radius:10px;padding:10px">
+      <div style="opacity:.7;font-size:12px">مجموع خوراک</div>
+      <div id="wacSum" style="font-size:18px;font-weight:800;color:#f0883e;margin-top:4px">0 kg</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+    <input id="wacUse" type="number" placeholder="خوراک مصرفی بچ (kg)" style="flex:1;min-width:120px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacRev" type="number" placeholder="فروش کل بچ (ریال)" style="flex:1;min-width:120px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacExtra" type="number" placeholder="سایر هزینه‌ها (برق/دستمزد) ریال" style="flex:1;min-width:150px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+  </div>
+  <button id="wacCalc" style="width:100%;padding:10px;border:0;border-radius:8px;background:#1f6feb;color:#fff;font-weight:700;margin-bottom:10px">🧮 محاسبهٔ هزینه و سود واقعی</button>
+  <div id="wacOut" style="display:none;background:#161b24;border-radius:10px;padding:12px;margin-bottom:12px;line-height:2">
+    هزینهٔ واقعی (خوراک + سایر): <b id="wacCost" style="color:#f0883e"></b><br>
+    سود ناخالص: <b id="wacProfit"></b><br>
+    حاشیهٔ سود: <b id="wacMargin" style="color:#3fb950"></b>
+  </div>
+  <details><summary style="cursor:pointer;opacity:.8">لیست خریدها</summary>
+    <div id="wacList" style="font-size:13px;line-height:2"></div>
+    <button id="wacClear" style="margin-top:8px;padding:6px 12px;border:0;border-radius:8px;background:#b62324;color:#fff;font-weight:700">🗑 پاک کردن همهٔ خریدها</button>
+  </details>
+</section>
+<script>
+(function(){
+  var KEY='pf_wac_v1', EKEY='pf_wac_extra_v1', L=function(i){return document.getElementById(i)};
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+  function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+  function getExtra(){return +localStorage.getItem(EKEY)||0}
+  function fmt(n){return Math.round(+n||0).toLocaleString('fa-IR')}
+  function render(){
+    var a=load(),kg=0,tot=0,h='';
+    a.forEach(function(p){kg+=+p.kg;tot+=+p.tot});
+    L('wacAvg').textContent=kg>0?fmt(tot/kg)+' ریال':'—';
+    L('wacSum').textContent=fmt(kg)+' kg';
+    for(var i=a.length-1;i>=0;i--){
+      var p=a[i];
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2a2f3a;padding:4px 0"><span>'+new Date(p.d).toLocaleDateString('fa-IR')+' — '+fmt(p.kg)+' kg</span><span>'+fmt(p.tot/p.kg)+' ریال/kg <button data-i="'+i+'" class="wacDel" style="background:none;border:0;color:#f85149;font-size:15px;cursor:pointer">🗑</button></span></div>';
+    }
+    L('wacList').innerHTML=h||'<span style="opacity:.6">هنوز خریدی ثبت نشده</span>';
+    Array.prototype.forEach.call(document.querySelectorAll('.wacDel'),function(b){
+      b.onclick=function(){var a2=load();a2.splice(+b.getAttribute('data-i'),1);save(a2);render();};
+    });
+    L('wacExtra').value=localStorage.getItem(EKEY)||'';
+  }
+  L('wacAdd').onclick=function(){
+    var kg=+L('wacKg').value,tot=+L('wacTot').value;
+    if(!(kg>0)||!(tot>0)){alert('وزن و قیمت کل را درست وارد کن');return}
+    var a=load();a.push({d:Date.now(),kg:kg,tot:tot});save(a);
+    L('wacKg').value='';L('wacTot').value='';render();
+  };
+  L('wacExtra').oninput=function(){localStorage.setItem(EKEY,String(+this.value||0))};
+  L('wacClear').onclick=function(){
+    if(confirm('همهٔ خریدها پاک شود؟')){save([]);L('wacOut').style.display='none';render();}
+  };
+  L('wacCalc').onclick=function(){
+    var a=load(),kg=0,tot=0;
+    a.forEach(function(p){kg+=+p.kg;tot+=+p.tot});
+    if(kg<=0){alert('اول حداقل یک خرید ثبت کن');return}
+    var use=+L('wacUse').value,rev=+L('wacRev').value,ex=getExtra();
+    if(!(use>0)){alert('خوراک مصرفی بچ را وارد کن');return}
+    var cost=(tot/kg)*use+ex,profit=rev-cost;
+    L('wacCost').textContent=fmt(cost)+' ریال';
+    L('wacProfit').textContent=fmt(profit)+' ریال';
+    L('wacProfit').style.color=profit>=0?'#3fb950':'#f85149';
+    L('wacMargin').textContent=rev>0?Math.round(profit/rev*100)+'٪':'—';
+    L('wacOut').style.display='block';
+  };
+  render();
+})();
+</script>
+<!-- ===== PF-WAC v2 BEGIN ===== -->
+<section id="pf-wac" dir="rtl" style="max-width:520px;margin:12px auto;padding:14px;border:1px solid #2a2f3a;border-radius:14px;background:#11151c;color:#e8ecf1;font-size:14px">
+  <h3 style="margin:0 0 12px;font-size:16px">📊 هزینهٔ واقعی و سود واقعی بچ</h3>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <input id="wacKg" type="number" placeholder="وزن خرید (kg)" style="flex:1;min-width:110px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacTot" type="number" placeholder="قیمت کل خرید (ریال)" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <button id="wacAdd" style="padding:8px 14px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700">➕ ثبت</button>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <div style="flex:1;min-width:140px;background:#161b24;border-radius:10px;padding:10px">
+      <div style="opacity:.7;font-size:12px">میانگین موزون هر کیلو</div>
+      <div id="wacAvg" style="font-size:18px;font-weight:800;color:#58a6ff;margin-top:4px">—</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:#161b24;border-radius:10px;padding:10px">
+      <div style="opacity:.7;font-size:12px">مجموع خوراک</div>
+      <div id="wacSum" style="font-size:18px;font-weight:800;color:#f0883e;margin-top:4px">0 kg</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+    <input id="wacUse" type="number" placeholder="خوراک مصرفی بچ (kg)" style="flex:1;min-width:120px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacRev" type="number" placeholder="فروش کل بچ (ریال)" style="flex:1;min-width:120px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    <input id="wacExtra" type="number" placeholder="سایر هزینه‌ها (برق/دستمزد) ریال" style="flex:1;min-width:150px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+  </div>
+  <button id="wacCalc" style="width:100%;padding:10px;border:0;border-radius:8px;background:#1f6feb;color:#fff;font-weight:700;margin-bottom:10px">🧮 محاسبهٔ هزینه و سود واقعی</button>
+  <div id="wacOut" style="display:none;background:#161b24;border-radius:10px;padding:12px;margin-bottom:12px;line-height:2">
+    هزینهٔ واقعی (خوراک + سایر): <b id="wacCost" style="color:#f0883e"></b><br>
+    سود ناخالص: <b id="wacProfit"></b><br>
+    حاشیهٔ سود: <b id="wacMargin" style="color:#3fb950"></b>
+  </div>
+  <details><summary style="cursor:pointer;opacity:.8">لیست خریدها</summary>
+    <div id="wacList" style="font-size:13px;line-height:2"></div>
+    <button id="wacClear" style="margin-top:8px;padding:6px 12px;border:0;border-radius:8px;background:#b62324;color:#fff;font-weight:700">🗑 پاک کردن همهٔ خریدها</button>
+  </details>
+</section>
+<script>
+(function(){
+  var KEY='pf_wac_v1', EKEY='pf_wac_extra_v1', L=function(i){return document.getElementById(i)};
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+  function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+  function getExtra(){return +localStorage.getItem(EKEY)||0}
+  function fmt(n){return Math.round(+n||0).toLocaleString('fa-IR')}
+  function render(){
+    var a=load(),kg=0,tot=0,h='';
+    a.forEach(function(p){kg+=+p.kg;tot+=+p.tot});
+    L('wacAvg').textContent=kg>0?fmt(tot/kg)+' ریال':'—';
+    L('wacSum').textContent=fmt(kg)+' kg';
+    for(var i=a.length-1;i>=0;i--){
+      var p=a[i];
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2a2f3a;padding:4px 0"><span>'+new Date(p.d).toLocaleDateString('fa-IR')+' — '+fmt(p.kg)+' kg</span><span>'+fmt(p.tot/p.kg)+' ریال/kg <button data-i="'+i+'" class="wacDel" style="background:none;border:0;color:#f85149;font-size:15px;cursor:pointer">🗑</button></span></div>';
+    }
+    L('wacList').innerHTML=h||'<span style="opacity:.6">هنوز خریدی ثبت نشده</span>';
+    Array.prototype.forEach.call(document.querySelectorAll('.wacDel'),function(b){
+      b.onclick=function(){var a2=load();a2.splice(+b.getAttribute('data-i'),1);save(a2);render();};
+    });
+    L('wacExtra').value=localStorage.getItem(EKEY)||'';
+  }
+  L('wacAdd').onclick=function(){
+    var kg=+L('wacKg').value,tot=+L('wacTot').value;
+    if(!(kg>0)||!(tot>0)){alert('وزن و قیمت کل را درست وارد کن');return}
+    var a=load();a.push({d:Date.now(),kg:kg,tot:tot});save(a);
+    L('wacKg').value='';L('wacTot').value='';render();
+  };
+  L('wacExtra').oninput=function(){localStorage.setItem(EKEY,String(+this.value||0))};
+  L('wacClear').onclick=function(){
+    if(confirm('همهٔ خریدها پاک شود؟')){save([]);L('wacOut').style.display='none';render();}
+  };
+  L('wacCalc').onclick=function(){
+    var a=load(),kg=0,tot=0;
+    a.forEach(function(p){kg+=+p.kg;tot+=+p.tot});
+    if(kg<=0){alert('اول حداقل یک خرید ثبت کن');return}
+    var use=+L('wacUse').value,rev=+L('wacRev').value,ex=getExtra();
+    if(!(use>0)){alert('خوراک مصرفی بچ را وارد کن');return}
+    var cost=(tot/kg)*use+ex,profit=rev-cost;
+    L('wacCost').textContent=fmt(cost)+' ریال';
+    L('wacProfit').textContent=fmt(profit)+' ریال';
+    L('wacProfit').style.color=profit>=0?'#3fb950':'#f85149';
+    L('wacMargin').textContent=rev>0?Math.round(profit/rev*100)+'٪':'—';
+    L('wacOut').style.display='block';
+  };
+  render();
+})();
+</script>
+<!-- ===== PF-WAC v2 END ===== -->
+ <!-- ===== PF-EXP v1 BEGIN ===== -->
+<section id="pf-exp" dir="rtl" style="max-width:520px;margin:12px auto;padding:14px;border:1px solid #2a2f3a;border-radius:14px;background:#11151c;color:#e8ecf1;font-size:14px">
+  <h3 style="margin:0 0 10px;font-size:16px">📒 دفتر هزینه‌ها (مالی)</h3>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button id="exTabDaily" style="flex:1;padding:8px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700">📅 روزانه (پرسنل/تعمیرات)</button>
+    <button id="exTabBill" style="flex:1;padding:8px;border:0;border-radius:8px;background:#21262d;color:#e8ecf1;font-weight:700">🧾 قبض‌های ماهانه</button>
+  </div>
+
+  <div id="exDaily">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+      <select id="exType" style="flex:1;min-width:110px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+        <option>پرسنل</option><option>تعمیرات</option><option>متفرقه</option>
+      </select>
+      <input id="exAmt" type="number" placeholder="مبلغ (ریال)" style="flex:1;min-width:120px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+      <input id="exDate" type="date" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    </div>
+    <button id="exAdd" style="width:100%;padding:9px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700;margin-bottom:10px">➕ ثبت هزینهٔ روزانه</button>
+    <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <div style="flex:1;min-width:130px;background:#161b24;border-radius:10px;padding:10px"><div style="opacity:.7;font-size:12px">جمع امروز</div><div id="exToday" style="font-size:17px;font-weight:800;color:#3fb950;margin-top:4px">0</div></div>
+      <div style="flex:1;min-width:130px;background:#161b24;border-radius:10px;padding:10px"><div style="opacity:.7;font-size:12px">جمع این ماه</div><div id="exMonth" style="font-size:17px;font-weight:800;color:#f0883e;margin-top:4px">0</div></div>
+    </div>
+    <button id="exApply" style="width:100%;padding:8px;border:0;border-radius:8px;background:#1f6feb;color:#fff;font-weight:700;margin-bottom:10px">📥 اعمال «جمع امروز» در محاسبهٔ بچ</button>
+    <div id="exList" style="font-size:13px;line-height:2"></div>
+  </div>
+
+  <div id="exBills" style="display:none">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+      <select id="blType" style="flex:1;min-width:100px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+        <option>برق</option><option>آب</option><option>گاز</option><option>گازوییل</option><option>سایر</option>
+      </select>
+      <input id="blMonth" type="text" placeholder="ماه (مثلاً 1405/06)" style="flex:1;min-width:130px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+      <input id="blAmt" type="number" placeholder="مبلغ کل قبض (ریال)" style="flex:1;min-width:140px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+      <input id="blKg" type="number" placeholder="تولید همان ماه (kg)" style="flex:1;min-width:140px;padding:8px;border-radius:8px;border:1px solid #2a2f3a;background:#161b24;color:#e8ecf1">
+    </div>
+    <button id="blAdd" style="width:100%;padding:9px;border:0;border-radius:8px;background:#2ea043;color:#fff;font-weight:700;margin-bottom:6px">➕ ثبت قبض</button>
+    <div id="blHint" style="background:#161b24;border-radius:10px;padding:10px;margin-bottom:10px;font-size:13px;line-height:1.9">💡 برآورد مصرف اینجا نشان داده می‌شود</div>
+    <div id="blList" style="font-size:13px;line-height:2"></div>
+  </div>
+</section>
+<script>
+(function(){
+  var DK='pf_exp_daily_v1',BK='pf_bills_v1',L=function(i){return document.getElementById(i)};
+  function ld(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}}
+  function sv(k,a){localStorage.setItem(k,JSON.stringify(a))}
+  function fmt(n){return Math.round(+n||0).toLocaleString('fa-IR')}
+  function dayKey(t){var d=new Date(t);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+  function monthKey(t){var d=new Date(t);return d.getFullYear()+'-'+(d.getMonth()+1)}
+  L('exDate').value=new Date().toISOString().slice(0,10);
+  function tab(d,b){L('exDaily').style.display=d;L('exBills').style.display=b;
+    L('exTabDaily').style.background=d?'#2ea043':'#21262d';
+    L('exTabBill').style.background=b?'#2ea043':'#21262d'}
+  L('exTabDaily').onclick=function(){tab('block','none')};
+  L('exTabBill').onclick=function(){tab('none','block')};
+  function renderDaily(){
+    var a=ld(DK),tk=dayKey(Date.now()),mk=monthKey(Date.now()),t=0,m=0,h='';
+    a.forEach(function(p){if(dayKey(p.d)===tk)t+=+p.amt;if(monthKey(p.d)===mk)m+=+p.amt});
+    L('exToday').textContent=fmt(t)+' ریال';L('exMonth').textContent=fmt(m)+' ریال';
+    for(var i=a.length-1;i>=0&&i>a.length-21;i--){
+      var p=a[i];
+      h+='<div style="display:flex;justify-content:space-between;border-bottom:1px solid #2a2f3a;padding:4px 0"><span>'+new Date(p.d).toLocaleDateString('fa-IR')+' — '+p.type+(p.note?' ('+p.note+')':'')+'</span><span>'+fmt(p.amt)+' <button data-i="'+i+'" class="exDel" style="background:none;border:0;color:#f85149;font-size:15px;cursor:pointer">🗑</button></span></div>';
+    }
+    L('exList').innerHTML=h||'<span style="opacity:.6">هنوز هزینه‌ای ثبت نشده</span>';
+    Array.prototype.forEach.call(document.querySelectorAll('.exDel'),function(b){
+      b.onclick=function(){var x=ld(DK);x.splice(+b.getAttribute('data-i'),1);sv(DK,x);renderDaily()}});
+  }
+  L('exAdd').onclick=function(){
+    var amt=+L('exAmt').value,dt=L('exDate').value;
+    if(!(amt>0)||!dt){alert('مبلغ و تاریخ را درست وارد کن');return}
+    var a=ld(DK);a.push({d:new Date(dt).getTime(),type:L('exType').value,amt:amt,note:''});sv(DK,a);
+    L('exAmt').value='';renderDaily();
+  };
+  L('exApply').onclick=function(){
+    var a=ld(DK),tk=dayKey(Date.now()),t=0;
+    a.forEach(function(p){if(dayKey(p.d)===tk)t+=+p.amt});
+    var w=document.getElementById('wacExtra');
+    if(!w){alert('بخش محاسبهٔ بچ پیدا نشد');return}
+    w.value=t;w.dispatchEvent(new Event('input'));
+    alert('جمع امروز ('+fmt(t)+' ریال) در «سایر هزینه‌ها» گذاشته شد');
+  };
+  function hintBills(){
+    var ty=L('blType').value,a=ld(BK).filter(function(p){return p.type===ty});
+    if(!a.length){L('blHint').innerHTML='💡 هنوز قبضی از «'+ty+'» نداریم — اولی را ثبت کن تا از دفعهٔ بعد برآورد بسازم';return}
+    var s=0;a.forEach(function(p){s+=+p.amt});
+    var avg=s/a.length;
+    L('blHint').innerHTML='💡 میانگین '+a.length+' قبض «'+ty+'» = <b>'+fmt(avg)+'</b> ریال/ماه ≈ <b>'+fmt(avg/30)+'</b> ریال/روز<br>وقتی قبض جدید نرسیده، همین برآورد را مبنای هزینهٔ روز بگذار';
+  }
+  L('blType').onchange=hintBills;
+  L('blAdd').onclick=function(){
+    var m=L('blMonth').value.trim(),amt=+L('blAmt').value,kg=+L('blKg').value;
+    if(!/^\d{4}\/\d{1,2}$/.test(m)){alert('ماه را مثل 1405/06 بنویس');return}
+    if(!(amt>0)){alert('مبلغ قبض را وارد کن');return}
+    var a=ld(BK);a.push({m:m,type:L('blType').value,amt:amt,kg:kg});sv(BK,a);
+    L('blAmt').value='';L('blKg').value='';renderBills();
+  };
+  function renderBills(){
+    var a=ld(BK),h='';
+    a.slice().reverse().forEach(function(p){
+      h+='<div style="display:flex;justify-content:space-between;border-bottom:1px solid #2a2f3a;padding:4px 0"><span>'+p.m+' — '+p.type+'</span><span>'+fmt(p.amt)+' ریال'+(p.kg>0?' — '+fmt(p.amt/p.kg)+' ریال/kg':'')+'</span></div>';
+    });
+    L('blList').innerHTML=h||'<span style="opacity:.6">هنوز قبضی ثبت نشده</span>';
+    hintBills();
+  }
+  renderDaily();renderBills();
+})();
+</script>
+<!-- ===== PF-EXP v1 END ===== -->
+ <script>
+(function(){
+  var s={},e=document.querySelectorAll('[id]');
+  for(var i=0;i<e.length;i++){var x=e[i];
+  if(s[x.id]){x.style.display='none';}else{s[x.id]=1;}}
+})();
 </script>
 </body>
 </html>
